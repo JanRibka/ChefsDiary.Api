@@ -1,0 +1,28 @@
+{
+  "name": "jan_ribka/chefs-diary",
+  "description": "Your online culinary destination!",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Jan Ribka",
+      "email": "ribkaj@seznam.cz"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "JR\\ChefsDiary\\": "app/"
+    }
+  },
+  "config": {
+    "platform": {
+      "php": "8.2.0"
+    },
+    "sort-packages": true,
+    "optimize-autoloader": true
+  },
+  "require": {
+    "slim/psr7": "^1.6",
+    "slim/slim": "^4.12",
+    "vlucas/phpdotenv": "^5.6"
+  }
+}
