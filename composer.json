@@ -13,6 +13,11 @@
       "JR\\ChefsDiary\\": "app/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
   "config": {
     "platform": {
       "php": "8.2.0"
@@ -21,8 +26,15 @@
     "optimize-autoloader": true
   },
   "require": {
+    "doctrine/migrations": "^3.7",
+    "doctrine/orm": "^2.17",
+    "php-di/php-di": "^7.0",
     "slim/psr7": "^1.6",
     "slim/slim": "^4.12",
+    "slim/twig-view": "^3.3",
     "vlucas/phpdotenv": "^5.6"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^10.5"
   }
 }
