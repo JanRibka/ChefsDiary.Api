@@ -1,20 +1,23 @@
 <?php
 
-use Slim\Views\Twig;
+// use Slim\Views\Twig;
 
 use function DI\create;
 use JR\ChefsDiary\Config;
 use Doctrine\ORM\ORMSetup;
 use Doctrine\ORM\EntityManager;
-use Psr\Container\ContainerInterface;
+
+// use Psr\Container\ContainerInterface;
 
 return [
     Config::class => create(Config::class)->constructor(require CONFIG_PATH . '/app.php'),
     EntityManager::class => fn(Config $config) => EntityManager::create(
         $config->get('doctrine.connection'),
         ORMSetup::createAttributeMetadataConfiguration(
-            $config->get('doctrine.entity_dir'),
-            $config->get('doctrine.dev_mode'),
+            [
+                $config->get('doctrine.entity_dir'),
+                $config->get('doctrine.dev_mode')
+            ]
         )
     ),
     // TODO: Asi jen pro views

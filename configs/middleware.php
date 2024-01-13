@@ -3,9 +3,10 @@
 declare(strict_types=1);
 
 use Slim\App;
-use Slim\Views\Twig;
+// use Slim\Views\Twig;
 use JR\ChefsDiary\Config;
-use Slim\Views\TwigMiddleware;
+
+// use Slim\Views\TwigMiddleware;
 
 return function (App $app) {
     $container = $app->getContainer();
@@ -13,7 +14,7 @@ return function (App $app) {
 
     // Twig
     // TODO: Toto tu asi nemusí být je to pro views
-    $app->add(TwigMiddleware::create($app, $container->get(Twig::class)));
+    //$app->add(TwigMiddleware::create($app, $container->get(Twig::class)));
 
     // Logger
     $app->addErrorMiddleware(
