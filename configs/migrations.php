@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 return [
     'table_storage' => [
-        'table_name' => 'migrations',
-        'version_column_name' => 'version',
+        'table_name' => 'Migrations',
+        'version_column_name' => 'Version',
         'version_column_length' => 1024,
-        'executed_at_column_name' => 'executed_at',
-        'execution_time_column_name' => 'execution_time',
+        'executed_at_column_name' => 'ExecutedAt',
+        'execution_time_column_name' => 'ExecutionTime',
     ],
     'migrations_paths' => [
         'Migrations' => __DIR__ . '/../migrations',

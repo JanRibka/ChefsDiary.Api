@@ -14,10 +14,8 @@ return [
     EntityManager::class => fn(Config $config) => EntityManager::create(
         $config->get('doctrine.connection'),
         ORMSetup::createAttributeMetadataConfiguration(
-            [
-                $config->get('doctrine.entity_dir'),
-                $config->get('doctrine.dev_mode')
-            ]
+            $config->get('doctrine.entity_dir'),
+            $config->get('doctrine.dev_mode')
         )
     ),
     // TODO: Asi jen pro views
