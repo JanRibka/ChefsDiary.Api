@@ -22,7 +22,7 @@ class User
     #[Column(type: Types::STRING, length: 255)]
     private string $Password;
 
-    #[Column(type: Types::STRING, length: 255)]
+    #[Column(type: Types::STRING, length: 50)]
     private string $Name;
 
     #[Column]
