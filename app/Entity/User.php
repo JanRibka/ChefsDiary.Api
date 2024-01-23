@@ -9,8 +9,11 @@ use Doctrine\ORM\Mapping\Table;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 
 #[Entity, Table('Users')]
+#[HasLifecycleCallbacks]
 class User
 {
     #[Id, Column(options: ['unsigned' => true]), GeneratedValue]
@@ -19,15 +22,51 @@ class User
     #[Column(type: Types::STRING, length: 50)]
     private string $Email;
 
-    #[Column(type: Types::STRING, length: 255)]
+    #[Column(length: 255)]
     private string $Password;
-
-    #[Column(type: Types::STRING, length: 50)]
-    private string $Name;
 
     #[Column]
     private DateTime $CreatedAt;
 
-    #[Column]
+    #[Column(nullable: true)]
     private DateTime $UpdatedAt;
+
+
+    public function getId(): int
+    {
+        return $this->IdUser;
+    }
+
+    public function updateTimestamp(LifecycleEventArgs $args): void
+    {
+        if (!isset($this->CreatedAt)) {
+            $this->CreatedAt = new DateTime();
+        }
+
+        $this->UpdatedAt = new DateTime();
+    }
+
+    public function getEmail(): string
+    {
+        return $this->Email;
+    }
+
+    public function setEmail(string $email): User
+    {
+        $this->Email = $email;
+
+        return $this;
+    }
+
+    public function getPassword(): string
+    {
+        return $this->Password;
+    }
+
+    public function setPassword(string $password): User
+    {
+        $this->Password = $password;
+
+        return $this;
+    }
 }

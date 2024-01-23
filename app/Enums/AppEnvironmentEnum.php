@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace JR\ChefsDiary\Enums;
 
-enum AppEnvironment: string
+enum AppEnvironmentEnum: string
 {
     case Development = "development";
     case Production = "production";
