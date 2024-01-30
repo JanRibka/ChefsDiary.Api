@@ -2,22 +2,37 @@
 
 // use Slim\Views\Twig;
 
+use Slim\App;
 use function DI\create;
 use JR\ChefsDiary\Config;
 use Doctrine\ORM\ORMSetup;
+use Slim\Factory\AppFactory;
 use Doctrine\ORM\EntityManager;
+use Psr\Container\ContainerInterface;
 
 // use Psr\Container\ContainerInterface;
 
 return [
-    Config::class => create(Config::class)->constructor(require CONFIG_PATH . '/app.php'),
-    EntityManager::class => fn(Config $config) => EntityManager::create(
-        $config->get('doctrine.connection'),
-        ORMSetup::createAttributeMetadataConfiguration(
-            $config->get('doctrine.entity_dir'),
-            $config->get('doctrine.dev_mode')
-        )
-    ),
+    App::class => function (ContainerInterface $container) {
+        AppFactory::setContainer($container);
+
+        $addMiddleware = require CONFIG_PATH . '/middleware.php';
+        $router = require CONFIG_PATH . '/routes/web.php';
+
+        $app = AppFactory::create();
+
+        $app->getRouteCollector()->setDefaultInvocationStrategy(
+            new RouteEntityBindingStrategy
+        );
+    }
+    // Config::class => create(Config::class)->constructor(require CONFIG_PATH . '/app.php'),
+    // EntityManager::class => fn(Config $config) => EntityManager::create(
+    //     $config->get('doctrine.connection'),
+    //     ORMSetup::createAttributeMetadataConfiguration(
+    //         $config->get('doctrine.entity_dir'),
+    //         $config->get('doctrine.dev_mode')
+    //     )
+    // ),
     // TODO: Asi jen pro views
     // Twig::class                   => function (Config $config, ContainerInterface $container) {
     //     $twig = Twig::create(VIEW_PATH, [

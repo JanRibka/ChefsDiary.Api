@@ -7,5 +7,13 @@ namespace JR\ChefsDiary\Services\Contracts;
 interface IEntityManagerService
 {
     public function __call(string $name, array $arguments);
+
+    public function sync($entity = null): void;
+
+    public function delete($entity, bool $sync = false): void;
+
+    public function clear(?string $entityName = null): void;
+
+    public function enableUserAuthFilter(int $userId): void;
 }
 
