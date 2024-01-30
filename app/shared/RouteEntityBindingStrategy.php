@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace JR\ChefsDiary;
+namespace JR\ChefsDiary\Shared;
 
 use Psr\Http\Message\ResponseFactoryInterface;
 use Slim\Interfaces\InvocationStrategyInterface;
