@@ -4,7 +4,14 @@ declare(strict_types=1);
 
 namespace JR\ChefsDiary\Services\Contracts;
 
-interface IEntityManagerService
+use Doctrine\ORM\EntityManagerInterface;
+
+/**
+ * @mixin EntityManagerInterface
+ * @author Jan Ribka
+ * @copyright (c) 2024
+ */
+interface EntityManagerServiceInterface
 {
     public function __call(string $name, array $arguments);
 

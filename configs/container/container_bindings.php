@@ -7,8 +7,11 @@ use function DI\create;
 use JR\ChefsDiary\Config;
 use Doctrine\ORM\ORMSetup;
 use Slim\Factory\AppFactory;
-use Doctrine\ORM\EntityManager;
 use Psr\Container\ContainerInterface;
+use Doctrine\ORM\EntityManagerInterface;
+use JR\ChefsDiary\Shared\RouteEntityBindingStrategy;
+use JR\ChefsDiary\Services\Contracts\IEntityManagerService;
+use JR\ChefsDiary\Services\Implementation\EntityManagerService;
 
 // use Psr\Container\ContainerInterface;
 
@@ -22,8 +25,22 @@ return [
         $app = AppFactory::create();
 
         $app->getRouteCollector()->setDefaultInvocationStrategy(
-            new RouteEntityBindingStrategy
+            new RouteEntityBindingStrategy(
+                $container->get(EntityManagerService::class),
+                $app->getResponseFactory()
+            )
         );
+
+        $router($app);
+        $addMiddleware($app);
+
+        return $app;
+    },
+    Config::class => create(Config::class)->constructor(
+        require CONFIG_PATH . '/app.php'
+    ),
+    EntityManagerInterface::class => function (Config $config) {
+
     }
     // Config::class => create(Config::class)->constructor(require CONFIG_PATH . '/app.php'),
     // EntityManager::class => fn(Config $config) => EntityManager::create(

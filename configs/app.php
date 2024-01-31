@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use JR\ChefsDiary\Enums\AppEnvironment;
+use JR\ChefsDiary\Enums\AppEnvironmentEnum;
 
-$appEnv = $_ENV['APP_ENV'] ?? AppEnvironment::Production->value;
+$appEnv = $_ENV['APP_ENV'] ?? AppEnvironmentEnum::Production->value;
 
 return [
     'app_name' => $_ENV['APP_NAME'],
@@ -14,7 +14,7 @@ return [
     'log_errors' => true,
     'log_error_details' => true,
     'doctrine' => [
-        'dev_mode' => AppEnvironment::isDevelopment($appEnv),
+        'dev_mode' => AppEnvironmentEnum::isDevelopment($appEnv),
         'cache_dir' => STORAGE_PATH . '/cache/doctrine',
         'entity_dir' => [APP_PATH . '/Entity'],
         'connection' => [
@@ -25,5 +25,12 @@ return [
             'user' => $_ENV['DB_USER'],
             'password' => $_ENV['DB_PASS']
         ]
-    ]
+    ],
+    'session' => [
+        'name' => $appSnakeName . '_session',
+        'flash_name' => $appSnakeName . '_flash',
+        'secure' => $boolean($_ENV['SESSION_SECURE'] ?? true),
+        'httponly' => $boolean($_ENV['SESSION_HTTP_ONLY'] ?? true),
+        'samesite' => $_ENV['SESSION_SAME_SITE'] ?? 'lax',
+    ],
 ];

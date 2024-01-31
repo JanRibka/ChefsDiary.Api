@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Slim\App;
 use Slim\Routing\RouteCollectorProxy;
+use JR\ChefsDiary\Middleware\AuthMiddleware;
 use JR\ChefsDiary\Controllers\AuthController;
 
 return function (App $app) {
@@ -11,5 +12,5 @@ return function (App $app) {
         $auth->post('/register', [AuthController::class, 'register']);
         $auth->post('/login', [AuthController::class, 'login']);
         $auth->post('/logout', [AuthController::class, 'logout']);
-    });
-}->add();
+    })->add(AuthMiddleware::class);
+};

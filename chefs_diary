@@ -12,8 +12,7 @@ use Doctrine\Migrations\Configuration\Migration\PhpFile;
 use Doctrine\Migrations\Configuration\EntityManager\ExistingEntityManager;
 use Doctrine\ORM\Tools\Console\EntityManagerProvider\SingleManagerProvider;
 
-$app = require 'bootstrap.php';
-$container = $app->getContainer();
+$container = require 'bootstrap.php';
 $config = $container->get(Config::class);
 
 $entityManager = $container->get(EntityManager::class);

@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace JR\ChefsDiary\Services\Implementation;
 
-use JR\ChefsDiary\Services\Contracts\IEntityManagerService;
+use Doctrine\ORM\EntityManagerInterface;
+use JR\ChefsDiary\Services\Contracts\EntityManagerServiceInterface;
 
-class EntityManagerService implements IEntityManagerService
+class EntityManagerService implements EntityManagerServiceInterface
 {
-    public function __construct(protected readonly IEntityManagerService $iEntityManagerService)
-    {
+    public function __construct(
+
+        protected readonly EntityManagerInterface $iEntityManagerService
+    ) {
     }
 
     public function __call(string $name, array $arguments)
