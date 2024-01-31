@@ -8,13 +8,14 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Table;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
+use JR\ChefsDiary\Shared\UserInterface;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 
 #[Entity, Table('Users')]
 #[HasLifecycleCallbacks]
-class User
+class User implements UserInterface
 {
     #[Id, Column(options: ['unsigned' => true]), GeneratedValue]
     private int $IdUser;

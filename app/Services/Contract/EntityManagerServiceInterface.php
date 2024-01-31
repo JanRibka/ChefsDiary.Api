@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace JR\ChefsDiary\Services\Contracts;
+namespace JR\ChefsDiary\Services\Contract;
 
 use Doctrine\ORM\EntityManagerInterface;
 

@@ -1,16 +1,24 @@
 <?php
 
-// use Slim\Views\Twig;
+declare(strict_types=1);
 
 use Slim\App;
 use function DI\create;
 use JR\ChefsDiary\Config;
 use Doctrine\ORM\ORMSetup;
 use Slim\Factory\AppFactory;
+use Doctrine\ORM\EntityManager;
+use Doctrine\DBAL\DriverManager;
+use JR\ChefsDiary\Filters\UserFilter;
 use Psr\Container\ContainerInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use DoctrineExtensions\Query\Mysql\Year;
+use DoctrineExtensions\Query\Mysql\Month;
+use DoctrineExtensions\Query\Mysql\DateFormat;
+use Psr\Http\Message\ResponseFactoryInterface;
 use JR\ChefsDiary\Shared\RouteEntityBindingStrategy;
-use JR\ChefsDiary\Services\Contracts\IEntityManagerService;
+use JR\ChefsDiary\Services\Implementation\AuthService;
+use JR\ChefsDiary\Services\Contract\AuthServiceInterface;
 use JR\ChefsDiary\Services\Implementation\EntityManagerService;
 
 // use Psr\Container\ContainerInterface;
@@ -40,8 +48,34 @@ return [
         require CONFIG_PATH . '/app.php'
     ),
     EntityManagerInterface::class => function (Config $config) {
+        $ormConfig = ORMSetup::createAttributeMetadataConfiguration(
+            $config->get('doctrine.entity_dir'),
+            $config->get('doctrine.dev_mode')
+        );
 
-    }
+        $ormConfig->addFilter('user', UserFilter::class);
+
+        if (class_exists('DoctrineExtensions\Query\Mysql\Year')) {
+            $ormConfig->addCustomDatetimeFunction('YEAR', Year::class);
+        }
+
+        if (class_exists('DoctrineExtensions\Query\Mysql\Month')) {
+            $ormConfig->addCustomDatetimeFunction('MONTH', Month::class);
+        }
+
+        if (class_exists('DoctrineExtensions\Query\Mysql\DateFormat')) {
+            $ormConfig->addCustomStringFunction('DATE_FORMAT', DateFormat::class);
+        }
+
+        return new EntityManager(
+            DriverManager::getConnection($config->get('doctrine.connection'), $ormConfig),
+            $ormConfig
+        );
+    },
+    ResponseFactoryInterface::class => fn(App $app) => $app->getResponseFactory(),
+    AuthServiceInterface::class => fn(ContainerInterface $container) => $container->get(
+        AuthService::class
+    )
     // Config::class => create(Config::class)->constructor(require CONFIG_PATH . '/app.php'),
     // EntityManager::class => fn(Config $config) => EntityManager::create(
     //     $config->get('doctrine.connection'),

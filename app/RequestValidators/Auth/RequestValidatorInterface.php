@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace JR\ChefsDiary\RequestValidators;
 
 
-interface IRequestValidator
+interface RequestValidatorInterface
 {
     /**
      * Summary of validate

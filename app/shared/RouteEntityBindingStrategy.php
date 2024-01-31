@@ -10,12 +10,12 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Slim\Interfaces\InvocationStrategyInterface;
-use JR\ChefsDiary\Services\Contracts\IEntityManagerService;
+use JR\ChefsDiary\Services\Contracts\EntityManagerServiceInterface;
 
 class RouteEntityBindingStrategy implements InvocationStrategyInterface
 {
     public function __construct(
-        private readonly IEntityManagerService $entityManagerService,
+        private readonly EntityManagerServiceInterface $entityManagerService,
         private readonly ResponseFactoryInterface $responseFactory
     ) {
     }

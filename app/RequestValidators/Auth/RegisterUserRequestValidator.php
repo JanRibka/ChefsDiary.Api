@@ -8,8 +8,8 @@ use Valitron\Validator;
 use JR\ChefsDiary\Entity\User;
 use JR\ChefsDiary\Enums\HttpStatusCodeEnum;
 use JR\ChefsDiary\Exception\ValidationException;
-use JR\ChefsDiary\RequestValidators\IRequestValidator;
 use JR\ChefsDiary\Services\Contracts\IEntityManagerService;
+use JR\ChefsDiary\RequestValidators\RequestValidatorInterface;
 
 class RegisterUserRequestValidation implements IRequestValidator
 {
