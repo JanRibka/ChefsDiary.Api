@@ -10,16 +10,21 @@ use JR\ChefsDiary\Enums\HttpStatusCodeEnum;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
+use JR\ChefsDiary\Services\Contract\AuthServiceInterface;
 
 class AuthMiddleware implements MiddlewareInterface
 {
     public function __construct(
-        private readonly ResponseFactoryInterface $responseFactory
+        private readonly ResponseFactoryInterface $responseFactory,
+        private readonly AuthServiceInterface $authService
     ) {
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        return $this->responseFactory->createResponse()->withStatus(HttpStatusCodeEnum::FOUND->value);
+        if ($user = $this->authService->getUser()) {
+
+        }
+        // return $this->responseFactory->createResponse()->withStatus(HttpStatusCodeEnum::FOUND->value);
     }
 }

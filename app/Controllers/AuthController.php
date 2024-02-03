@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace JR\ChefsDiary\Controllers;
 
-use JR\ChefsDiary\Entity\User;
+use JR\ChefsDiary\Entity\User\User;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -21,9 +21,9 @@ class AuthController
 
         $user = new User();
 
-        $user->setEmail($data["email"]);
+        $user->setLogin($data["login"]);
         $user->setPassword($data["password"]);
-
+        var_dump($user);
         return $response;
     }
 

@@ -51,8 +51,8 @@ return [
             $config->get('doctrine.dev_mode')
         );
 
-        $ormConfig->addFilter('user', UserFilter::class);
-
+        // $ormConfig->addFilter('user', UserFilter::class);
+    
         if (class_exists('DoctrineExtensions\Query\Mysql\Year')) {
             $ormConfig->addCustomDatetimeFunction('YEAR', Year::class);
         }

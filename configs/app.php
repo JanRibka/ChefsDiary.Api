@@ -26,11 +26,11 @@ return [
             'password' => $_ENV['DB_PASS']
         ]
     ],
-    'session' => [
-        'name' => $appSnakeName . '_session',
-        'flash_name' => $appSnakeName . '_flash',
-        'secure' => $boolean($_ENV['SESSION_SECURE'] ?? true),
-        'httponly' => $boolean($_ENV['SESSION_HTTP_ONLY'] ?? true),
-        'samesite' => $_ENV['SESSION_SAME_SITE'] ?? 'lax',
-    ],
+    // 'session' => [
+    //     'name' => $appSnakeName . '_session',
+    //     'flash_name' => $appSnakeName . '_flash',
+    //     'secure' => $boolean($_ENV['SESSION_SECURE'] ?? true),
+    //     'httponly' => $boolean($_ENV['SESSION_HTTP_ONLY'] ?? true),
+    //     'samesite' => $_ENV['SESSION_SAME_SITE'] ?? 'lax',
+    // ],
 ];
