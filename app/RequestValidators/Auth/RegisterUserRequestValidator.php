@@ -5,16 +5,15 @@ declare(strict_types=1);
 namespace JR\ChefsDiary\RequestValidators\Auth;
 
 use Valitron\Validator;
-use JR\ChefsDiary\Entity\User;
 use JR\ChefsDiary\Enums\HttpStatusCodeEnum;
 use JR\ChefsDiary\Exception\ValidationException;
-use JR\ChefsDiary\RequestValidators\RequestValidatorInterface;
 use JR\ChefsDiary\Services\Contract\EntityManagerServiceInterface;
 
-class RegisterUserRequestValidation implements RequestValidatorInterface
+class RegisterUserRequestValidator implements RequestValidatorInterface
 {
-    public function __construct(private readonly EntityManagerServiceInterface $entityManagerService)
-    {
+    public function __construct(
+        private readonly EntityManagerServiceInterface $entityManagerService
+    ) {
     }
 
     public function validate(array $data): array
