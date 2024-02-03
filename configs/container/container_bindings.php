@@ -20,6 +20,7 @@ use JR\ChefsDiary\Shared\RouteEntityBindingStrategy;
 use JR\ChefsDiary\Services\Implementation\AuthService;
 use JR\ChefsDiary\Services\Contract\AuthServiceInterface;
 use JR\ChefsDiary\Services\Implementation\EntityManagerService;
+use JR\ChefsDiary\Services\Contract\EntityManagerServiceInterface;
 
 return [
     App::class => function (ContainerInterface $container) {
@@ -73,7 +74,14 @@ return [
     ResponseFactoryInterface::class => fn(App $app) => $app->getResponseFactory(),
     AuthServiceInterface::class => fn(ContainerInterface $container) => $container->get(
         AuthService::class
-    )
+    ),
+    EntityManagerServiceInterface::class => fn(EntityManagerInterface $entityManager) => new EntityManagerService(
+        $entityManager
+    ),
+
+
+
+
     // Config::class => create(Config::class)->constructor(require CONFIG_PATH . '/app.php'),
     // EntityManager::class => fn(Config $config) => EntityManager::create(
     //     $config->get('doctrine.connection'),
