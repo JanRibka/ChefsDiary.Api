@@ -6,7 +6,6 @@ namespace JR\ChefsDiary\Services\Implementation;
 
 use JR\ChefsDiary\Shared\UserInterface;
 use JR\ChefsDiary\DataObjects\RegisterUserData;
-use JR\ChefsDiary\Services\Contracts\AuthInterface;
 use JR\ChefsDiary\Services\Contract\AuthServiceInterface;
 use JR\ChefsDiary\Repositories\Contract\UserRepositoryInterface;
 

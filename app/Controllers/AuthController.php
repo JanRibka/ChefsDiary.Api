@@ -23,6 +23,8 @@ class AuthController
 
         $user->setEmail($data["email"]);
         $user->setPassword($data["password"]);
+
+        return $response;
     }
 
     // public function login(Request $request, Response $response): Response

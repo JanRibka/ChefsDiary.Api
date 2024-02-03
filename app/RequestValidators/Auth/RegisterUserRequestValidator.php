@@ -8,12 +8,12 @@ use Valitron\Validator;
 use JR\ChefsDiary\Entity\User;
 use JR\ChefsDiary\Enums\HttpStatusCodeEnum;
 use JR\ChefsDiary\Exception\ValidationException;
-use JR\ChefsDiary\Services\Contracts\IEntityManagerService;
 use JR\ChefsDiary\RequestValidators\RequestValidatorInterface;
+use JR\ChefsDiary\Services\Contract\EntityManagerServiceInterface;
 
-class RegisterUserRequestValidation implements IRequestValidator
+class RegisterUserRequestValidation implements RequestValidatorInterface
 {
-    public function __construct(private readonly IEntityManagerService $entityManagerService)
+    public function __construct(private readonly EntityManagerServiceInterface $entityManagerService)
     {
     }
 
@@ -24,7 +24,7 @@ class RegisterUserRequestValidation implements IRequestValidator
         $v->rule('required', ['Email', 'Password', 'ConfirmPassword'])->message('Email and password is required');
 
         if (!$v->validate()) {
-            throw new ValidationException($v->message(), HttpStatusCodeEnum::BAD_REQUEST->value());
+            throw new ValidationException("Chyba vole", HttpStatusCodeEnum::BAD_REQUEST->value);
         }
 
         // Validate email address

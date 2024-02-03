@@ -10,7 +10,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Slim\Interfaces\InvocationStrategyInterface;
-use JR\ChefsDiary\Services\Contracts\EntityManagerServiceInterface;
+use JR\ChefsDiary\Services\Contract\EntityManagerServiceInterface;
 
 class RouteEntityBindingStrategy implements InvocationStrategyInterface
 {

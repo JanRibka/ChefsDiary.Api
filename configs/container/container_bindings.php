@@ -21,8 +21,6 @@ use JR\ChefsDiary\Services\Implementation\AuthService;
 use JR\ChefsDiary\Services\Contract\AuthServiceInterface;
 use JR\ChefsDiary\Services\Implementation\EntityManagerService;
 
-// use Psr\Container\ContainerInterface;
-
 return [
     App::class => function (ContainerInterface $container) {
         AppFactory::setContainer($container);
