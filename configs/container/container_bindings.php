@@ -79,10 +79,6 @@ return [
         $entityManager
     ),
 
-
-
-
-    // Config::class => create(Config::class)->constructor(require CONFIG_PATH . '/app.php'),
     // EntityManager::class => fn(Config $config) => EntityManager::create(
     //     $config->get('doctrine.connection'),
     //     ORMSetup::createAttributeMetadataConfiguration(
