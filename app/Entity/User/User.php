@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use JR\ChefsDiary\Shared\Interfaces\UserInterface;
-
+// TODO: Asi místo jména a příjmení bych tam dal Uživatelské jméno, které musí být jediněčné
 #[Entity, Table('Users')]
 class User implements UserInterface
 {
