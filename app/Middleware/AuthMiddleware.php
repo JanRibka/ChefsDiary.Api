@@ -25,6 +25,6 @@ class AuthMiddleware implements MiddlewareInterface
         if ($user = $this->authService->getUser()) {
 
         }
-        // return $this->responseFactory->createResponse()->withStatus(HttpStatusCodeEnum::FOUND->value);
+        return $this->responseFactory->createResponse()->withStatus(HttpStatusCodeEnum::FOUND->value);
     }
 }

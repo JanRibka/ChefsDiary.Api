@@ -5,26 +5,28 @@ declare(strict_types=1);
 namespace JR\ChefsDiary\Controllers;
 
 use JR\ChefsDiary\Entity\User\User;
+use JR\ChefsDiary\Enums\HttpStatusCodeEnum;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use JR\ChefsDiary\RequestValidators\RequestValidatorFactoryInterface;
+use JR\ChefsDiary\RequestValidators\Auth\RegisterUserRequestValidator;
 
 class AuthController
 {
-    public function __construct()
-    {
+    public function __construct(
+        private readonly RequestValidatorFactoryInterface $requestValidatorFactory
+    ) {
     }
 
 
     public function register(Request $request, Response $response): Response
     {
-        $data = $request->getParsedBody();
+        $data = $this->requestValidatorFactory->make(RegisterUserRequestValidator::class)
+            ->validate(
+                $request->getParsedBody()
+            );
 
-        $user = new User();
-
-        $user->setLogin($data["login"]);
-        $user->setPassword($data["password"]);
-        var_dump($user);
-        return $response;
+        return $response->withStatus(HttpStatusCodeEnum::CREATED->value);
     }
 
     // public function login(Request $request, Response $response): Response

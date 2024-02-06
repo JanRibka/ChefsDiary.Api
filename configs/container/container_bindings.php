@@ -19,10 +19,13 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use JR\ChefsDiary\Shared\RouteEntityBindingStrategy;
 use JR\ChefsDiary\Services\Implementation\AuthService;
 use JR\ChefsDiary\Services\Contract\AuthServiceInterface;
+use JR\ChefsDiary\RequestValidators\RequestValidatorFactory;
 use JR\ChefsDiary\Services\Implementation\EntityManagerService;
 use JR\ChefsDiary\Services\Contract\EntityManagerServiceInterface;
+use JR\ChefsDiary\RequestValidators\RequestValidatorFactoryInterface;
 
 return [
+        // Project config
     App::class => function (ContainerInterface $container) {
         AppFactory::setContainer($container);
 
@@ -46,6 +49,12 @@ return [
     Config::class => create(Config::class)->constructor(
         require CONFIG_PATH . '/app.php'
     ),
+    ResponseFactoryInterface::class => fn(App $app) => $app->getResponseFactory(),
+    AuthServiceInterface::class => fn(ContainerInterface $container) => $container->get(
+        AuthService::class
+    ),
+
+        // Database
     EntityManagerInterface::class => function (Config $config) {
         $ormConfig = ORMSetup::createAttributeMetadataConfiguration(
             $config->get('doctrine.entity_dir'),
@@ -71,6 +80,15 @@ return [
             $ormConfig
         );
     },
+
+        // Validations
+    RequestValidatorFactoryInterface::class => fn(ContainerInterface $container) => $container->get(
+        RequestValidatorFactory::class
+    ),
+
+
+
+
     ResponseFactoryInterface::class => fn(App $app) => $app->getResponseFactory(),
     AuthServiceInterface::class => fn(ContainerInterface $container) => $container->get(
         AuthService::class
