@@ -21,6 +21,8 @@ class UserInfo implements UserInfoInterface
 
     private string $Email;
 
+    private string $Phone;
+
     private DateTime $CreatedAt;
 
 
