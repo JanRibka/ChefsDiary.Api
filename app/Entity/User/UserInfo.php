@@ -6,9 +6,12 @@ namespace JR\ChefsDiary\Entity\User;
 
 use DateTime;
 use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\Table;
 use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
 
+#[Entity, Table('UserInfo')]
 class UserInfo implements UserInfoInterface
 {
     #[Id, Column(options: ['unsigned' => true]), GeneratedValue]
@@ -32,4 +35,8 @@ class UserInfo implements UserInfoInterface
         return $this->IdUserInfo;
     }
 
+    public function getIdUser(): int
+    {
+        return $this->IdUser;
+    }
 }

@@ -82,12 +82,10 @@ return [
         );
     },
 
-        // Validations
+        // Factories
     RequestValidatorFactoryInterface::class => fn(ContainerInterface $container) => $container->get(
         RequestValidatorFactory::class
     ),
-
-        // Factories
     ResponseFactoryInterface::class => fn(App $app) => $app->getResponseFactory(),
 
         // Services
