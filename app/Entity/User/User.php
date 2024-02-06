@@ -7,9 +7,8 @@ use Doctrine\ORM\Mapping\Table;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
-use JR\ChefsDiary\Shared\Interfaces\UserInterface;
 
-#[Entity, Table('Users')]
+#[Entity, Table('User')]
 class User implements UserInterface
 {
 

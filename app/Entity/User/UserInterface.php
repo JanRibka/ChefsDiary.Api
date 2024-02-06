@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace JR\ChefsDiary\Shared\Interfaces;
+namespace JR\ChefsDiary\Entity\User;
 
 interface UserInterface
 {
