@@ -1,12 +1,13 @@
 <?php
 
-namespace JR\ChefsDiary\Entity\User;
+namespace JR\ChefsDiary\Entity\User\Implementation;
 
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Table;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
+use JR\ChefsDiary\Entity\User\Contract\UserInterface;
 
 #[Entity, Table('User')]
 class User implements UserInterface
