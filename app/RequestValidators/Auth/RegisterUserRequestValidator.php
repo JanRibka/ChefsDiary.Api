@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace JR\ChefsDiary\RequestValidators\Auth;
 
 use Valitron\Validator;
+use JR\ChefsDiary\Entity\User\User;
 use JR\ChefsDiary\Enums\HttpStatusCodeEnum;
 use JR\ChefsDiary\Exception\ValidationException;
 use JR\ChefsDiary\Services\Contract\EntityManagerServiceInterface;
@@ -18,37 +19,41 @@ class RegisterUserRequestValidator implements RequestValidatorInterface
 
     public function validate(array $data): array
     {
-        // Validate email and password required
-        $v = new Validator();
-        $v->rule('required', ['Email', 'Password', 'ConfirmPassword'])->message('Email and password is required');
+        $v = new Validator($data);
 
-        if (!$v->validate()) {
-            throw new ValidationException("Chyba vole", HttpStatusCodeEnum::BAD_REQUEST->value);
+        // Validate mandatory fields
+        $v->rule('required', 'login')->message('Email je povinný');
+
+        if (!!$data['login']) {
+            $v->rule('email', 'login')->message('Email není platná emailová adresa');
         }
 
-        // Validate email address
-        // $v = new Validator();
-        // $v->rule('email', 'Email')->message("Email is not a valid email address");
+        $v->rule('required', 'password')->message('Heslo je povinné');
+        $v->rule('required', 'confirmPassword')->message('Heslo pro potvrzení je povinné');
+        $v->rule('required', 'agreement')->message('Se zpracováním osobních údajů je třeba souhlasit');
 
-        // if (!$v->validate()) {
-        //     throw new ValidationException($v->message(), HttpStatusCodeEnum::BAD_REQUEST);
-        // }
+        if (!$v->validate()) {
+            throw new ValidationException($v->errors(), HttpStatusCodeEnum::BAD_REQUEST->value);
+        }
 
-        // // Validate password and confirmPassword are not equal 
-        // $v = new Validator();
-        // $v->rule('equals', 'password', 'ConfirmPassword')->message('Password and ConfirmPassword are not equal');
+        // Validate password equals
+        $v->rule('equals', 'password', 'confirmPassword')->message('Hesla se neshodují');
 
-        // if (!$v->validate()) {
-        //     throw new ValidationException($v->message(), HttpStatusCodeEnum::BAD_REQUEST);
-        // }
+        if (!$v->validate()) {
+            throw new ValidationException($v->errors(), HttpStatusCodeEnum::BAD_REQUEST->value);
+        }
 
-        // // Validate user already exists
-        // $v = new Validator();        
-        // $v->rule(fn($field, $value, $params, $field) => !$this->entityManagerService(User::class))->message('User with the given email address already exists');
+        // Validate user exists
+        $v->rule(
+            fn($field, $value, $params, $fields) => !$this->entityManagerService->getRepository(User::class)->count(
+                ['Login' => $value]
+            ),
+            'login'
+        )->message('Uživatel s daným emailem již existuje');
 
-        // if (!$v->validate()) {
-        //     throw new ValidationException($v->errors(), $v->message, HttpStatusCodeEnum::BAD_REQUEST);
-        // }
+        if (!$v->validate()) {
+            throw new ValidationException($v->errors(), HttpStatusCodeEnum::CONFLICT->value);
+        }
 
         return $data;
     }

@@ -7,7 +7,7 @@ namespace JR\ChefsDiary\DataObjects;
 class RegisterUserData
 {
     public function __construct(
-        public readonly string $email,
+        public readonly string $login,
         public readonly string $password
     ) {
     }

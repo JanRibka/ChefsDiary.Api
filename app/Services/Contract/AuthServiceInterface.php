@@ -10,6 +10,6 @@ use JR\ChefsDiary\Shared\Interfaces\UserInterface;
 
 interface AuthServiceInterface
 {
-    public function getUser(): ?UserInterface;
+    // public function getUser(): ?UserInterface;
     public function register(RegisterUserData $data): UserInterface;
 }

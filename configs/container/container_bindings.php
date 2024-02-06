@@ -9,7 +9,6 @@ use Doctrine\ORM\ORMSetup;
 use Slim\Factory\AppFactory;
 use Doctrine\ORM\EntityManager;
 use Doctrine\DBAL\DriverManager;
-use JR\ChefsDiary\Filters\UserFilter;
 use Psr\Container\ContainerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use DoctrineExtensions\Query\Mysql\Year;
@@ -20,7 +19,9 @@ use JR\ChefsDiary\Shared\RouteEntityBindingStrategy;
 use JR\ChefsDiary\Services\Implementation\AuthService;
 use JR\ChefsDiary\Services\Contract\AuthServiceInterface;
 use JR\ChefsDiary\RequestValidators\RequestValidatorFactory;
+use JR\ChefsDiary\Repositories\Implementation\UserRepository;
 use JR\ChefsDiary\Services\Implementation\EntityManagerService;
+use JR\ChefsDiary\Repositories\Contract\UserRepositoryInterface;
 use JR\ChefsDiary\Services\Contract\EntityManagerServiceInterface;
 use JR\ChefsDiary\RequestValidators\RequestValidatorFactoryInterface;
 
@@ -86,10 +87,10 @@ return [
         RequestValidatorFactory::class
     ),
 
-
-
-
+        // Factories
     ResponseFactoryInterface::class => fn(App $app) => $app->getResponseFactory(),
+
+        // Services
     AuthServiceInterface::class => fn(ContainerInterface $container) => $container->get(
         AuthService::class
     ),
@@ -97,35 +98,8 @@ return [
         $entityManager
     ),
 
-    // EntityManager::class => fn(Config $config) => EntityManager::create(
-    //     $config->get('doctrine.connection'),
-    //     ORMSetup::createAttributeMetadataConfiguration(
-    //         $config->get('doctrine.entity_dir'),
-    //         $config->get('doctrine.dev_mode')
-    //     )
-    // ),
-    // TODO: Asi jen pro views
-    // Twig::class                   => function (Config $config, ContainerInterface $container) {
-    //     $twig = Twig::create(VIEW_PATH, [
-    //         'cache'       => STORAGE_PATH . '/cache/templates',
-    //         'auto_reload' => AppEnvironment::isDevelopment($config->get('app_environment')),
-    //     ]);
-
-    //     $twig->addExtension(new IntlExtension());
-    //     $twig->addExtension(new EntryFilesTwigExtension($container));
-    //     $twig->addExtension(new AssetExtension($container->get('webpack_encore.packages')));
-
-    //     return $twig;
-    // },
-
-    // /**
-    //  * The following two bindings are needed for EntryFilesTwigExtension & AssetExtension to work for Twig
-    //  */
-    // 'webpack_encore.packages' => fn() => new Packages(
-    //     new Package(new JsonManifestVersionStrategy(BUILD_PATH . '/manifest.json'))
-    // ),
-    // 'webpack_encore.tag_renderer' => fn(ContainerInterface $container) => new TagRenderer(
-    //     new EntrypointLookup(BUILD_PATH . '/entrypoints.json'),
-    //     $container->get('webpack_encore.packages')
-    // ),
+        // Repositories
+    UserRepositoryInterface::class => fn(ContainerInterface $container) => $container->get(
+        UserRepository::class
+    ),
 ];

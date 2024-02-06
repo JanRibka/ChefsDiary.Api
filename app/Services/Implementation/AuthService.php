@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace JR\ChefsDiary\Services\Implementation;
 
-use JR\ChefsDiary\Shared\UserInterface;
 use JR\ChefsDiary\DataObjects\RegisterUserData;
+use JR\ChefsDiary\Shared\Interfaces\UserInterface;
 use JR\ChefsDiary\Services\Contract\AuthServiceInterface;
 use JR\ChefsDiary\Repositories\Contract\UserRepositoryInterface;
 
