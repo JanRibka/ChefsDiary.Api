@@ -59,7 +59,7 @@ class RouteEntityBindingStrategy implements InvocationStrategyInterface
                     }
 
                     $entity = $this->entityManagerService->find($typeName, $entityId);
-
+                    // TODO: Tady bude hodnota z Enumu
                     if (!$entity) {
                         return $this->responseFactory->createResponse(404, 'Resource Not Found');
                     }
