@@ -12,11 +12,14 @@ use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\OneToOne;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\GeneratedValue;
+use JR\ChefsDiary\Entity\Traits\HasTimestamp;
 use JR\ChefsDiary\Entity\User\Contract\UserInfoInterface;
 
 #[Entity, Table('UserInfo')]
 class UserInfo implements UserInfoInterface
 {
+    use HasTimestamp;
+
     #[Id, Column(options: ['unsigned' => true]), GeneratedValue]
     private int $IdUserInfo;
 
@@ -25,17 +28,13 @@ class UserInfo implements UserInfoInterface
     private int $IdUser;
 
     #[Column(length: 50, nullable: true)]
-    private string $UserName;
+    private string|null $UserName;
 
     #[Column(length: 50, nullable: true)]
-    private string $Email;
+    private string|null $Email;
 
     #[Column(length: 50, nullable: true)]
-    private string $Phone;
-
-    //TODO: Bude v jinem modelu
-    #[Column]
-    private DateTime $CreatedAt;
+    private string|null $Phone;
 
 
     // Getters
@@ -47,5 +46,50 @@ class UserInfo implements UserInfoInterface
     public function getIdUser(): int
     {
         return $this->IdUser;
+    }
+
+    public function getUserName(): string|null
+    {
+        return $this->UserName;
+    }
+
+    public function getUserEmail(): string|null
+    {
+        return $this->Email;
+    }
+
+    public function getUserPhone(): string|null
+    {
+        return $this->Phone;
+    }
+
+
+    // Setters
+    public function setIdUser(int $idUser): UserInfo
+    {
+        $this->IdUser = $idUser;
+
+        return $this;
+    }
+
+    public function setUserName(string $userName): UserInfo
+    {
+        $this->UserName = $userName;
+
+        return $this;
+    }
+
+    public function setEmail(string $email): UserInfo
+    {
+        $this->Email = $email;
+
+        return $this;
+    }
+
+    public function setPhone(string $phone): UserInfo
+    {
+        $this->Phone = $phone;
+
+        return $this;
     }
 }
