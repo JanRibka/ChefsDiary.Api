@@ -15,7 +15,7 @@ interface EntityManagerServiceInterface
 {
     public function __call(string $name, array $arguments);
 
-    public function sync($entity = null): void;
+    public function sync($entity = null): int;
 
     public function delete($entity, bool $sync = false): void;
 

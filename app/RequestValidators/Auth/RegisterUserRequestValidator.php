@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace JR\ChefsDiary\RequestValidators\Auth;
 
 use Valitron\Validator;
-use JR\ChefsDiary\Entity\User\User;
 use JR\ChefsDiary\Enums\HttpStatusCodeEnum;
 use JR\ChefsDiary\Exception\ValidationException;
+use JR\ChefsDiary\Entity\User\Implementation\User;
 use JR\ChefsDiary\Services\Contract\EntityManagerServiceInterface;
 
 class RegisterUserRequestValidator implements RequestValidatorInterface

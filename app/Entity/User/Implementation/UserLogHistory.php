@@ -54,4 +54,24 @@ class UserLogHistory implements UserLogHistoryInterface
 
 
     // Setters
+    public function setIdUser(int $idUser): UserLogHistory
+    {
+        $this->IdUser = $idUser;
+
+        return $this;
+    }
+
+    public function setLoginAttemptDate(DateTime $loginAttemptDate): UserLogHistory
+    {
+        $this->LoginAttemptDate = $loginAttemptDate;
+
+        return $this;
+    }
+
+    public function setLoginSuccessful(bool $loginSuccessful): UserLogHistory
+    {
+        $this->LoginSuccessful = $loginSuccessful;
+
+        return $this;
+    }
 }
