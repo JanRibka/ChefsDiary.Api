@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace JR\ChefsDiary\Repositories\Implementation;
 
-use JR\ChefsDiary\Entity\User\User;
 use JR\ChefsDiary\DataObjects\RegisterUserData;
-use JR\ChefsDiary\Shared\Interfaces\UserInterface;
+use JR\ChefsDiary\Entity\User\Implementation\User;
+use JR\ChefsDiary\Entity\User\Contract\UserInterface;
 use JR\ChefsDiary\Services\Implementation\HashService;
 use JR\ChefsDiary\Repositories\Contract\UserRepositoryInterface;
 use JR\ChefsDiary\Services\Contract\EntityManagerServiceInterface;

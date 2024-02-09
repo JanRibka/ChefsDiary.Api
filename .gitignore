@@ -3,3 +3,6 @@
 
 # Misc
 .env
+
+#Migrations
+/migrations
