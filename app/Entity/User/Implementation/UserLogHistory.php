@@ -20,26 +20,21 @@ class UserLogHistory implements UserLogHistoryInterface
     #[Id, Column(options: ['unsigned' => true]), GeneratedValue]
     private int $IdUserLogHistory;
 
-    #[ManyToOne(inversedBy: 'IdUser', targetEntity: User::class)]
-    #[JoinColumn(name: 'IdUser', referencedColumnName: 'IdUser', options: ['unsigned' => true], nullable: false)]
-    private int $IdUser;
-
     #[Column]
     private DateTime $LoginAttemptDate;
 
     #[Column]
     private bool $LoginSuccessful;
 
+    #[ManyToOne(inversedBy: 'IdUser', targetEntity: User::class)]
+    #[JoinColumn(name: 'IdUser', referencedColumnName: 'IdUser', nullable: false)]
+    private User $User;
+
 
     // Getters
     public function getId(): int
     {
         return $this->IdUserLogHistory;
-    }
-
-    public function getIdUser(): int
-    {
-        return (int) $this->IdUser;
     }
 
     public function getLoginAttemptDate(): DateTime
@@ -54,13 +49,6 @@ class UserLogHistory implements UserLogHistoryInterface
 
 
     // Setters
-    public function setIdUser(int $idUser): UserLogHistory
-    {
-        $this->IdUser = $idUser;
-
-        return $this;
-    }
-
     public function setLoginAttemptDate(DateTime $loginAttemptDate): UserLogHistory
     {
         $this->LoginAttemptDate = $loginAttemptDate;
@@ -71,6 +59,13 @@ class UserLogHistory implements UserLogHistoryInterface
     public function setLoginSuccessful(bool $loginSuccessful): UserLogHistory
     {
         $this->LoginSuccessful = $loginSuccessful;
+
+        return $this;
+    }
+
+    public function setUser(User $user): UserLogHistory
+    {
+        $this->User = $user;
 
         return $this;
     }
