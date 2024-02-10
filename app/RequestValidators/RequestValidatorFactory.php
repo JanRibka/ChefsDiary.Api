@@ -6,7 +6,7 @@ namespace JR\ChefsDiary\RequestValidators;
 
 use RuntimeException;
 use Psr\Container\ContainerInterface;
-use JR\ChefsDiary\RequestValidators\Auth\RequestValidatorInterface;
+use JR\ChefsDiary\RequestValidators\RequestValidatorInterface;
 
 class RequestValidatorFactory implements RequestValidatorFactoryInterface
 {

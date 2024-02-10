@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace JR\ChefsDiary\RequestValidators\Auth;
+namespace JR\ChefsDiary\RequestValidators;
 
 interface RequestValidatorInterface
 {
