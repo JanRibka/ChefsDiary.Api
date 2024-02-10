@@ -3,7 +3,6 @@
 namespace JR\ChefsDiary\Entity\User\Implementation;
 
 use Doctrine\ORM\Mapping\Id;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Table;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
@@ -16,7 +15,7 @@ class User implements UserInterface
 
     #[Id]
     #[GeneratedValue(strategy: 'AUTO')]
-    #[Column(options: ['unsigned' => true])]
+    #[Column(options: ['unsigned' => true], nullable: false)]
     private int $IdUser;
 
     #[Column(length: 50, nullable: false)]

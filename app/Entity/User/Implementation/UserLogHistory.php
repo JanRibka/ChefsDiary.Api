@@ -17,7 +17,9 @@ use JR\ChefsDiary\Entity\User\Contract\UserLogHistoryInterface;
 #[Entity, Table('UserLogHistory')]
 class UserLogHistory implements UserLogHistoryInterface
 {
-    #[Id, Column(options: ['unsigned' => true]), GeneratedValue]
+    #[Id]
+    #[GeneratedValue(strategy: "AUTO")]
+    #[Column(options: ['unsigned' => true], nullable: false)]
     private int $IdUserLogHistory;
 
     #[Column]

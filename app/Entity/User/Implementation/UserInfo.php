@@ -22,7 +22,7 @@ class UserInfo implements UserInfoInterface
 
     #[Id]
     #[GeneratedValue(strategy: "AUTO")]
-    #[Column(options: ['unsigned' => true])]
+    #[Column(options: ['unsigned' => true], nullable: false)]
     private int $IdUserInfo;
 
     #[Column(length: 50, nullable: true)]
