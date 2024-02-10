@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace JR\ChefsDiary\Entity\User\Implementation;
 
-use DateTime;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Table;
 use Doctrine\ORM\Mapping\Column;
@@ -13,6 +12,7 @@ use Doctrine\ORM\Mapping\OneToOne;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use JR\ChefsDiary\Entity\Traits\HasTimestamp;
+
 use JR\ChefsDiary\Entity\User\Contract\UserInfoInterface;
 
 #[Entity, Table('UserInfo')]
@@ -20,12 +20,10 @@ class UserInfo implements UserInfoInterface
 {
     use HasTimestamp;
 
-    #[Id, Column(options: ['unsigned' => true]), GeneratedValue]
+    #[Id]
+    #[GeneratedValue(strategy: "AUTO")]
+    #[Column(options: ['unsigned' => true])]
     private int $IdUserInfo;
-
-    #[OneToOne(mappedBy: 'IdUser', targetEntity: User::class)]
-    #[JoinColumn(name: 'IdUser', referencedColumnName: 'IdUser', options: ['unsigned' => true], nullable: false)]
-    private int $IdUser;
 
     #[Column(length: 50, nullable: true)]
     private string|null $UserName;
@@ -36,16 +34,15 @@ class UserInfo implements UserInfoInterface
     #[Column(length: 50, nullable: true)]
     private string|null $Phone;
 
+    #[OneToOne(targetEntity: User::class)]
+    #[JoinColumn(name: 'IdUser', referencedColumnName: 'IdUser')]
+    private User $User;
+
 
     // Getters
     public function getId(): int
     {
         return $this->IdUserInfo;
-    }
-
-    public function getIdUser(): int
-    {
-        return $this->IdUser;
     }
 
     public function getUserName(): string|null
@@ -65,13 +62,6 @@ class UserInfo implements UserInfoInterface
 
 
     // Setters
-    public function setIdUser(int $idUser): UserInfo
-    {
-        $this->IdUser = $idUser;
-
-        return $this;
-    }
-
     public function setUserName(string $userName): UserInfo
     {
         $this->UserName = $userName;
@@ -89,6 +79,13 @@ class UserInfo implements UserInfoInterface
     public function setPhone(string $phone): UserInfo
     {
         $this->Phone = $phone;
+
+        return $this;
+    }
+
+    public function setUser(User $user): UserInfo
+    {
+        $this->User = $user;
 
         return $this;
     }

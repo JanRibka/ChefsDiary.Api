@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace JR\ChefsDiary\Repositories\Implementation;
 
 use DateTime;
-use Exception;
-use Doctrine\ORM\EntityManager;
 use JR\ChefsDiary\DataObjects\RegisterUserData;
 use JR\ChefsDiary\Entity\User\Implementation\User;
 use JR\ChefsDiary\Entity\User\Contract\UserInterface;
@@ -41,10 +39,11 @@ class UserRepository implements UserRepositoryInterface
             $idUser = $this->entityManagerService->sync($user);
 
             // Insert userInfo
+            $user = $this->entityManagerService->find(User::class, $idUser);
             $userInfo = new UserInfo();
 
             $userInfo->setCreatedAt(new DateTime());
-            $userInfo->setIdUser($idUser);
+            $userInfo->setUser($user);
 
             $this->entityManagerService->sync($userInfo);
         });
