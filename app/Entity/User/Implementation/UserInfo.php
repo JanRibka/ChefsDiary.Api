@@ -35,7 +35,7 @@ class UserInfo implements UserInfoInterface
     private string|null $Phone;
 
     #[OneToOne(targetEntity: User::class)]
-    #[JoinColumn(name: 'IdUser', referencedColumnName: 'IdUser')]
+    #[JoinColumn(name: 'IdUser', referencedColumnName: 'IdUser', nullable: false)]
     private User $User;
 
 
