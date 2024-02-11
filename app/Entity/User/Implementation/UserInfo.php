@@ -4,13 +4,8 @@ declare(strict_types=1);
 
 namespace JR\ChefsDiary\Entity\User\Implementation;
 
-use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Table;
-use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
-use Doctrine\ORM\Mapping\OneToOne;
-use Doctrine\ORM\Mapping\JoinColumn;
-use Doctrine\ORM\Mapping\GeneratedValue;
 use JR\ChefsDiary\Entity\Traits\HasTimestamp;
 
 use JR\ChefsDiary\Entity\User\Contract\UserInfoInterface;
@@ -20,23 +15,24 @@ class UserInfo implements UserInfoInterface
 {
     use HasTimestamp;
 
-    #[Id]
-    #[GeneratedValue(strategy: "AUTO")]
-    #[Column(options: ['unsigned' => true], nullable: false)]
+    // #[Id]
+    // #[GeneratedValue(strategy: "AUTO")]
+    // #[Column(options: ['unsigned' => true], nullable: false)]
     private int $IdUserInfo;
 
-    #[Column(length: 50, nullable: true)]
+    // #[OneToOne(targetEntity: User::class)]
+    // #[JoinColumn(name: 'IdUser', referencedColumnName: 'IdUser', nullable: false)]
+    private int $User;
+
+    // #[Column(length: 50, nullable: true)]
     private string|null $UserName;
 
-    #[Column(length: 50, nullable: true)]
+    // #[Column(length: 50, nullable: true)]
     private string|null $Email;
 
-    #[Column(length: 50, nullable: true)]
+    // #[Column(length: 50, nullable: true)]
     private string|null $Phone;
 
-    #[OneToOne(targetEntity: User::class)]
-    #[JoinColumn(name: 'IdUser', referencedColumnName: 'IdUser', nullable: false)]
-    private User $User;
 
 
     // Getters
@@ -62,6 +58,13 @@ class UserInfo implements UserInfoInterface
 
 
     // Setters
+    public function setUser(int $user): UserInfo
+    {
+        $this->User = $user;
+
+        return $this;
+    }
+
     public function setUserName(string $userName): UserInfo
     {
         $this->UserName = $userName;
@@ -79,13 +82,6 @@ class UserInfo implements UserInfoInterface
     public function setPhone(string $phone): UserInfo
     {
         $this->Phone = $phone;
-
-        return $this;
-    }
-
-    public function setUser(User $user): UserInfo
-    {
-        $this->User = $user;
 
         return $this;
     }
