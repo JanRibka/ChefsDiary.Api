@@ -8,6 +8,7 @@ use JR\ChefsDiary\Middleware\AuthMiddleware;
 use JR\ChefsDiary\Controllers\AuthController;
 
 return function (App $app) {
+    #region Authentication
     $app->group('/auth', function (RouteCollectorProxy $auth) {
         $auth->post('/logout', [AuthController::class, 'logout']);
     })->add(AuthMiddleware::class);
@@ -16,4 +17,5 @@ return function (App $app) {
         $auth->post('/register', [AuthController::class, 'register']);
         $auth->post('/login', [AuthController::class, 'login']);
     });
+    #endregion
 };

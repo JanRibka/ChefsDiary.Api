@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace JR\ChefsDiary\Services\Implementation;
 
+use JR\ChefsDiary\Enums\AuthAttemptStatusEnum;
 use JR\ChefsDiary\DataObjects\RegisterUserData;
 use JR\ChefsDiary\Entity\User\Contract\UserInterface;
 use JR\ChefsDiary\Services\Contract\AuthServiceInterface;
@@ -21,5 +22,10 @@ class AuthService implements AuthServiceInterface
         $user = $this->userRepository->createUser($data);
 
         return $user;
+    }
+
+    public function attemptLogin(array $credentials): AuthAttemptStatusEnum
+    {
+        return AuthAttemptStatusEnum::SUCCESS;
     }
 }

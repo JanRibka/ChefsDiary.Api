@@ -19,7 +19,7 @@ class UserLoginRequestValidator implements RequestValidatorInterface
 
     public function validate(array $data): array
     {
-        $v = new Validator();
+        $v = new Validator($data);
 
         // Validate mandatory fields
         $v->rule('required', 'login')->message('Email je povinný');
