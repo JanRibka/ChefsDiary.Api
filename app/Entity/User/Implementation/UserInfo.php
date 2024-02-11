@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace JR\ChefsDiary\Entity\User\Implementation;
 
+use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Table;
+use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\GeneratedValue;
 use JR\ChefsDiary\Entity\Traits\HasTimestamp;
 
 use JR\ChefsDiary\Entity\User\Contract\UserInfoInterface;
@@ -15,21 +18,26 @@ class UserInfo implements UserInfoInterface
 {
     use HasTimestamp;
 
-    // #[Id]
-    // #[GeneratedValue(strategy: "AUTO")]
+    #[Id]
+    #[GeneratedValue]
+    #[Column]
     // #[Column(options: ['unsigned' => true], nullable: false)]
     private int $IdUserInfo;
 
+    #[Column]
     // #[OneToOne(targetEntity: User::class)]
     // #[JoinColumn(name: 'IdUser', referencedColumnName: 'IdUser', nullable: false)]
-    private int $User;
+    private int $IdUser;
 
+    #[Column]
     // #[Column(length: 50, nullable: true)]
     private string|null $UserName;
 
+    #[Column]
     // #[Column(length: 50, nullable: true)]
     private string|null $Email;
 
+    #[Column]
     // #[Column(length: 50, nullable: true)]
     private string|null $Phone;
 
@@ -60,7 +68,7 @@ class UserInfo implements UserInfoInterface
     // Setters
     public function setUser(int $user): UserInfo
     {
-        $this->User = $user;
+        $this->IdUser = $user;
 
         return $this;
     }

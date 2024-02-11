@@ -45,11 +45,11 @@ class UserRepository implements UserRepositoryInterface
             $idUser = $this->entityManagerService->sync($user);
 
             // Insert userInfo
-            $user = $this->entityManagerService->find(User::class, $idUser);
+            // $user = $this->entityManagerService->find(User::class, $idUser);
             $userInfo = new UserInfo();
 
             $userInfo->setCreatedAt(new DateTime());
-            $userInfo->setUser($user);
+            $userInfo->setUser($idUser);
 
             $this->entityManagerService->sync($userInfo);
         });
