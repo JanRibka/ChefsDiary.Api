@@ -10,6 +10,7 @@ use JR\ChefsDiary\Entity\User\Implementation\User;
 use JR\ChefsDiary\Entity\User\Contract\UserInterface;
 use JR\ChefsDiary\Entity\User\Implementation\UserInfo;
 use JR\ChefsDiary\Services\Implementation\HashService;
+use JR\ChefsDiary\Entity\User\Implementation\UserLogHistory;
 use JR\ChefsDiary\Repositories\Contract\UserRepositoryInterface;
 use JR\ChefsDiary\Services\Contract\EntityManagerServiceInterface;
 
@@ -25,6 +26,11 @@ class UserRepository implements UserRepositoryInterface
     public function getById(int $userId): ?UserInterface
     {
         return $this->entityManagerService->find(User::class, $userId);
+    }
+
+    public function getByLogin(string $login): ?UserInterface
+    {
+        return $this->entityManagerService->getRepository(User::class)->findOneBy(['Login' => $login]);
     }
 
     public function createUser(RegisterUserData $data): UserInterface
@@ -48,8 +54,19 @@ class UserRepository implements UserRepositoryInterface
             $this->entityManagerService->sync($userInfo);
         });
 
-
-
         return $user;
+    }
+
+    public function logLoginAttempt(UserInterface $user, bool $successful): void
+    {
+        $userLogHistory = new UserLogHistory();
+
+        $userLogHistory->setLoginAttemptDate(new DateTime());
+        $userLogHistory->setLoginSuccessful($successful);
+        $userLogHistory->setUser($user);
+
+        if (!!$user) {
+            $this->entityManagerService->sync($userLogHistory);
+        }
     }
 }

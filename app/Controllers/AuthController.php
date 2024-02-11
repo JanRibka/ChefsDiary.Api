@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace JR\ChefsDiary\Controllers;
 
 use JR\ChefsDiary\Enums\HttpStatusCodeEnum;
+use JR\ChefsDiary\Enums\AuthAttemptStatusEnum;
 use JR\ChefsDiary\DataObjects\RegisterUserData;
+use JR\ChefsDiary\Exception\ValidationException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use JR\ChefsDiary\Services\Contract\AuthServiceInterface;
@@ -49,6 +51,17 @@ class AuthController
         $data = $this->requestValidatorFactory->make(UserLoginRequestValidator::class)->validate(
             $request->getParsedBody()
         );
+
+        $status = $this->authService->attemptLogin($data);
+
+        if ($status === AuthAttemptStatusEnum::FAILED) {
+            throw new ValidationException(['unauthorized' => ['Nesprávné uživatelské jméno nebo heslo']], HttpStatusCodeEnum::UNAUTHORIZED->value);
+        }
+
+        // TODO: Dvoufazove overeni
+        // if ($status === AuthAttemptStatus::TWO_FACTOR_AUTH) {
+        //     return $this->responseFormatter->asJson($response, ['two_factor' => true]);
+        // }
 
         return $this->responseFormatter->asJson($response, []);
     }

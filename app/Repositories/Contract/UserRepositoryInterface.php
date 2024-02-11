@@ -11,5 +11,9 @@ interface UserRepositoryInterface
 {
     public function getById(int $userId): ?UserInterface;
 
+    public function getByLogin(string $login): ?UserInterface;
+
     public function createUser(RegisterUserData $data): UserInterface;
+
+    public function logLoginAttempt(UserInterface $user, bool $successful): void;
 }
