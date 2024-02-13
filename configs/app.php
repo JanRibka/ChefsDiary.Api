@@ -12,6 +12,7 @@ $boolean = function (mixed $value) {
     return false;
 };
 $appEnv = $_ENV['APP_ENV'] ?? AppEnvironmentEnum::Production->value;
+$appSnakeName = strtolower(str_replace(' ', '_', $_ENV['APP_NAME']));
 
 return [
     'app_key' => $_ENV['APP_KEY'] ?? '',
@@ -35,11 +36,22 @@ return [
             'password' => $_ENV['DB_PASS'],
         ],
     ],
-    // 'session' => [
-    //     'name' => $appSnakeName . '_session',
-    //     'flash_name' => $appSnakeName . '_flash',
-    //     'secure' => $boolean($_ENV['SESSION_SECURE'] ?? true),
-    //     'httponly' => $boolean($_ENV['SESSION_HTTP_ONLY'] ?? true),
-    //     'samesite' => $_ENV['SESSION_SAME_SITE'] ?? 'lax',
-    // ],
+    'token' => [
+        'exp_access' => time() + $_ENV['TOKEN_EXP_ACCESS'] ?? 0,
+        'exp_refresh' => time() + $_ENV['TOKEN_EXP_REFRESH'] ?? 0,
+        'algorithm' => 'HS256',
+        'key_access' => $_ENV['TOKEN_KEY_ACCESS'],
+        'key_refresh' => $_ENV['TOKEN_KEY_REFRESH']
+    ],
+    'auth_cookie' => [
+        'name' => $appSnakeName . '_refreshToken',
+        'secure' => $boolean($_ENV['AUTH_COOKIE_SECURE'] ?? true),
+        'http_only' => $boolean($_ENV['AUTH_COOKIE_HTTP_ONLY'] ?? true),
+        'same_site' => $_ENV['AUTH_COOKIE_SAME_SITE'] ?? 'lax',
+        'expires' => time() + $_ENV['TOKEN_EXP_REFRESH'] ?? 0,
+        'path' => ''
+
+
+    ]
+
 ];

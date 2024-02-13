@@ -2,11 +2,11 @@
 
 namespace JR\ChefsDiary\Entity\User\Implementation;
 
+use DateTime;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Table;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
-use Doctrine\ORM\Mapping\GeneratedValue;
 use JR\ChefsDiary\Entity\User\Contract\UserInterface;
 
 #[Entity, Table('User')]
@@ -14,18 +14,23 @@ class User implements UserInterface
 {
 
     #[Id]
-    #[GeneratedValue]
     #[Column]
-    //#[Column(options: ['unsigned' => true], nullable: false)]
     private int $IdUser;
 
     #[Column]
-    //#[Column(length: 50, nullable: false)]
     private string $Login;
 
     #[Column]
-    //#[Column(length: 255, nullable: false)]
     private string $Password;
+
+    #[Column]
+    private string $RefreshToken;
+
+    #[Column]
+    private bool $IsDisabled;
+
+    #[Column]
+    private DateTime $LoginRestrictedUntil;
 
 
     // Getters
@@ -44,6 +49,22 @@ class User implements UserInterface
         return $this->Password;
     }
 
+    public function getRefreshToken(): string
+    {
+        return $this->RefreshToken;
+    }
+
+    public function getIsDisabled(): bool
+    {
+        return $this->IsDisabled;
+    }
+
+    public function getLoginRestrictedUntil(): DateTime
+    {
+        return $this->LoginRestrictedUntil;
+    }
+
+
     // Setters
     public function setLogin(string $login): User
     {
@@ -55,6 +76,27 @@ class User implements UserInterface
     public function setPassword(string $password): User
     {
         $this->Password = $password;
+
+        return $this;
+    }
+
+    public function setRefreshToken(string $refreshToken): User
+    {
+        $this->RefreshToken = $refreshToken;
+
+        return $this;
+    }
+
+    public function setIsDisabled(bool $isDisabled): User
+    {
+        $this->IsDisabled = $isDisabled;
+
+        return $this;
+    }
+
+    public function setLoginRestrictedUntil(DateTime $loginRestrictedUntil): User
+    {
+        $this->LoginRestrictedUntil = $loginRestrictedUntil;
 
         return $this;
     }

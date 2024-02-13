@@ -46,6 +46,13 @@ class AuthController
         return $response->withStatus(HttpStatusCodeEnum::CREATED->value);
     }
 
+    /**
+     * Login user
+     * @param \Psr\Http\Message\ServerRequestInterface $request
+     * @param \Psr\Http\Message\ResponseInterface $response
+     * @return \Psr\Http\Message\ResponseInterface
+     * @author Jan Ribka
+     */
     public function login(Request $request, Response $response): Response
     {
         $data = $this->requestValidatorFactory->make(UserLoginRequestValidator::class)->validate(

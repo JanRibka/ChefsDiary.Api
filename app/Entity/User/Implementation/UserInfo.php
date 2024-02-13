@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace JR\ChefsDiary\Entity\User\Implementation;
 
+use DateTime;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Table;
 use Doctrine\ORM\Mapping\Column;
@@ -19,27 +20,23 @@ class UserInfo implements UserInfoInterface
     use HasTimestamp;
 
     #[Id]
-    #[GeneratedValue]
     #[Column]
-    // #[Column(options: ['unsigned' => true], nullable: false)]
     private int $IdUserInfo;
 
     #[Column]
-    // #[OneToOne(targetEntity: User::class)]
-    // #[JoinColumn(name: 'IdUser', referencedColumnName: 'IdUser', nullable: false)]
     private int $IdUser;
 
     #[Column]
-    // #[Column(length: 50, nullable: true)]
     private string|null $UserName;
 
     #[Column]
-    // #[Column(length: 50, nullable: true)]
     private string|null $Email;
 
     #[Column]
-    // #[Column(length: 50, nullable: true)]
     private string|null $Phone;
+
+    #[Column]
+    private DateTime $CreatedAt;
 
 
 
@@ -62,6 +59,11 @@ class UserInfo implements UserInfoInterface
     public function getUserPhone(): string|null
     {
         return $this->Phone;
+    }
+
+    public function getUserCreatedAt(): DateTime
+    {
+        return $this->CreatedAt;
     }
 
 
@@ -90,6 +92,13 @@ class UserInfo implements UserInfoInterface
     public function setPhone(string $phone): UserInfo
     {
         $this->Phone = $phone;
+
+        return $this;
+    }
+
+    public function setUserCreatedAt(DateTime $createdAt): UserInfo
+    {
+        $this->CreatedAt = $createdAt;
 
         return $this;
     }

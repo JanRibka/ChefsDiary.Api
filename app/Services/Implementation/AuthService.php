@@ -8,12 +8,19 @@ use JR\ChefsDiary\Enums\AuthAttemptStatusEnum;
 use JR\ChefsDiary\DataObjects\RegisterUserData;
 use JR\ChefsDiary\Entity\User\Contract\UserInterface;
 use JR\ChefsDiary\Services\Contract\AuthServiceInterface;
+use JR\ChefsDiary\Services\Contract\TokenServiceInterface;
+use JR\ChefsDiary\Services\Contract\AuthCookieServiceInterface;
 use JR\ChefsDiary\Repositories\Contract\UserRepositoryInterface;
 
 class AuthService implements AuthServiceInterface
 {
+
+    private ?UserInterface $user = null;
+
     public function __construct(
-        private readonly UserRepositoryInterface $userRepository
+        private readonly UserRepositoryInterface $userRepository,
+        private readonly TokenServiceInterface $tokenService,
+        private readonly AuthCookieServiceInterface $authCookieService
     ) {
     }
 
@@ -30,7 +37,11 @@ class AuthService implements AuthServiceInterface
         $password = $credentials['password'];
         $user = $this->userRepository->getByLogin($login);
 
-        if (!$user || !$this->checkCredentials($user, $password)) {
+        if (!$user) {
+            return AuthAttemptStatusEnum::FAILED;
+        }
+
+        if (!$this->checkCredentials($user, $password)) {
             $this->userRepository->logLoginAttempt($user, false);
 
             return AuthAttemptStatusEnum::FAILED;
@@ -56,9 +67,12 @@ class AuthService implements AuthServiceInterface
 
     private function login(UserInterface $user): void
     {
-        // $this->session->regenerate();
-        // $this->session->put('user', $user->getId());
+        $accessToken = $this->tokenService->createAccessToken($user, ["sd"]);
 
-        // $this->user = $user;
+        $refreshToken = $this->tokenService->createRefreshToken($user);
+
+        $this->authCookieService->setCookie($refreshToken);
+
+        $this->user = $user;
     }
 }
