@@ -67,7 +67,7 @@ class AuthService implements AuthServiceInterface
 
     private function login(UserInterface $user): void
     {
-        $accessToken = $this->tokenService->createAccessToken($user, ["sd"]);
+        $accessToken = $this->tokenService->createAccessToken($user, [5050]);
 
         $refreshToken = $this->tokenService->createRefreshToken($user);
 

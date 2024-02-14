@@ -39,8 +39,10 @@ class UserRepository implements UserRepositoryInterface
 
         $this->entityManagerService->transactional(function () use ($user, $data) {
             // Insert user
-            $user->setLogin($data->login);
-            $user->setPassword($this->hashService->hashPassword($data->password));
+            $user
+                ->setLogin($data->login)
+                ->setPassword($this->hashService->hashPassword($data->password))
+                ->setUuid();
 
             $idUser = $this->entityManagerService->sync($user);
 
@@ -48,8 +50,9 @@ class UserRepository implements UserRepositoryInterface
             // $user = $this->entityManagerService->find(User::class, $idUser);
             $userInfo = new UserInfo();
 
-            $userInfo->setCreatedAt(new DateTime());
-            $userInfo->setUser($idUser);
+            $userInfo
+                ->setCreatedAt(new DateTime())
+                ->setUser($idUser);
 
             $this->entityManagerService->sync($userInfo);
         });
@@ -61,9 +64,10 @@ class UserRepository implements UserRepositoryInterface
     {
         $userLogHistory = new UserLogHistory();
 
-        $userLogHistory->setLoginAttemptDate(new DateTime());
-        $userLogHistory->setLoginSuccessful($successful);
-        $userLogHistory->setUser($user);
+        $userLogHistory
+            ->setLoginAttemptDate(new DateTime())
+            ->setLoginSuccessful($successful)
+            ->setUser($user);
 
         if (!!$user) {
             $this->entityManagerService->sync($userLogHistory);

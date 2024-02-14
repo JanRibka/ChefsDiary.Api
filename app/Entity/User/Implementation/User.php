@@ -3,6 +3,7 @@
 namespace JR\ChefsDiary\Entity\User\Implementation;
 
 use DateTime;
+use Ramsey\Uuid\Uuid;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Table;
 use Doctrine\ORM\Mapping\Column;
@@ -16,6 +17,9 @@ class User implements UserInterface
     #[Id]
     #[Column]
     private int $IdUser;
+
+    #[Column]
+    private string $Uuid;
 
     #[Column]
     private string $Login;
@@ -37,6 +41,11 @@ class User implements UserInterface
     public function getId(): int
     {
         return $this->IdUser;
+    }
+
+    public function getUuid(): string
+    {
+        return $this->Uuid;
     }
 
     public function getLogin(): string
@@ -69,6 +78,13 @@ class User implements UserInterface
     public function setLogin(string $login): User
     {
         $this->Login = $login;
+
+        return $this;
+    }
+
+    public function setUuid(): User
+    {
+        $this->Uuid = Uuid::uuid4();
 
         return $this;
     }

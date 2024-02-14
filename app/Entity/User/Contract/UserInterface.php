@@ -7,6 +7,7 @@ namespace JR\ChefsDiary\Entity\User\Contract;
 interface UserInterface
 {
     public function getId(): int;
+    public function getUuid(): string;
     public function getLogin(): string;
     public function getPassword(): string;
 }

@@ -27,7 +27,7 @@ class TokenService implements TokenServiceInterface
     {
         $payload = [
             'userInfo' => [
-                'login' => $user->getLogin(),
+                'uuid' => $user->getUuid(),
                 'role' => $role
             ],
             'exp' => $this->config->expAccess
@@ -43,7 +43,7 @@ class TokenService implements TokenServiceInterface
     public function createRefreshToken(UserInterface $user): string
     {
         $payload = [
-            'login' => $user->getLogin(),
+            'uuid' => $user->getUuid(),
             'exp' => $this->config->expRefresh,
         ];
 
@@ -68,7 +68,7 @@ class TokenService implements TokenServiceInterface
             $key = new Key($this->config->keyAccess, $this->config->algorithm);
             $decoded = JWT::decode($token, $key);
 
-            $request = $request->withAttribute('login', $decoded->userInfo->login);
+            $request = $request->withAttribute('uuid', $decoded->userInfo->uuid);
             $request = $request->withAttribute('role', $decoded->userInfo->role);
 
             return $handler->handle($request);

@@ -33,6 +33,7 @@
     "doctrine/orm": "^2.17",
     "firebase/php-jwt": "^6.10",
     "php-di/php-di": "^7.0",
+    "ramsey/uuid": "^4.7",
     "slim/psr7": "^1.6",
     "slim/slim": "^4.12",
     "slim/twig-view": "^3.3",
