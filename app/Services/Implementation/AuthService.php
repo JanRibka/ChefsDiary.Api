@@ -41,6 +41,10 @@ class AuthService implements AuthServiceInterface
             return AuthAttemptStatusEnum::FAILED;
         }
 
+        if ($user->getIsDisabled()) {
+            return AuthAttemptStatusEnum::DISABLED;
+        }
+
         if (!$this->checkCredentials($user, $password)) {
             $this->userRepository->logLoginAttempt($user, false);
 

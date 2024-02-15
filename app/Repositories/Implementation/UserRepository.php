@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace JR\ChefsDiary\Repositories\Implementation;
 
 use DateTime;
+use JR\ChefsDiary\Enums\UserRoleEnum;
 use JR\ChefsDiary\DataObjects\RegisterUserData;
 use JR\ChefsDiary\Entity\User\Implementation\User;
 use JR\ChefsDiary\Entity\User\Contract\UserInterface;
 use JR\ChefsDiary\Entity\User\Implementation\UserInfo;
 use JR\ChefsDiary\Services\Implementation\HashService;
+use JR\ChefsDiary\Entity\User\Implementation\UserRoles;
+use JR\ChefsDiary\Entity\User\Implementation\UserRoleType;
 use JR\ChefsDiary\Entity\User\Implementation\UserLogHistory;
 use JR\ChefsDiary\Repositories\Contract\UserRepositoryInterface;
 use JR\ChefsDiary\Services\Contract\EntityManagerServiceInterface;
@@ -40,21 +43,34 @@ class UserRepository implements UserRepositoryInterface
         $this->entityManagerService->transactional(function () use ($user, $data) {
             // Insert user
             $user
+                ->setUuid()
                 ->setLogin($data->login)
                 ->setPassword($this->hashService->hashPassword($data->password))
-                ->setUuid();
+                ->setIsDisabled(false);
 
             $idUser = $this->entityManagerService->sync($user);
 
             // Insert userInfo
-            // $user = $this->entityManagerService->find(User::class, $idUser);
+            $user = $this->entityManagerService->find(User::class, $idUser);
             $userInfo = new UserInfo();
 
             $userInfo
-                ->setCreatedAt(new DateTime())
-                ->setUser($idUser);
+                ->setUser($user)
+                ->setUserName($data->userName)
+                ->setEmail($data->login)
+                ->setCreatedAt(new DateTime());
 
             $this->entityManagerService->sync($userInfo);
+
+            // Insert user role
+            $userRoleType = $this->entityManagerService->getRepository(UserRoleType::class)->findOneBy(['Value' => UserRoleEnum::EDITOR->value]);
+            $userRoles = new UserRoles();
+
+            $userRoles
+                ->setUser($user)
+                ->setUserRoleType($userRoleType);
+
+            $this->entityManagerService->sync($userRoles);
         });
 
         return $user;

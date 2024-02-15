@@ -35,4 +35,30 @@ class UserRoles implements UserRolesInterface
     {
         return $this->IdUserRole;
     }
+
+    public function getUser(): User
+    {
+        return $this->User;
+    }
+
+    public function getUserRoleType(): UserRoleType
+    {
+        return $this->UserRoleType;
+    }
+
+
+    // Setters
+    public function setUser(User $user): UserRoles
+    {
+        $this->User = $user;
+
+        return $this;
+    }
+
+    public function setUserRoleType(UserRoleType $userRoleType): UserRoles
+    {
+        $this->UserRoleType = $userRoleType;
+
+        return $this;
+    }
 }

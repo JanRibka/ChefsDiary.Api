@@ -10,4 +10,5 @@ interface UserInterface
     public function getUuid(): string;
     public function getLogin(): string;
     public function getPassword(): string;
+    public function getIsDisabled(): bool;
 }

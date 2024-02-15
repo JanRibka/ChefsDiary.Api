@@ -40,7 +40,11 @@ class AuthController
             );
 
         $this->authService->register(
-            new RegisterUserData($data['login'], $data['password'])
+            new RegisterUserData(
+                $data['login'],
+                $data['password'],
+                $data['userName']
+            )
         );
 
         return $response->withStatus(HttpStatusCodeEnum::CREATED->value);
@@ -63,6 +67,10 @@ class AuthController
 
         if ($status === AuthAttemptStatusEnum::FAILED) {
             throw new ValidationException(['unauthorized' => ['Nesprávné uživatelské jméno nebo heslo']], HttpStatusCodeEnum::UNAUTHORIZED->value);
+        }
+
+        if ($status === AuthAttemptStatusEnum::DISABLED) {
+            throw new ValidationException(['unauthorized' => ['Přístup odepřen']], HttpStatusCodeEnum::FORBIDDEN->value);
         }
 
         // TODO: Dvoufazove overeni

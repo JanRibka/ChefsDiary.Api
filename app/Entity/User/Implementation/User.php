@@ -23,20 +23,20 @@ class User implements UserInterface
     #[Column(length: 36)]
     private string $Uuid;
 
-    #[Column(length: 50)]
+    #[Column(length: 25)]
     private string $Login;
 
-    #[Column(length: 25)]
+    #[Column(length: 75)]
     private string $Password;
 
     #[Column(length: 255, nullable: true)]
-    private string $RefreshToken;
+    private string|null $RefreshToken;
 
-    #[Column(options: ['default' => false])]
-    private bool $IsDisabled;
+    #[Column(options: ['default' => false], nullable: false)]
+    private bool|null $IsDisabled;
 
     #[Column(nullable: true)]
-    private DateTime $LoginRestrictedUntil;
+    private DateTime|null $LoginRestrictedUntil;
 
 
     // Getters
