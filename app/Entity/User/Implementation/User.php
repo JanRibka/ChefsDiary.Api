@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Table;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\GeneratedValue;
 use JR\ChefsDiary\Entity\User\Contract\UserInterface;
 
 #[Entity, Table('User')]
@@ -15,25 +16,26 @@ class User implements UserInterface
 {
 
     #[Id]
-    #[Column]
+    #[GeneratedValue(strategy: "AUTO")]
+    #[Column(options: ['unsigned' => true])]
     private int $IdUser;
 
-    #[Column]
+    #[Column(length: 36)]
     private string $Uuid;
 
-    #[Column]
+    #[Column(length: 50)]
     private string $Login;
 
-    #[Column]
+    #[Column(length: 25)]
     private string $Password;
 
-    #[Column]
+    #[Column(length: 255, nullable: true)]
     private string $RefreshToken;
 
-    #[Column]
+    #[Column(options: ['default' => false])]
     private bool $IsDisabled;
 
-    #[Column]
+    #[Column(nullable: true)]
     private DateTime $LoginRestrictedUntil;
 
 

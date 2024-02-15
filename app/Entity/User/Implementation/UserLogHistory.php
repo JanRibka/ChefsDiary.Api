@@ -19,18 +19,18 @@ class UserLogHistory implements UserLogHistoryInterface
 {
     #[Id]
     #[GeneratedValue(strategy: "AUTO")]
-    #[Column(options: ['unsigned' => true], nullable: false)]
+    #[Column(options: ['unsigned' => true])]
     private int $IdUserLogHistory;
-
-    #[Column]
-    private DateTime $LoginAttemptDate;
-
-    #[Column]
-    private bool $LoginSuccessful;
 
     #[ManyToOne(inversedBy: 'IdUser', targetEntity: User::class)]
     #[JoinColumn(name: 'IdUser', referencedColumnName: 'IdUser', nullable: false)]
     private User $User;
+
+    #[Column(options: ['default' => 'CURRENT_TIMESTAMP'])]
+    private DateTime $LoginAttemptDate;
+
+    #[Column(options: ['default' => false])]
+    private bool $LoginSuccessful;
 
 
     // Getters

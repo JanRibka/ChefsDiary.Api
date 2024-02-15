@@ -9,6 +9,8 @@ use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Table;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\OneToOne;
+use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use JR\ChefsDiary\Entity\Traits\HasTimestamp;
 
@@ -20,22 +22,30 @@ class UserInfo implements UserInfoInterface
     use HasTimestamp;
 
     #[Id]
-    #[Column]
+    #[GeneratedValue(strategy: "AUTO")]
+    #[Column(options: ['unsigned' => true])]
     private int $IdUserInfo;
 
-    #[Column]
-    private int $IdUser;
+    #[OneToOne(targetEntity: User::class)]
+    #[JoinColumn(name: 'IdUser', referencedColumnName: 'IdUser', options: ['unsigned' => true], nullable: false)]
+    private User $User;
 
-    #[Column]
-    private string|null $UserName;
+    #[Column(length: 25)]
+    private string $UserName;
 
-    #[Column]
-    private string|null $Email;
+    #[Column(length: 25, nullable: true)]
+    private string|null $FirstName;
 
-    #[Column]
+    #[Column(length: 25, nullable: true)]
+    private string|null $LastName;
+
+    #[Column(length: 50)]
+    private string $Email;
+
+    #[Column(length: 25, nullable: true)]
     private string|null $Phone;
 
-    #[Column]
+    #[Column(options: ['default' => 'CURRENT_TIMESTAMP'], nullable: false)]
     private DateTime $CreatedAt;
 
 
@@ -68,9 +78,9 @@ class UserInfo implements UserInfoInterface
 
 
     // Setters
-    public function setUser(int $user): UserInfo
+    public function setUser(User $user): UserInfo
     {
-        $this->IdUser = $user;
+        $this->User = $user;
 
         return $this;
     }
