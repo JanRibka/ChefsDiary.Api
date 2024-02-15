@@ -6,6 +6,7 @@ namespace JR\ChefsDiary\Repositories\Implementation;
 
 use DateTime;
 use JR\ChefsDiary\Enums\UserRoleEnum;
+use JR\ChefsDiary\DataObjects\UserData;
 use JR\ChefsDiary\DataObjects\RegisterUserData;
 use JR\ChefsDiary\Entity\User\Implementation\User;
 use JR\ChefsDiary\Entity\User\Contract\UserInterface;
@@ -88,5 +89,19 @@ class UserRepository implements UserRepositoryInterface
         if (!!$user) {
             $this->entityManagerService->sync($userLogHistory);
         }
+    }
+
+    public function getUserRolesByUserId(int $idUser): array
+    {
+        return $this->entityManagerService->getRepository(UserRoles::class)->findBy(['User' => $idUser]);
+    }
+
+    public function update(UserInterface $user, UserData $data): void
+    {
+        if (!!$data->refreshToken) {
+            $user->setRefreshToken($data->refreshToken);
+        }
+
+        $this->entityManagerService->sync($user);
     }
 }

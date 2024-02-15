@@ -23,12 +23,12 @@ class TokenService implements TokenServiceInterface
     }
 
 
-    public function createAccessToken(UserInterface $user, array $role): string
+    public function createAccessToken(UserInterface $user, array $roles): string
     {
         $payload = [
             'userInfo' => [
                 'uuid' => $user->getUuid(),
-                'role' => $role
+                'roles' => $roles
             ],
             'exp' => $this->config->expAccess
         ];
@@ -69,7 +69,7 @@ class TokenService implements TokenServiceInterface
             $decoded = JWT::decode($token, $key);
 
             $request = $request->withAttribute('uuid', $decoded->userInfo->uuid);
-            $request = $request->withAttribute('role', $decoded->userInfo->role);
+            $request = $request->withAttribute('roles', $decoded->userInfo->roles);
 
             return $handler->handle($request);
         } catch (Exception) {

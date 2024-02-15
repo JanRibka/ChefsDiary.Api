@@ -7,4 +7,5 @@ namespace JR\ChefsDiary\Entity\User\Contract;
 interface UserRoleTypeInterface
 {
     public function getId(): int;
+    public function getValue(): int;
 }

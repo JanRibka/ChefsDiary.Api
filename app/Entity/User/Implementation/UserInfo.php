@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping\OneToOne;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use JR\ChefsDiary\Entity\Traits\HasTimestamp;
-
+use JR\ChefsDiary\Entity\User\Contract\UserInterface;
 use JR\ChefsDiary\Entity\User\Contract\UserInfoInterface;
 
 #[Entity, Table('UserInfo')]
@@ -78,7 +78,7 @@ class UserInfo implements UserInfoInterface
 
 
     // Setters
-    public function setUser(User $user): UserInfo
+    public function setUser(UserInterface $user): UserInfo
     {
         $this->User = $user;
 

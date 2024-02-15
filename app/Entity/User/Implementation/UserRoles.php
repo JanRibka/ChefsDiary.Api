@@ -11,7 +11,9 @@ use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\GeneratedValue;
+use JR\ChefsDiary\Entity\User\Contract\UserInterface;
 use JR\ChefsDiary\Entity\User\Contract\UserRolesInterface;
+use JR\ChefsDiary\Entity\User\Contract\UserRoleTypeInterface;
 
 #[Entity, Table('UserRoles')]
 class UserRoles implements UserRolesInterface
@@ -48,14 +50,14 @@ class UserRoles implements UserRolesInterface
 
 
     // Setters
-    public function setUser(User $user): UserRoles
+    public function setUser(UserInterface $user): UserRoles
     {
         $this->User = $user;
 
         return $this;
     }
 
-    public function setUserRoleType(UserRoleType $userRoleType): UserRoles
+    public function setUserRoleType(UserRoleTypeInterface $userRoleType): UserRoles
     {
         $this->UserRoleType = $userRoleType;
 

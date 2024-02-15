@@ -35,4 +35,19 @@ class UserRoleType implements UserRoleTypeInterface
     {
         return $this->IdUserRoleType;
     }
+
+    public function getCode(): string
+    {
+        return $this->Code;
+    }
+
+    public function getValue(): int
+    {
+        return $this->Value;
+    }
+
+    public function getDescription(): string
+    {
+        return $this->Description;
+    }
 }

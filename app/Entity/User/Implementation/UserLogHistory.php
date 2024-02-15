@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\GeneratedValue;
+use JR\ChefsDiary\Entity\User\Contract\UserInterface;
 use JR\ChefsDiary\Entity\User\Contract\UserLogHistoryInterface;
 
 #[Entity, Table('UserLogHistory')]
@@ -65,7 +66,7 @@ class UserLogHistory implements UserLogHistoryInterface
         return $this;
     }
 
-    public function setUser(User $user): UserLogHistory
+    public function setUser(UserInterface $user): UserLogHistory
     {
         $this->User = $user;
 

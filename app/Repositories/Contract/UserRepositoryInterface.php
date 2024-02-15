@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace JR\ChefsDiary\Repositories\Contract;
 
+use JR\ChefsDiary\DataObjects\UserData;
 use JR\ChefsDiary\DataObjects\RegisterUserData;
 use JR\ChefsDiary\Entity\User\Contract\UserInterface;
+use JR\ChefsDiary\Entity\User\Contract\UserRolesInterface;
 
 interface UserRepositoryInterface
 {
@@ -16,4 +18,14 @@ interface UserRepositoryInterface
     public function createUser(RegisterUserData $data): UserInterface;
 
     public function logLoginAttempt(UserInterface $user, bool $successful): void;
+
+    /**
+     * Get user roles by user id
+     * @param int $userId
+     * @return UserRolesInterface[]
+     * @author Jan Ribka
+     */
+    public function getUserRolesByUserId(int $idUser): array;
+
+    public function update(UserInterface $user, UserData $data): void;
 }

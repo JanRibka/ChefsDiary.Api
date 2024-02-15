@@ -11,7 +11,14 @@ use JR\ChefsDiary\Entity\User\Contract\UserInterface;
 
 interface TokenServiceInterface
 {
-    public function createAccessToken(UserInterface $user, array $role): string;
+    /**
+     * Create access token
+     * @param \JR\ChefsDiary\Entity\User\Contract\UserInterface $user
+     * @param int[] $role
+     * @return string
+     * @author Jan Ribka
+     */
+    public function createAccessToken(UserInterface $user, array $roles): string;
 
     public function createRefreshToken(UserInterface $user): string;
 

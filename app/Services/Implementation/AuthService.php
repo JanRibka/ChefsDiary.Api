@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace JR\ChefsDiary\Services\Implementation;
 
+use JR\ChefsDiary\DataObjects\UserData;
 use JR\ChefsDiary\Enums\AuthAttemptStatusEnum;
 use JR\ChefsDiary\DataObjects\RegisterUserData;
 use JR\ChefsDiary\Entity\User\Contract\UserInterface;
 use JR\ChefsDiary\Services\Contract\AuthServiceInterface;
+use JR\ChefsDiary\Entity\User\Contract\UserRolesInterface;
 use JR\ChefsDiary\Services\Contract\TokenServiceInterface;
 use JR\ChefsDiary\Services\Contract\AuthCookieServiceInterface;
 use JR\ChefsDiary\Repositories\Contract\UserRepositoryInterface;
@@ -31,6 +33,12 @@ class AuthService implements AuthServiceInterface
         return $user;
     }
 
+    /**
+     * Přihlášení
+     * @param string[] $credentials
+     * @return \JR\ChefsDiary\Enums\AuthAttemptStatusEnum
+     * @author Jan Ribka
+     */
     public function attemptLogin(array $credentials): AuthAttemptStatusEnum
     {
         $login = $credentials['login'];
@@ -58,7 +66,7 @@ class AuthService implements AuthServiceInterface
         //     return AuthAttemptStatus::TWO_FACTOR_AUTH;
         // }
 
-        $this->login($user);
+        $accessToken = $this->login($user);
         $this->userRepository->logLoginAttempt($user, true);
 
         return AuthAttemptStatusEnum::SUCCESS;
@@ -69,14 +77,26 @@ class AuthService implements AuthServiceInterface
         return password_verify($password, $user->getPassword());
     }
 
-    private function login(UserInterface $user): void
+    private function login(UserInterface $user): string
     {
-        $accessToken = $this->tokenService->createAccessToken($user, [5050]);
+        $getRoles = function (UserRolesInterface $userRole) {
+            return $userRole->getUserRoleType()->getValue();
+        };
 
+        $userRoles = $this->userRepository->getUserRolesByUserId($user->getId());
+        $rolesArray = array_map($getRoles, $userRoles);
         $refreshToken = $this->tokenService->createRefreshToken($user);
 
-        $this->authCookieService->setCookie($refreshToken);
+        $this->userRepository->update(
+            $user,
+            new UserData(
+                $refreshToken
+            )
+        );
 
+        $this->authCookieService->setCookie($refreshToken);
         $this->user = $user;
+
+        return $this->tokenService->createAccessToken($user, $rolesArray);
     }
 }

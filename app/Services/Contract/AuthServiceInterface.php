@@ -14,5 +14,11 @@ interface AuthServiceInterface
     // public function getUser(): ?UserInterface;
     public function register(RegisterUserData $data): UserInterface;
 
+    /**
+     * Přihlášení
+     * @param string[] $credentials
+     * @return \JR\ChefsDiary\Enums\AuthAttemptStatusEnum
+     * @author Jan Ribka
+     */
     public function attemptLogin(array $credentials): AuthAttemptStatusEnum;
 }
