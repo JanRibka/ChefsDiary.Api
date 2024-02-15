@@ -64,10 +64,6 @@ class RegisterUserRequestValidator implements RequestValidatorInterface
             'login'
         )->message('Uživatel s daným emailem již existuje');
 
-        if (!$v->validate()) {
-            throw new ValidationException($v->errors(), HttpStatusCodeEnum::CONFLICT->value);
-        }
-
         // Validate user name exists
         $v->rule(
             fn($field, $value, $params, $fields) => !$this->entityManagerService->getRepository(UserInfo::class)->count(

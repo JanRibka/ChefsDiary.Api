@@ -8,6 +8,5 @@ enum AuthAttemptStatusEnum
 {
     case FAILED;
     case TWO_FACTOR;
-    case SUCCESS;
     case DISABLED;
 }
