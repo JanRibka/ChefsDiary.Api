@@ -39,7 +39,7 @@ class AuthService implements AuthServiceInterface
      * @return \JR\ChefsDiary\Enums\AuthAttemptStatusEnum
      * @author Jan Ribka
      */
-    public function attemptLogin(array $credentials): AuthAttemptStatusEnum
+    public function attemptLogin(array $credentials): AuthAttemptStatusEnum|string
     {
         $login = $credentials['login'];
         $password = $credentials['password'];
@@ -64,12 +64,10 @@ class AuthService implements AuthServiceInterface
         //     $this->startLoginWith2FA($user);
 
         //     return AuthAttemptStatus::TWO_FACTOR_AUTH;
-        // }
+        // }        
 
-        $accessToken = $this->login($user);
-        $this->userRepository->logLoginAttempt($user, true);
+        return $this->login($user);
 
-        return AuthAttemptStatusEnum::SUCCESS;
     }
 
     private function checkCredentials(UserInterface $user, string $password): bool
@@ -94,7 +92,9 @@ class AuthService implements AuthServiceInterface
             )
         );
 
+        $this->userRepository->logLoginAttempt($user, true);
         $this->authCookieService->setCookie($refreshToken);
+
         $this->user = $user;
 
         return $this->tokenService->createAccessToken($user, $rolesArray);

@@ -17,8 +17,8 @@ interface AuthServiceInterface
     /**
      * Přihlášení
      * @param string[] $credentials
-     * @return \JR\ChefsDiary\Enums\AuthAttemptStatusEnum
+     * @return \JR\ChefsDiary\Enums\AuthAttemptStatusEnum|string
      * @author Jan Ribka
      */
-    public function attemptLogin(array $credentials): AuthAttemptStatusEnum;
+    public function attemptLogin(array $credentials): AuthAttemptStatusEnum|string;
 }
