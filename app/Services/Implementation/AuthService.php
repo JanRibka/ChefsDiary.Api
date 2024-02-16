@@ -16,9 +16,6 @@ use JR\ChefsDiary\Repositories\Contract\UserRepositoryInterface;
 
 class AuthService implements AuthServiceInterface
 {
-
-    private ?UserInterface $user = null;
-
     public function __construct(
         private readonly UserRepositoryInterface $userRepository,
         private readonly TokenServiceInterface $tokenService,
@@ -43,6 +40,7 @@ class AuthService implements AuthServiceInterface
     {
         $login = $credentials['login'];
         $password = $credentials['password'];
+        // $persistLogin = $credentials['persistLogin'];
         $user = $this->userRepository->getByLogin($login);
 
         if (!$user) {
@@ -94,8 +92,6 @@ class AuthService implements AuthServiceInterface
 
         $this->userRepository->logLoginAttempt($user, true);
         $this->authCookieService->setCookie($refreshToken);
-
-        $this->user = $user;
 
         return $this->tokenService->createAccessToken($user, $rolesArray);
     }

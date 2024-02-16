@@ -26,6 +26,11 @@ class AuthCookieService implements AuthCookieServiceInterface
         ]);
     }
 
+    public function getCookie(string $name): string
+    {
+        return $_COOKIE[$name];
+    }
+
     function deleteCookie(string $value): void
     {
         setcookie('jwt', $value, [

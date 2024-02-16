@@ -10,6 +10,7 @@ use JR\ChefsDiary\Controllers\AuthController;
 return function (App $app) {
     #region Authentication
     $app->group('/auth', function (RouteCollectorProxy $auth) {
+        $auth->post('/refreshToken', [AuthController::class, 'refreshToken']);
         $auth->post('/logout', [AuthController::class, 'logout']);
     })->add(AuthMiddleware::class);
 

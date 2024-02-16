@@ -8,6 +8,8 @@ interface AuthCookieServiceInterface
 {
     public function setCookie(string $value, bool $session = false): void;
 
+    public function getCookie(string $name);
+
     public function deleteCookie(string $value): void;
 
 }

@@ -78,12 +78,6 @@ class AuthController
         //     return $this->responseFormatter->asJson($response, ['two_factor' => true]);
         // }
 
-        $responseData = new LoginResponseModel(
-            $dbUser->UserRoleValue,
-            $accessToken,
-            $dbUser->Id
-        );
-
         return $this->responseFormatter->asJson($response, $status);
     }
 
