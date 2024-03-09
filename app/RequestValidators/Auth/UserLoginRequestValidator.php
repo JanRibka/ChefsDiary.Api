@@ -23,11 +23,6 @@ class UserLoginRequestValidator implements RequestValidatorInterface
 
         // Validate mandatory fields
         $v->rule('required', 'login')->message('Email je povinný');
-
-        if (!!$data['login']) {
-            $v->rule('email', 'login')->message('Email není platná emailová adresa');
-        }
-
         $v->rule('required', 'password')->message('Heslo je povinné');
 
         if (!$v->validate()) {
