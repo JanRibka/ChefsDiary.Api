@@ -24,7 +24,7 @@ class RegisterUserRequestValidator implements RequestValidatorInterface
         $v = new Validator($data);
 
         // Validate mandatory fields
-        $v->rule('required', 'login')->message('Email je povinný');
+        $v->rule('required', 'login')->message('loginRequired');
 
         if (!!$data['login']) {
             $v->rule('email', 'login')->message('Email není platná emailová adresa');

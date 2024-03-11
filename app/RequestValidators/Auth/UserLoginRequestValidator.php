@@ -22,8 +22,8 @@ class UserLoginRequestValidator implements RequestValidatorInterface
         $v = new Validator($data);
 
         // Validate mandatory fields
-        $v->rule('required', 'login')->message('Email je povinný');
-        $v->rule('required', 'password')->message('Heslo je povinné');
+        $v->rule('required', 'login')->message('loginRequired');
+        $v->rule('required', 'password')->message('passwordRequired');
 
         if (!$v->validate()) {
             throw new ValidationException($v->errors(), HttpStatusCodeEnum::BAD_REQUEST->value);

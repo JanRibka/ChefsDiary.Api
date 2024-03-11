@@ -66,11 +66,11 @@ class AuthController
         $status = $this->authService->attemptLogin($data);
 
         if ($status === AuthAttemptStatusEnum::FAILED) {
-            throw new ValidationException(['unauthorized' => ['Nesprávné uživatelské jméno nebo heslo']], HttpStatusCodeEnum::UNAUTHORIZED->value);
+            throw new ValidationException(['unauthorized' => ['incorrectLoginPassword']], HttpStatusCodeEnum::UNAUTHORIZED->value);
         }
 
         if ($status === AuthAttemptStatusEnum::DISABLED) {
-            throw new ValidationException(['unauthorized' => ['Přístup odepřen']], HttpStatusCodeEnum::FORBIDDEN->value);
+            throw new ValidationException(['unauthorized' => ['accessDenied']], HttpStatusCodeEnum::FORBIDDEN->value);
         }
 
         // TODO: Dvoufazove overeni
