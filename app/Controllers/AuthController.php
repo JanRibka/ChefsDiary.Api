@@ -72,7 +72,7 @@ class AuthController
         if ($status === AuthAttemptStatusEnum::DISABLED) {
             throw new ValidationException(['unauthorized' => ['accessDenied']], HttpStatusCodeEnum::FORBIDDEN->value);
         }
-
+        // TODO: Stahnout balicek na HTTP status code
         // TODO: Dvoufazove overeni
         // if ($status === AuthAttemptStatus::TWO_FACTOR_AUTH) {
         //     return $this->responseFormatter->asJson($response, ['two_factor' => true]);
