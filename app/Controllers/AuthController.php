@@ -71,7 +71,7 @@ class AuthController
         }
 
         if ($status === AuthAttemptStatusEnum::DISABLED) {
-            throw new ValidationException(['unauthorized' => ['accessDenied']], HttpStatusCode::FORBIDDEN->value);
+            throw new ValidationException(['forbidden' => ['accessDenied']], HttpStatusCode::FORBIDDEN->value);
         }
         // TODO: Stahnout balicek na HTTP status code
         // TODO: Dvoufazove overeni

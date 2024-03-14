@@ -89,7 +89,7 @@ class AuthService implements AuthServiceInterface
         };
 
         $userRoles = $this->userRepository->getUserRolesByUserId($user->getId());
-        $rolesArray = array_map($getRoles, $userRoles);
+        $roleArray = array_map($getRoles, $userRoles);
         $refreshToken = $this->tokenService->createRefreshToken($user);
 
         $this->userRepository->update(
@@ -102,11 +102,11 @@ class AuthService implements AuthServiceInterface
         $this->userRepository->logLoginAttempt($user, true);
         $this->authCookieService->setCookie($refreshToken);
 
-        $accessToken = $this->tokenService->createAccessToken($user, $rolesArray);
+        $accessToken = $this->tokenService->createAccessToken($user, $roleArray);
         $data = [
             'uuid' => $user->getUuid(),
             'login' => $user->getLogin(),
-            'userRoles' => $rolesArray,
+            'userRoles' => $roleArray,
             'accessToken' => $accessToken
         ];
 
