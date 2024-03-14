@@ -36,7 +36,16 @@ class AuthService implements AuthServiceInterface
      * @return \JR\ChefsDiary\Enums\AuthAttemptStatusEnum
      * @author Jan Ribka
      */
-    public function attemptLogin(array $credentials): AuthAttemptStatusEnum|string
+
+
+
+    /**
+     * Summary of attemptLogin
+     * @param array $credentials
+     * @return \JR\ChefsDiary\Enums\AuthAttemptStatusEnum|array
+     * @author Jan Ribka
+     */
+    public function attemptLogin(array $credentials): AuthAttemptStatusEnum|array
     {
         $login = $credentials['login'];
         $password = $credentials['password'];
@@ -73,10 +82,10 @@ class AuthService implements AuthServiceInterface
         return password_verify($password, $user->getPassword());
     }
 
-    private function login(UserInterface $user): string
+    private function login(UserInterface $user): array
     {
         $getRoles = function (UserRolesInterface $userRole) {
-            return $userRole->getUserRoleType()->getValue();
+            return $userRole->getUserRoleTypes();
         };
 
         $userRoles = $this->userRepository->getUserRolesByUserId($user->getId());
@@ -93,6 +102,14 @@ class AuthService implements AuthServiceInterface
         $this->userRepository->logLoginAttempt($user, true);
         $this->authCookieService->setCookie($refreshToken);
 
-        return $this->tokenService->createAccessToken($user, $rolesArray);
+        $accessToken = $this->tokenService->createAccessToken($user, $rolesArray);
+        $data = [
+            'uuid' => $user->getUuid(),
+            'login' => $user->getLogin(),
+            'userRoles' => $rolesArray,
+            'accessToken' => $accessToken
+        ];
+
+        return $data;
     }
 }

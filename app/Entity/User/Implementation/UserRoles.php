@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\ManyToMany;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use JR\ChefsDiary\Entity\User\Contract\UserInterface;
 use JR\ChefsDiary\Entity\User\Contract\UserRolesInterface;
@@ -27,9 +28,10 @@ class UserRoles implements UserRolesInterface
     #[JoinColumn(name: 'IdUser', referencedColumnName: 'IdUser', options: ['unsigned' => true], nullable: false)]
     private User $User;
 
-    #[ManyToOne(inversedBy: 'IdUserRoleType', targetEntity: UserRoleType::class)]
+
+    #[ManyToMany(inversedBy: 'IdUserRoleType', targetEntity: UserRoleType::class)]
     #[JoinColumn(name: 'IdUserRoleType', referencedColumnName: 'IdUserRoleType', options: ['unsigned' => true], nullable: false)]
-    private UserRoleType $UserRoleType;
+    private array $UserRoleTypes;
 
 
     // Getters
@@ -43,9 +45,14 @@ class UserRoles implements UserRolesInterface
         return $this->User;
     }
 
-    public function getUserRoleType(): UserRoleType
+    /**
+     * getUserRoleTypes
+     * @return \JR\ChefsDiary\Entity\User\Implementation\UserRoleType[]
+     * @author Jan Ribka
+     */
+    public function getUserRoleTypes(): array
     {
-        return $this->UserRoleType;
+        return $this->UserRoleTypes;
     }
 
 
@@ -57,9 +64,15 @@ class UserRoles implements UserRolesInterface
         return $this;
     }
 
-    public function setUserRoleType(UserRoleTypeInterface $userRoleType): UserRoles
+    /**
+     * Summary of setUserRoleType
+     * @param \JR\ChefsDiary\Entity\User\Contract\UserRoleTypeInterface[]
+     * @return \JR\ChefsDiary\Entity\User\Implementation\UserRoles
+     * @author Jan Ribka
+     */
+    public function setUserRoleTypes(array $userRoleTypes): UserRoles
     {
-        $this->UserRoleType = $userRoleType;
+        $this->UserRoleTypes = $userRoleTypes;
 
         return $this;
     }
