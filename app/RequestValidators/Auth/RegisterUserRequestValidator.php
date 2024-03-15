@@ -25,11 +25,14 @@ class RegisterUserRequestValidator implements RequestValidatorInterface
 
         // Validate mandatory fields
         $v->rule('required', 'login')->message('loginRequired');
+        $v->rule('email', 'email')->message('Email není platná emailová adresa');
 
-        if (!!$data['login']) {
-            $v->rule('email', 'login')->message('Email není platná emailová adresa');
+        if (!!$data['email']) {
+            $v->rule('email', 'email')->message('Email není platná emailová adresa');
         }
-
+        // TODO: D8t regex do shared
+        // $v->rule('length', 'password', 8, 24)->message('Heslo musí mít délku 8 až 24 znaků');
+        // $v->rule('regex', 'password', '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/')->message('Heslo musí obsahovat malá písmena, velká písmena a číslice');
         $v->rule('required', 'userName')->message('Uživatelské jméno je povinné');
         $v->rule('required', 'password')->message('Heslo je povinné');
         $v->rule('required', 'confirmPassword')->message('Heslo pro potvrzení je povinné');
