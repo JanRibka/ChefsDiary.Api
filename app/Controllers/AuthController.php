@@ -9,6 +9,7 @@ use JR\ChefsDiary\Enums\AuthAttemptStatusEnum;
 use JR\ChefsDiary\DataObjects\RegisterUserData;
 use JR\ChefsDiary\Exception\ValidationException;
 use Psr\Http\Message\ResponseInterface as Response;
+use JustSteveKing\StatusCode\Http as HttpStatusCode;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use JR\ChefsDiary\Services\Contract\AuthServiceInterface;
 use JR\ChefsDiary\Shared\ResponseFormatter\ResponseFormatter;
@@ -47,7 +48,7 @@ class AuthController
             )
         );
 
-        return $response->withStatus(HttpStatusCodeEnum::CREATED->value);
+        return $response->withStatus(HttpStatusCode::CREATED->value);
     }
 
     /**
@@ -66,11 +67,11 @@ class AuthController
         $status = $this->authService->attemptLogin($data);
 
         if ($status === AuthAttemptStatusEnum::FAILED) {
-            throw new ValidationException(['unauthorized' => ['incorrectLoginPassword']], HttpStatusCodeEnum::UNAUTHORIZED->value);
+            throw new ValidationException(['unauthorized' => ['incorrectLoginPassword']], HttpStatusCode::UNAUTHORIZED->value);
         }
 
         if ($status === AuthAttemptStatusEnum::DISABLED) {
-            throw new ValidationException(['forbidden' => ['accessDenied']], HttpStatusCodeEnum::FORBIDDEN->value);
+            throw new ValidationException(['forbidden' => ['accessDenied']], HttpStatusCode::FORBIDDEN->value);
         }
         // TODO: Stahnout balicek na HTTP status code
         // TODO: Dvoufazove overeni

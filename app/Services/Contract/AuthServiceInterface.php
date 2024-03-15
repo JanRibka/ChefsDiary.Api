@@ -20,5 +20,5 @@ interface AuthServiceInterface
      * @return \JR\ChefsDiary\Enums\AuthAttemptStatusEnum|string
      * @author Jan Ribka
      */
-    public function attemptLogin(array $credentials): AuthAttemptStatusEnum|string;
+    public function attemptLogin(array $credentials): AuthAttemptStatusEnum|array;
 }

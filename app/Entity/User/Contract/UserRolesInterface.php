@@ -7,5 +7,11 @@ namespace JR\ChefsDiary\Entity\User\Contract;
 interface UserRolesInterface
 {
     public function getId(): int;
-    public function getUserRoleType(): UserRoleTypeInterface;
+
+    /**
+     * Summary of getUserRoleType
+     * @return \JR\ChefsDiary\Entity\User\Contract\UserRoleTypeInterface[]
+     * @author Jan Ribka
+     */
+    public function getUserRoleTypes(): array;
 }
