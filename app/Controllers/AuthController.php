@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace JR\ChefsDiary\Controllers;
 
-use JR\ChefsDiary\Enums\HttpStatusCodeEnum;
+use JR\ChefsDiary\Enums\HttpStatusCode;
 use JR\ChefsDiary\Enums\AuthAttemptStatusEnum;
 use JR\ChefsDiary\DataObjects\RegisterUserData;
 use JR\ChefsDiary\Exception\ValidationException;
 use Psr\Http\Message\ResponseInterface as Response;
-use JustSteveKing\StatusCode\Http as HttpStatusCode;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use JR\ChefsDiary\Services\Contract\AuthServiceInterface;
 use JR\ChefsDiary\Shared\ResponseFormatter\ResponseFormatter;

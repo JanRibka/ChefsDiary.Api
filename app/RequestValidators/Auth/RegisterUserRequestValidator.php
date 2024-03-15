@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace JR\ChefsDiary\RequestValidators\Auth;
 
 use Valitron\Validator;
-use JR\ChefsDiary\Enums\HttpStatusCodeEnum;
+use JR\ChefsDiary\Enums\HttpStatusCode;
 use JR\ChefsDiary\Exception\ValidationException;
 use JR\ChefsDiary\Entity\User\Implementation\User;
 use JR\ChefsDiary\Entity\User\Implementation\UserInfo;
@@ -42,21 +42,21 @@ class RegisterUserRequestValidator implements RequestValidatorInterface
         $v->rule('lengthMax', "password", 25)->message('Maximální délka je 25 znaků');
 
         if (!$v->validate()) {
-            throw new ValidationException($v->errors(), HttpStatusCodeEnum::BAD_REQUEST->value);
+            throw new ValidationException($v->errors(), HttpStatusCode::BAD_REQUEST->value);
         }
 
         // Validate login length
         $v->rule('lengthMax', "login", 25)->message('Maximální délka je 25 znaků');
 
         if (!$v->validate()) {
-            throw new ValidationException($v->errors(), HttpStatusCodeEnum::BAD_REQUEST->value);
+            throw new ValidationException($v->errors(), HttpStatusCode::BAD_REQUEST->value);
         }
 
         // Validate password equals
         $v->rule('equals', 'password', 'confirmPassword')->message('Hesla se neshodují');
 
         if (!$v->validate()) {
-            throw new ValidationException($v->errors(), HttpStatusCodeEnum::BAD_REQUEST->value);
+            throw new ValidationException($v->errors(), HttpStatusCode::BAD_REQUEST->value);
         }
 
         // Validate user exists
@@ -76,7 +76,7 @@ class RegisterUserRequestValidator implements RequestValidatorInterface
         )->message('Uživatelské jméno již existuje');
 
         if (!$v->validate()) {
-            throw new ValidationException($v->errors(), HttpStatusCodeEnum::CONFLICT->value);
+            throw new ValidationException($v->errors(), HttpStatusCode::CONFLICT->value);
         }
 
         return $data;
