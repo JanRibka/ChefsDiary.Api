@@ -51,61 +51,19 @@ class RegisterUserRequestValidator implements RequestValidatorInterface
             'email'
         )->message('emailExists');
 
+        // Validate password
+        $v->rule('lengthMin', "password", 8)->message('passwordMinLength|8');
+        $v->rule('lengthMax', "password", 24)->message('passwordMaxLength|24');
+        $v->rule('regex', 'password', '/' . LOWERCASE_REGEX . '/')->message('passwordLoweCase');
+        $v->rule('regex', 'password', '/' . UPPERCASE_REGEX . '/')->message('passwordUpperCase');
+        $v->rule('regex', 'password', '/' . NUMBERS_REGEX . '/')->message('passwordNumbers');
+
+        // Validate confirm password
+        $v->rule('equals', 'confirmPassword', 'password')->message('confirmPasswordOneOf');
+
         if (!$v->validate()) {
             throw new ValidationException($v->errors(), HttpStatusCode::BAD_REQUEST->value);
         }
-
-
-
-        // $v->rule('email', 'email')->message('Email není platná emailová adresa');
-        // // TODO: D8t regex do shared
-        // // $v->rule('length', 'password', 8, 24)->message('Heslo musí mít délku 8 až 24 znaků');
-        // // $v->rule('regex', 'password', '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/')->message('Heslo musí obsahovat malá písmena, velká písmena a číslice');
-        // $v->rule('required', 'userName')->message('Uživatelské jméno je povinné');
-        // $v->rule('required', 'password')->message('Heslo je povinné');
-        // $v->rule('required', 'confirmPassword')->message('Heslo pro potvrzení je povinné');
-        // $v->rule('required', 'agreement')->message('Se zpracováním osobních údajů je třeba souhlasit');
-
-        // $v->rule('lengthMax', "userName", 25)->message('Maximální délka je 25 znaků');
-        // $v->rule('lengthMax', "password", 25)->message('Maximální délka je 25 znaků');
-
-        // if (!$v->validate()) {
-        //     throw new ValidationException($v->errors(), HttpStatusCode::BAD_REQUEST->value);
-        // }
-
-
-
-
-        // if (!$v->validate()) {
-        //     throw new ValidationException($v->errors(), HttpStatusCode::BAD_REQUEST->value);
-        // }
-
-        // // Validate password equals
-        // $v->rule('equals', 'password', 'confirmPassword')->message('Hesla se neshodují');
-
-        // if (!$v->validate()) {
-        //     throw new ValidationException($v->errors(), HttpStatusCode::BAD_REQUEST->value);
-        // }
-
-        // // Validate user exists
-        // $v->rule(
-        //     fn($field, $value, $params, $fields) => !$this->entityManagerService->getRepository(User::class)->count(
-        //         ['Login' => $value]
-        //     ),
-        //     'login'
-        // )->message('Uživatel s daným emailem již existuje');
-
-        // // Validate user name exists
-        // $v->rule(
-        //     fn($field, $value, $params, $fields) => !$this->entityManagerService->getRepository(UserInfo::class)->count(
-        //         ['UserName' => $value]
-        //     ),
-        //     'userName'
-        // )->message('Uživatelské jméno již existuje');
-
-        // if (!$v->validate()) {
-        //     throw new ValidationException($v->errors(), HttpStatusCode::CONFLICT->value);
-        // }
 
         return $data;
     }

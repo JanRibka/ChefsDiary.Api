@@ -8,8 +8,8 @@ class RegisterUserData
 {
     public function __construct(
         public readonly string $login,
-        public readonly string $password,
-        public readonly string $userName,
+        public readonly string $email,
+        public readonly string $password
     ) {
     }
 }

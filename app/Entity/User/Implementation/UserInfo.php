@@ -30,9 +30,6 @@ class UserInfo implements UserInfoInterface
     #[JoinColumn(name: 'IdUser', referencedColumnName: 'IdUser', options: ['unsigned' => true], nullable: false)]
     private User $User;
 
-    #[Column(length: 25)]
-    private string $UserName;
-
     #[Column(length: 25, nullable: true)]
     private string|null $FirstName;
 
@@ -56,11 +53,6 @@ class UserInfo implements UserInfoInterface
         return $this->IdUserInfo;
     }
 
-    public function getUserName(): string|null
-    {
-        return $this->UserName;
-    }
-
     public function getUserEmail(): string|null
     {
         return $this->Email;
@@ -81,13 +73,6 @@ class UserInfo implements UserInfoInterface
     public function setUser(UserInterface $user): UserInfo
     {
         $this->User = $user;
-
-        return $this;
-    }
-
-    public function setUserName(string $userName): UserInfo
-    {
-        $this->UserName = $userName;
 
         return $this;
     }
