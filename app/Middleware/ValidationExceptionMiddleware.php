@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace JR\ChefsDiary\Middleware;
 
+use JR\ChefsDiary\Enums\HttpStatusCode;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\MiddlewareInterface;
-use JR\ChefsDiary\Enums\HttpStatusCodeEnum;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
-use JR\ChefsDiary\Exception\ValidationException;
+use JR\ChefsDiary\Exceptions\ValidationException;
 use JR\ChefsDiary\Services\Implementation\RequestService;
 use JR\ChefsDiary\Shared\ResponseFormatter\ResponseFormatter;
 
@@ -30,7 +30,7 @@ class ValidationExceptionMiddleware implements MiddlewareInterface
             $response = $this->responseFactory->createResponse();
 
             if ($this->requestService->isXhr($request)) {
-                return $this->responseFormatter->asJson($response->withStatus(HttpStatusCodeEnum::UNPROCESSABLE_ENTITY->value), $ex->errors);
+                return $this->responseFormatter->asJson($response->withStatus(HttpStatusCode::UNPROCESSABLE_ENTITY->value), $ex->errors);
             }
 
             return $this->responseFormatter->asJson($response->withStatus($ex->getCode()), $ex->errors);

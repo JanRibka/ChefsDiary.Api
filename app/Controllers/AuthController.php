@@ -7,7 +7,7 @@ namespace JR\ChefsDiary\Controllers;
 use JR\ChefsDiary\Enums\HttpStatusCode;
 use JR\ChefsDiary\Enums\AuthAttemptStatusEnum;
 use JR\ChefsDiary\DataObjects\RegisterUserData;
-use JR\ChefsDiary\Exception\ValidationException;
+use JR\ChefsDiary\Exceptions\ValidationException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use JR\ChefsDiary\Services\Contract\AuthServiceInterface;

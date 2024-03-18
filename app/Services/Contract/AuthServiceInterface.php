@@ -11,7 +11,6 @@ use JR\ChefsDiary\Entity\User\Contract\UserInterface;
 
 interface AuthServiceInterface
 {
-    // public function getUser(): ?UserInterface;
     public function register(RegisterUserData $data): UserInterface;
 
     /**

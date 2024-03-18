@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace JR\ChefsDiary\Exception;
+namespace JR\ChefsDiary\Exceptions;
 
 use Throwable;
 use RuntimeException;

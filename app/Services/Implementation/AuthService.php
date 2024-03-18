@@ -23,6 +23,12 @@ class AuthService implements AuthServiceInterface
     ) {
     }
 
+    /**
+     * Register user
+     * @param \JR\ChefsDiary\DataObjects\RegisterUserData $data
+     * @return \JR\ChefsDiary\Entity\User\Contract\UserInterface
+     * @author Jan Ribka
+     */
     public function register(RegisterUserData $data): UserInterface
     {
         $user = $this->userRepository->createUser($data);
@@ -31,16 +37,7 @@ class AuthService implements AuthServiceInterface
     }
 
     /**
-     * Přihlášení
-     * @param string[] $credentials
-     * @return \JR\ChefsDiary\Enums\AuthAttemptStatusEnum
-     * @author Jan Ribka
-     */
-
-
-
-    /**
-     * Summary of attemptLogin
+     * Attempt to login
      * @param array $credentials
      * @return \JR\ChefsDiary\Enums\AuthAttemptStatusEnum|array
      * @author Jan Ribka
