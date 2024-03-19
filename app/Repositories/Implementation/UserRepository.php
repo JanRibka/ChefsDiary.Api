@@ -79,7 +79,7 @@ class UserRepository implements UserRepositoryInterface
                 $userRoles = new UserRoles();
                 $userRoles
                     ->setUser($user)
-                    ->setUserRoleTypes($item);
+                    ->setUserRoleType($item);
 
                 $this->entityManagerService->persist($userRoles);
             }
