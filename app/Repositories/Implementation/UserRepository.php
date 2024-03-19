@@ -61,9 +61,18 @@ class UserRepository implements UserRepositoryInterface
                 ->setCreatedAt(new DateTime());
 
             $this->entityManagerService->sync($userInfo);
-            // TODO: Dodelat nacitani voce roli. Od user po editor a zkontrolovat indexy v db a zda se to spravne zapisuje
+
             // Insert user role
-            $userRoleTypes = $this->entityManagerService->getRepository(UserRoleType::class)->findBy(['Value' => [UserRoleEnum::USER->value, UserRoleEnum::EDITOR->value]]);
+            $userRoleTypes = $this->entityManagerService->getRepository(UserRoleType::class)
+                ->findBy(
+                    [
+                        'Value' =>
+                            [
+                                UserRoleEnum::USER->value,
+                                UserRoleEnum::EDITOR->value
+                            ]
+                    ]
+                );
 
 
             foreach ($userRoleTypes as $item) {
