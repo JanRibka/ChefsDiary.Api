@@ -28,9 +28,9 @@ class UserRoles implements UserRolesInterface
     private User $User;
 
 
-    #[OneToOne(mappedBy: 'IdUserRoleType', targetEntity: UserRoleType::class)]
+    #[ManyToOne(inversedBy: 'IdUserRoleType', targetEntity: UserRoleType::class)]
     #[JoinColumn(name: 'IdUserRoleType', referencedColumnName: 'IdUserRoleType', options: ['unsigned' => true], nullable: false)]
-    private array $UserRoleTypes;
+    private UserRoleType $UserRoleType;
 
 
     // Getters
@@ -44,14 +44,9 @@ class UserRoles implements UserRolesInterface
         return $this->User;
     }
 
-    /**
-     * getUserRoleTypes
-     * @return \JR\ChefsDiary\Entity\User\Implementation\UserRoleType[]
-     * @author Jan Ribka
-     */
-    public function getUserRoleTypes(): array
+    public function getUserRoleType(): UserRoleType
     {
-        return $this->UserRoleTypes;
+        return $this->UserRoleType;
     }
 
 
@@ -63,15 +58,10 @@ class UserRoles implements UserRolesInterface
         return $this;
     }
 
-    /**
-     * Summary of setUserRoleType
-     * @param \JR\ChefsDiary\Entity\User\Contract\UserRoleTypeInterface[]
-     * @return \JR\ChefsDiary\Entity\User\Implementation\UserRoles
-     * @author Jan Ribka
-     */
-    public function setUserRoleTypes(array $userRoleTypes): UserRoles
+
+    public function setUserRoleTypes(UserRoleType $userRoleType): UserRoles
     {
-        $this->UserRoleTypes = $userRoleTypes;
+        $this->UserRoleType = $userRoleType;
 
         return $this;
     }

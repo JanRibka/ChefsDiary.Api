@@ -4,14 +4,10 @@ declare(strict_types=1);
 
 namespace JR\ChefsDiary\Entity\User\Contract;
 
+use JR\ChefsDiary\Entity\User\Implementation\UserRoleType;
+
 interface UserRolesInterface
 {
     public function getId(): int;
-
-    /**
-     * Summary of getUserRoleType
-     * @return \JR\ChefsDiary\Entity\User\Contract\UserRoleTypeInterface[]
-     * @author Jan Ribka
-     */
-    public function getUserRoleTypes(): array;
+    public function getUserRoleType(): UserRoleType;
 }
