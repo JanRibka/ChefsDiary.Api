@@ -83,7 +83,7 @@ class AuthService implements AuthServiceInterface
     private function login(UserInterface $user): array
     {
         $getRoles = function (UserRolesInterface $userRole) {
-            return $userRole->getUserRoleTypes();
+            return $userRole->getUserRoleType();
         };
 
         $userRoles = $this->userRepository->getUserRolesByUserId($user->getId());
