@@ -57,7 +57,6 @@ class UserRepository implements UserRepositoryInterface
 
             $userInfo
                 ->setUser($user)
-                ->setUserName($data->userName)
                 ->setEmail($data->login)
                 ->setCreatedAt(new DateTime());
 
