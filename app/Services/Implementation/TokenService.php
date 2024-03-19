@@ -7,9 +7,9 @@ namespace JR\ChefsDiary\Services\Implementation;
 use Exception;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+use JR\ChefsDiary\Enums\HttpStatusCode;
 use Psr\Http\Message\ResponseInterface;
 use JR\ChefsDiary\DataObjects\TokenConfig;
-use JR\ChefsDiary\Enums\HttpStatusCodeEnum;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use JR\ChefsDiary\Entity\User\Contract\UserInterface;
@@ -59,7 +59,7 @@ class TokenService implements TokenServiceInterface
         $authHeader = $request->getHeaderLine('HTTP_AUTHORIZATION');
 
         if (!$authHeader || !str_starts_with($authHeader, 'Bearer ')) {
-            return $handler->handle($request)->withStatus(HttpStatusCodeEnum::UNAUTHORIZED->value);
+            return $handler->handle($request)->withStatus(HttpStatusCode::UNAUTHORIZED->value);
         }
 
         $token = explode(' ', $authHeader)[1];
@@ -73,7 +73,7 @@ class TokenService implements TokenServiceInterface
 
             return $handler->handle($request);
         } catch (Exception) {
-            return $handler->handle($request)->withStatus(HttpStatusCodeEnum::FORBIDDEN->value);
+            return $handler->handle($request)->withStatus(HttpStatusCode::FORBIDDEN->value);
         }
 
     }
