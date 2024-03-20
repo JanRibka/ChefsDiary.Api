@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace JR\ChefsDiary\Repositories\Contract;
 
-use JR\ChefsDiary\DataObjects\UserData;
-use JR\ChefsDiary\DataObjects\RegisterUserData;
+use JR\ChefsDiary\DataObjects\Data\UserData;
+use JR\ChefsDiary\DataObjects\Data\RegisterUserData;
 use JR\ChefsDiary\Entity\User\Contract\UserInterface;
 use JR\ChefsDiary\Entity\User\Contract\UserRolesInterface;
 

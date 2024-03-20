@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace JR\ChefsDiary\DataObjects;
+namespace JR\ChefsDiary\DataObjects\Data;
 
 class RegisterUserData
 {

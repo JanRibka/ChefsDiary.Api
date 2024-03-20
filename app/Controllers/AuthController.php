@@ -81,8 +81,21 @@ class AuthController
         return $this->responseFormatter->asJson($response, $status);
     }
 
-    // public function logout(Request $request, Response $response): Response
-    // {
+    public function logout(Request $request, Response $response): Response
+    {
+        $this->authService->logout();
 
-    // }
+        return $response->withStatus(HttpStatusCode::NO_CONTENT->value);
+    }
+
+    public function refreshToken(Request $request, Response $response): Response
+    {
+        
+        $status = $this->authService->refreshToken();
+
+        if () {}
+    
+
+        return $this->responseFormatter->asJson($response, $status);
+    }
 }

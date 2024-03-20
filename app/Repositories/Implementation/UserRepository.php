@@ -6,9 +6,9 @@ namespace JR\ChefsDiary\Repositories\Implementation;
 
 use DateTime;
 use JR\ChefsDiary\Enums\UserRoleEnum;
-use JR\ChefsDiary\DataObjects\UserData;
-use JR\ChefsDiary\DataObjects\RegisterUserData;
+use JR\ChefsDiary\DataObjects\Data\UserData;
 use JR\ChefsDiary\Entity\User\Implementation\User;
+use JR\ChefsDiary\DataObjects\Data\RegisterUserData;
 use JR\ChefsDiary\Entity\User\Contract\UserInterface;
 use JR\ChefsDiary\Entity\User\Implementation\UserInfo;
 use JR\ChefsDiary\Services\Implementation\HashService;
