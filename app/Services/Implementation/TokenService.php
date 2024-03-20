@@ -9,7 +9,6 @@ use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use JR\ChefsDiary\Enums\HttpStatusCode;
 use Psr\Http\Message\ResponseInterface;
-use JR\ChefsDiary\Enums\HttpStatusCodeEnum;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use JR\ChefsDiary\DataObjects\Configs\TokenConfig;

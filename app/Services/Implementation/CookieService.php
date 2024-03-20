@@ -7,7 +7,7 @@ namespace JR\ChefsDiary\Services\Implementation;
 use JR\ChefsDiary\DataObjects\Data\CookieConfigData;
 use JR\ChefsDiary\Services\Contract\CookieServiceInterface;
 
-class AuthCookieService implements CookieServiceInterface
+class CookieService implements CookieServiceInterface
 {
     public function __construct()
     {

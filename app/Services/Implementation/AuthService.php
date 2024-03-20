@@ -21,7 +21,7 @@ class AuthService implements AuthServiceInterface
     public function __construct(
         private readonly UserRepositoryInterface $userRepository,
         private readonly TokenServiceInterface $tokenService,
-        private readonly CookieServiceInterface $authCookieService,
+        private readonly CookieServiceInterface $cookieService,
         private readonly AuthCookieConfig $authCookieConfig
     ) {
     }
@@ -99,7 +99,7 @@ class AuthService implements AuthServiceInterface
         };
 
         $userRoles = $this->userRepository->getUserRolesByUserId($user->getId());
-        $roleArray = array_map($getRoles, $userRoles);
+        $roleValueArray = array_map($getRoles, $userRoles);
         $refreshToken = $this->tokenService->createRefreshToken($user);
 
         $this->userRepository->update(
@@ -119,17 +119,17 @@ class AuthService implements AuthServiceInterface
             $this->authCookieConfig->path
         );
 
-        $this->authCookieService->set(
+        $this->cookieService->set(
             $this->authCookieConfig->name,
             $refreshToken,
             $config
         );
 
-        $accessToken = $this->tokenService->createAccessToken($user, $roleArray);
+        $accessToken = $this->tokenService->createAccessToken($user, $roleValueArray);
         $data = [
             'uuid' => $user->getUuid(),
             'login' => $user->getLogin(),
-            'userRoles' => $roleArray,
+            'userRoles' => $roleValueArray,
             'accessToken' => $accessToken
         ];
 

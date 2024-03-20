@@ -49,7 +49,7 @@ return [
         'http_only' => $boolean($_ENV['AUTH_COOKIE_HTTP_ONLY'] ?? true),
         'same_site' => $_ENV['AUTH_COOKIE_SAME_SITE'] ?? 'lax',
         'expires' => time() + $_ENV['TOKEN_EXP_REFRESH'] ?? 0,
-        'path' => ''
+        'path' => $_ENV['AUTH_COOKIE_PATH'] ?? ''
 
 
     ]
