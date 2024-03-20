@@ -6,9 +6,9 @@ namespace JR\ChefsDiary\Controllers;
 
 use JR\ChefsDiary\Enums\HttpStatusCode;
 use JR\ChefsDiary\Enums\AuthAttemptStatusEnum;
-use JR\ChefsDiary\DataObjects\RegisterUserData;
 use JR\ChefsDiary\Exceptions\ValidationException;
 use Psr\Http\Message\ResponseInterface as Response;
+use JR\ChefsDiary\DataObjects\Data\RegisterUserData;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use JR\ChefsDiary\Services\Contract\AuthServiceInterface;
 use JR\ChefsDiary\Shared\ResponseFormatter\ResponseFormatter;
@@ -83,18 +83,16 @@ class AuthController
 
     public function logout(Request $request, Response $response): Response
     {
-        $this->authService->logout();
+        // $this->authService->logout();
 
         return $response->withStatus(HttpStatusCode::NO_CONTENT->value);
     }
 
     public function refreshToken(Request $request, Response $response): Response
     {
-        
+
         $status = $this->authService->refreshToken();
 
-        if () {}
-    
 
         return $this->responseFormatter->asJson($response, $status);
     }
