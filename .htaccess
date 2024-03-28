@@ -1,6 +1,6 @@
 RewriteEngine On
 RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
-RewriteBase /api
+RewriteBase /
 
 # Redirect to index.php
 RewriteRule ^index\.php$ - [L]
