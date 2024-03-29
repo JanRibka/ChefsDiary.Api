@@ -59,7 +59,6 @@ class AuthController
      */
     public function login(Request $request, Response $response): Response
     {
-        echo 'login';
         $data = $this->requestValidatorFactory->make(UserLoginRequestValidator::class)->validate(
             $request->getParsedBody()
         );

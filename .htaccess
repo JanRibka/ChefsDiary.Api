@@ -1,9 +1,12 @@
 RewriteEngine On
+
+# Set HTTP_AUTHORIZATION header
 RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
-RewriteBase /
 
 # Redirect to index.php
 RewriteRule ^index\.php$ - [L]
+
+# Rewrite to index.php if file or directory doesn't exist
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ /index.php [L]
