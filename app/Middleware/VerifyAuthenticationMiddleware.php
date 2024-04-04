@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace JR\ChefsDiary\Middleware;
 
-use Exception;
-use RuntimeException;
 use JR\ChefsDiary\Enums\UserRoleEnum;
 use JR\ChefsDiary\Enums\HttpStatusCode;
 use Psr\Http\Message\ResponseInterface;
