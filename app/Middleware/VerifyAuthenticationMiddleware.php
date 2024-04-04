@@ -40,7 +40,7 @@ class VerifyAuthenticationMiddleware implements MiddlewareInterface
     /**
      * @param UserRoleEnum[] $userRoles
      */
-    public static function processWithParameter(array $userRoles)
+    public function processWithParameter(array $userRoles)
     {
         $this->userRoles = $userRoles;
 
