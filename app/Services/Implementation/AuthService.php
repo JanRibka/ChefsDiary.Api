@@ -126,13 +126,12 @@ class AuthService implements AuthServiceInterface
         );
 
         $accessToken = $this->tokenService->createAccessToken($user, $roleValueArray);
-        $data = [
+
+        return [
             'uuid' => $user->getUuid(),
             'login' => $user->getLogin(),
             'userRoles' => $roleValueArray,
             'accessToken' => $accessToken
         ];
-
-        return $data;
     }
 }
