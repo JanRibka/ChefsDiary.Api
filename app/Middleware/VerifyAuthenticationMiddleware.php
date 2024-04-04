@@ -17,11 +17,10 @@ use JR\ChefsDiary\Services\Contract\TokenServiceInterface;
 
 class VerifyAuthenticationMiddleware implements MiddlewareInterface
 {
-    private array $userRoles;
-
     public function __construct(
         private readonly ResponseFactoryInterface $responseFactory,
-        private readonly TokenServiceInterface $tokenService
+        private readonly TokenServiceInterface $tokenService,
+        private array $userRoles = []
     ) {
     }
 
@@ -40,12 +39,10 @@ class VerifyAuthenticationMiddleware implements MiddlewareInterface
     /**
      * @param UserRoleEnum[] $userRoles
      */
-    public function processWithParameter(array $userRoles)
+    public static function processWithParameter(array $userRoles)
     {
-        $this->userRoles = $userRoles;
-
-        return function (ServerRequestInterface $request, RequestHandlerInterface $handler) {
-            $middleware = new self($this->responseFactory, $this->tokenService);
+        return function (ServerRequestInterface $request, RequestHandlerInterface $handler) use ($userRoles) {
+            $middleware = new self($this->responseFactory, $this->tokenService, $userRoles);
             return $middleware->process($request, $handler);
         };
     }
