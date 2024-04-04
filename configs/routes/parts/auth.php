@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use JR\ChefsDiary\Enums\UserRoleEnum;
 use Slim\Routing\RouteCollectorProxy;
 use JR\ChefsDiary\Middleware\AuthMiddleware;
 use JR\ChefsDiary\Controllers\AuthController;
@@ -11,7 +12,7 @@ function getAuthRoutes(RouteCollectorProxy $api)
 {
     $api->group('/auth', function (RouteCollectorProxy $auth) {
         $auth->post('/refreshToken', [AuthController::class, 'refreshToken']);
-        $auth->post('/logout', [AuthController::class, 'logout'])->add(VerifyAuthenticationMiddleware::class);
+        $auth->post('/logout', [AuthController::class, 'logout'])->add(VerifyAuthenticationMiddleware::processWithParameter([UserRoleEnum::EDITOR]));
         // })->add(AuthMiddleware::class);
     });
 
