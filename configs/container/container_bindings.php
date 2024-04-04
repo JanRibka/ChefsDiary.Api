@@ -99,6 +99,9 @@ return [
             UserRepository::class
         ),
         new TokenService(
+            $container->get(
+                ResponseFactoryInterface::class
+            ),
             new TokenConfig(
                 $config->get('token.exp_access'),
                 $config->get('token.exp_refresh'),
@@ -122,7 +125,10 @@ return [
     EntityManagerServiceInterface::class => fn(EntityManagerInterface $entityManager) => new EntityManagerService(
         $entityManager
     ),
-    TokenServiceInterface::class => fn(Config $config) => new TokenService(
+    TokenServiceInterface::class => fn(Config $config, ContainerInterface $container) => new TokenService(
+        $container->get(
+            ResponseFactoryInterface::class
+        ),
         new TokenConfig(
             $config->get('token.exp_access'),
             $config->get('token.exp_refresh'),

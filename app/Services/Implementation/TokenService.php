@@ -11,6 +11,7 @@ use JR\ChefsDiary\Enums\HttpStatusCode;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
 use JR\ChefsDiary\DataObjects\Configs\TokenConfig;
 use JR\ChefsDiary\Entity\User\Contract\UserInterface;
 use JR\ChefsDiary\Services\Contract\TokenServiceInterface;
@@ -18,6 +19,7 @@ use JR\ChefsDiary\Services\Contract\TokenServiceInterface;
 class TokenService implements TokenServiceInterface
 {
     public function __construct(
+        private readonly ResponseFactoryInterface $responseFactory,
         private readonly TokenConfig $config
     ) {
     }
@@ -59,6 +61,14 @@ class TokenService implements TokenServiceInterface
         $authHeader = $request->getHeaderLine('HTTP_AUTHORIZATION');
 
         if (!$authHeader || !str_starts_with($authHeader, 'Bearer ')) {
+            // return $handler->handle($request)->withStatus(HttpStatusCode::UNAUTHORIZED->value);
+            return $this->responseFactory->createResponse(HttpStatusCode::UNAUTHORIZED->value);
+        }
+
+        $tokenParts = explode(' ', $authHeader);
+
+        if (count($tokenParts) !== 2) {
+            // return $handler->handle($request)->withStatus(HttpStatusCode::UNAUTHORIZED->value);
             return $handler->handle($request)->withStatus(HttpStatusCode::UNAUTHORIZED->value);
         }
 
@@ -73,8 +83,8 @@ class TokenService implements TokenServiceInterface
 
             return $handler->handle($request);
         } catch (Exception) {
-            return $handler->handle($request)->withStatus(HttpStatusCode::FORBIDDEN->value);
+            // return $handler->handle($request)->withStatus(HttpStatusCode::FORBIDDEN->value);
+            return $handler->handle($request)->withStatus(HttpStatusCode::UNAUTHORIZED->value);
         }
-
     }
 }
