@@ -35,9 +35,12 @@ class VerifyAuthenticationMiddleware implements MiddlewareInterface
     }
 
     /**
+     * Summary of processWithParameter
      * @param UserRoleEnum[] $userRoles
+     * @return callable
+     * @author Jan Ribka
      */
-    public static function processWithParameter(array $userRoles)
+    public static function processWithParameter(array $userRoles): callable
     {
         return function (ServerRequestInterface $request, RequestHandlerInterface $handler) use ($userRoles) {
             $middleware = new self($this->responseFactory, $this->tokenService, $userRoles);
