@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace JR\ChefsDiary\Services\Contract;
 
 use JR\ChefsDiary\Enums\AuthAttemptStatusEnum;
+use JR\ChefsDiary\Enums\LogoutAttemptStatusEnum;
 use JR\ChefsDiary\DataObjects\Data\RegisterUserData;
 use JR\ChefsDiary\Entity\User\Contract\UserInterface;
+use JR\ChefsDiary\Enums\RefreshTokenAttemptStatusEnum;
 
 interface AuthServiceInterface
 {
@@ -20,7 +22,7 @@ interface AuthServiceInterface
      */
     public function attemptLogin(array $credentials): AuthAttemptStatusEnum|array;
 
-    public function logout(UserInterface $user): void;
+    public function attemptLogout(): LogoutAttemptStatusEnum;
 
-    public function refreshToken(): string;
+    public function attemptRefreshToken(): RefreshTokenAttemptStatusEnum|string;
 }

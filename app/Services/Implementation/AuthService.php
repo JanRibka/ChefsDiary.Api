@@ -6,9 +6,12 @@ namespace JR\ChefsDiary\Services\Implementation;
 
 use JR\ChefsDiary\DataObjects\Data\UserData;
 use JR\ChefsDiary\Enums\AuthAttemptStatusEnum;
+use JR\ChefsDiary\Enums\LogoutAttemptStatusEnum;
+use JR\ChefsDiary\DataObjects\Configs\TokenConfig;
 use JR\ChefsDiary\DataObjects\Data\CookieConfigData;
 use JR\ChefsDiary\DataObjects\Data\RegisterUserData;
 use JR\ChefsDiary\Entity\User\Contract\UserInterface;
+use JR\ChefsDiary\Enums\RefreshTokenAttemptStatusEnum;
 use JR\ChefsDiary\DataObjects\Configs\AuthCookieConfig;
 use JR\ChefsDiary\Services\Contract\AuthServiceInterface;
 use JR\ChefsDiary\Entity\User\Contract\UserRolesInterface;
@@ -22,7 +25,8 @@ class AuthService implements AuthServiceInterface
         private readonly UserRepositoryInterface $userRepository,
         private readonly TokenServiceInterface $tokenService,
         private readonly CookieServiceInterface $cookieService,
-        private readonly AuthCookieConfig $authCookieConfig
+        private readonly AuthCookieConfig $authCookieConfig,
+        private readonly TokenConfig $tokenConfig
     ) {
     }
 
@@ -78,15 +82,45 @@ class AuthService implements AuthServiceInterface
 
     }
 
-    public function logout(UserInterface $user): void
+    public function attemptLogout(): LogoutAttemptStatusEnum
     {
+        $refreshToken = $this->cookieService->get($this->authCookieConfig->name);
+
+        if (!$refreshToken) {
+            return LogoutAttemptStatusEnum::NO_COOKIE;
+        }
+
+        $user = $this->userRepository->getByRefreshToken($refreshToken);
+
+        if (!$user) {
+            $this->cookieService->delete($this->authCookieConfig->name);
+
+            return LogoutAttemptStatusEnum::NO_USER;
+        }
+
+        return $this->logout($user);
     }
 
-    public function refreshToken(): string
+    public function attemptRefreshToken(): RefreshTokenAttemptStatusEnum|string
     {
-        return '';
+        $refreshToken = $this->cookieService->get($this->authCookieConfig->name);
+
+        if (!$refreshToken) {
+            return RefreshTokenAttemptStatusEnum::NO_COOKIE;
+        }
+
+        $user = $this->userRepository->getByRefreshToken($refreshToken);
+
+        if (!$user) {
+            $this->cookieService->delete($this->authCookieConfig->name);
+
+            return RefreshTokenAttemptStatusEnum::NO_USER;
+        }
+
+        return $this->refreshToken($user, $refreshToken);
     }
 
+    #region Private methods
     private function checkCredentials(UserInterface $user, string $password): bool
     {
         return password_verify($password, $user->getPassword());
@@ -134,4 +168,39 @@ class AuthService implements AuthServiceInterface
             'accessToken' => $accessToken
         ];
     }
+
+    private function logout(UserInterface $user): LogoutAttemptStatusEnum
+    {
+        $this->userRepository->update(
+            $user,
+            new UserData(
+                null
+            )
+        );
+
+        $this->cookieService->delete($this->authCookieConfig->name);
+
+        return LogoutAttemptStatusEnum::LOGOUT_SUCCESS;
+    }
+
+    private function refreshToken(UserInterface $user, string $refreshToken): RefreshTokenAttemptStatusEnum|array
+    {
+        throw new \Exception($refreshToken);
+        $decoded = $this->tokenService->decodeToken($refreshToken, $this->tokenConfig->keyRefresh);
+        // throw new \Exception(json_encode($decoded));
+        if ($user->getUuid() !== $decoded->uuid) {
+            return RefreshTokenAttemptStatusEnum::USER_NOT_EQUAL;
+        }
+
+        $userRoles = $this->userRepository->getUserRolesByUserId($user->getId());
+        $accessToken = $this->tokenService->createAccessToken($user, $userRoles);
+
+        return [
+            'uuid' => $user->getUuid(),
+            'login' => $user->getLogin(),
+            'userRoles' => $userRoles,
+            'accessToken' => $accessToken
+        ];
+    }
+    #region
 }

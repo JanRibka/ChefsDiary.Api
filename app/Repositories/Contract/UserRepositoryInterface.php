@@ -15,6 +15,8 @@ interface UserRepositoryInterface
 
     public function getByLogin(string $login): ?UserInterface;
 
+    public function getByRefreshToken(string $refreshToken): ?UserInterface;
+
     public function createUser(RegisterUserData $data): UserInterface;
 
     public function logLoginAttempt(UserInterface $user, bool $successful): void;

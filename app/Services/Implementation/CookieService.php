@@ -25,7 +25,7 @@ class CookieService implements CookieServiceInterface
         ]);
     }
 
-    public function get(string $key): string
+    public function get(string $key): string|null
     {
         return $_COOKIE[$key];
     }
@@ -45,6 +45,6 @@ class CookieService implements CookieServiceInterface
 
     public function exists(string $key): bool
     {
-        return isset ($_COOKIE[$key]);
+        return isset($_COOKIE[$key]);
     }
 }

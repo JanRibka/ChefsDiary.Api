@@ -10,7 +10,7 @@ interface CookieServiceInterface
 {
     public function set(string $key, string $value, CookieConfigData|null $config = null): void;
 
-    public function get(string $key): string;
+    public function get(string $key): string|null;
 
     public function delete(string $key): void;
 

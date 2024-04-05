@@ -61,14 +61,12 @@ class TokenService implements TokenServiceInterface
         $authHeader = $request->getHeaderLine('HTTP_AUTHORIZATION');
 
         if (!$authHeader || !str_starts_with($authHeader, 'Bearer ')) {
-            // return $handler->handle($request)->withStatus(HttpStatusCode::UNAUTHORIZED->value);
             return $this->responseFactory->createResponse(HttpStatusCode::UNAUTHORIZED->value);
         }
 
         $tokenParts = explode(' ', $authHeader);
 
         if (count($tokenParts) !== 2) {
-            // return $handler->handle($request)->withStatus(HttpStatusCode::UNAUTHORIZED->value);
             return $handler->handle($request)->withStatus(HttpStatusCode::UNAUTHORIZED->value);
         }
 
@@ -83,8 +81,19 @@ class TokenService implements TokenServiceInterface
 
             return $handler->handle($request);
         } catch (Exception) {
-            // return $handler->handle($request)->withStatus(HttpStatusCode::FORBIDDEN->value);
             return $handler->handle($request)->withStatus(HttpStatusCode::UNAUTHORIZED->value);
+        }
+    }
+
+    public function decodeToken(string $token, string $tokenKey): object|null
+    {
+        try {
+            $key = new Key($tokenKey, $this->config->algorithm);
+
+            return JWT::decode($token, $key);
+        } catch (Exception) {
+            throw new \Exception('Token decoding failed');
+            return null;
         }
     }
 }

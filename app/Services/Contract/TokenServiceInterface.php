@@ -23,5 +23,7 @@ interface TokenServiceInterface
     public function createRefreshToken(UserInterface $user): string;
 
     public function verifyJWT(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface;
+
+    public function decodeToken(string $token, string $tokenKey): object|null;
 }
 

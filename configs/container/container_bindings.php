@@ -120,6 +120,13 @@ return [
             $config->get('auth_cookie.same_site'),
             $config->get('auth_cookie.expires'),
             $config->get('auth_cookie.path')
+        ),
+        new TokenConfig(
+            $config->get('token.exp_access'),
+            $config->get('token.exp_refresh'),
+            $config->get('token.algorithm'),
+            $config->get('token.key_access'),
+            $config->get('token.key_refresh')
         )
     ),
     EntityManagerServiceInterface::class => fn(EntityManagerInterface $entityManager) => new EntityManagerService(

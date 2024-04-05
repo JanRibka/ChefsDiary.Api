@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace JR\ChefsDiary\Middleware;
 
-use JR\ChefsDiary\Enums\UserRoleEnum;
 use JR\ChefsDiary\Enums\HttpStatusCode;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -13,12 +12,11 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use JR\ChefsDiary\Services\Contract\TokenServiceInterface;
 
-class VerifyAuthenticationMiddleware implements MiddlewareInterface
+class VerifyTokenMiddleware implements MiddlewareInterface
 {
     public function __construct(
         private readonly ResponseFactoryInterface $responseFactory,
         private readonly TokenServiceInterface $tokenService,
-        private array $userRoles = []
     ) {
     }
 
@@ -32,19 +30,5 @@ class VerifyAuthenticationMiddleware implements MiddlewareInterface
         }
 
         return $handler->handle($request);
-    }
-
-    /**
-     * Summary of processWithParameter
-     * @param UserRoleEnum[] $userRoles
-     * @return callable
-     * @author Jan Ribka
-     */
-    public static function processWithParameter(array $userRoles): callable
-    {
-        return function (ServerRequestInterface $request, RequestHandlerInterface $handler) use ($userRoles) {
-            $middleware = new self($this->responseFactory, $this->tokenService, $userRoles);
-            return $middleware->process($request, $handler);
-        };
     }
 }
