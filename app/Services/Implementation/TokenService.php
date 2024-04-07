@@ -30,6 +30,7 @@ class TokenService implements TokenServiceInterface
         $payload = [
             'userInfo' => [
                 'uuid' => $user->getUuid(),
+                'login' => $user->getLogin(),
                 'roles' => $roles
             ],
             'exp' => $this->config->expAccess

@@ -145,7 +145,7 @@ class AuthService implements AuthServiceInterface
             $this->authCookieConfig->secure,
             $this->authCookieConfig->httpOnly,
             $this->authCookieConfig->sameSite,
-            $persistLogin ? $this->authCookieConfig->expires : "session",
+            $this->authCookieConfig->expires,
             $this->authCookieConfig->path
         );
 
@@ -158,9 +158,9 @@ class AuthService implements AuthServiceInterface
         $accessToken = $this->tokenService->createAccessToken($user, $roleValueArray);
 
         return [
-            'uuid' => $user->getUuid(),
-            'login' => $user->getLogin(),
-            'userRoles' => $roleValueArray,
+            // 'uuid' => $user->getUuid(),
+            // 'login' => $user->getLogin(),
+            // 'userRoles' => $roleValueArray,
             'accessToken' => $accessToken
         ];
     }
@@ -197,12 +197,12 @@ class AuthService implements AuthServiceInterface
 
         $userRoles = $this->userRepository->getUserRolesByUserId($user->getId());
         $roleValueArray = UserRoleHelper::getRoleValueArrayFromUserRoles($userRoles);
-        $accessToken = $this->tokenService->createAccessToken($user, $userRoles);
+        $accessToken = $this->tokenService->createAccessToken($user, $roleValueArray);
 
         return [
-            'uuid' => $user->getUuid(),
-            'login' => $user->getLogin(),
-            'userRoles' => $roleValueArray,
+            // 'uuid' => $user->getUuid(),
+            // 'login' => $user->getLogin(),
+            // 'userRoles' => $roleValueArray,
             'accessToken' => $accessToken
         ];
     }
