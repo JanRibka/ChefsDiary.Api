@@ -108,12 +108,28 @@ class AuthService implements AuthServiceInterface
         if (!$refreshToken) {
             return RefreshTokenAttemptStatusEnum::NO_COOKIE;
         }
-
+        
+        $this->cookieService->delete($this->authCookieConfig->name);
         $user = $this->userRepository->getByRefreshToken($refreshToken);
 
+        // Detected refresh token reuse!
         if (!$user) {
-            $this->cookieService->delete($this->authCookieConfig->name);
+            $decoded = $this->tokenService->decodeToken($refreshToken, $this->tokenConfig->keyRefresh);
 
+            if (!$decoded) {
+                return RefreshTokenAttemptStatusEnum::NO_USER;
+            }
+            
+            $hackedLogin = $decoded->login;
+            $hackedUser = $this->userRepository->getByLogin($hackedLogin);
+
+            $this->userRepository->update(
+                $hackedUser,
+                new UserData(
+                    null
+                )
+            );
+            
             return RefreshTokenAttemptStatusEnum::NO_USER;
         }
 
