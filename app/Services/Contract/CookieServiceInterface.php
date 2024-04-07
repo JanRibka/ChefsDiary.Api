@@ -12,7 +12,7 @@ interface CookieServiceInterface
 
     public function get(string $key): string|null;
 
-    public function delete(string $key): void;
+    public function delete(string $key, CookieConfigData|null $config = null): void;
 
     public function exists(string $key): bool;
 

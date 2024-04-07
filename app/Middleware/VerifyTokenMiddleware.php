@@ -25,7 +25,7 @@ class VerifyTokenMiddleware implements MiddlewareInterface
         $response = $this->tokenService->verifyJWT($request, $handler);
         $statusCode = $response->getStatusCode();
 
-        if ($statusCode === HttpStatusCode::UNAUTHORIZED->value) {
+        if ($statusCode !== HttpStatusCode::OK->value) {
             return $this->responseFactory->createResponse($statusCode);
         }
 

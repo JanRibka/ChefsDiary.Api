@@ -81,7 +81,7 @@ class TokenService implements TokenServiceInterface
 
             return $handler->handle($request);
         } catch (Exception) {
-            return $handler->handle($request)->withStatus(HttpStatusCode::UNAUTHORIZED->value);
+            return $handler->handle($request)->withStatus(HttpStatusCode::FORBIDDEN->value);
         }
     }
 
@@ -92,7 +92,6 @@ class TokenService implements TokenServiceInterface
 
             return JWT::decode($token, $key);
         } catch (Exception) {
-            throw new \Exception('Token decoding failed');
             return null;
         }
     }

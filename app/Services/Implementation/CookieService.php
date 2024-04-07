@@ -30,17 +30,15 @@ class CookieService implements CookieServiceInterface
         return $_COOKIE[$key];
     }
 
-    public function delete(string $key): void
+    public function delete(string $key, CookieConfigData|null $config = null): void
     {
-        // setcookie('jwt', $value, [
-        //     'expires' => time(),
-        //     'path' => $this->config->path,
-        //     'httpOnly' => $this->config->httpOnly,
-        //     'secure' => $this->config->secure,
-        //     'sameSite' => $this->config->sameSite,
-        // ]);
-
-        unset($_COOKIE[$key]);
+        setcookie($key, "", [
+            'expires' => time(),
+            'path' => $config->path,
+            'httpOnly' => $config->httpOnly,
+            'secure' => $config->secure,
+            'sameSite' => $config->sameSite,
+        ]);
     }
 
     public function exists(string $key): bool

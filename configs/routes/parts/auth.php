@@ -9,7 +9,7 @@ use JR\ChefsDiary\Middleware\VerifyTokenMiddleware;
 function getAuthRoutes(RouteCollectorProxy $api)
 {
     $api->group('/auth', function (RouteCollectorProxy $auth) {
-        $auth->post('/refreshToken', [AuthController::class, 'refreshToken']);
+        $auth->get('/refreshToken', [AuthController::class, 'refreshToken']);
         $auth->post('/logout', [AuthController::class, 'logout'])->add(VerifyTokenMiddleware::class);
     });
 
