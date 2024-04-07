@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use JR\ChefsDiary\Entity\User\Contract\UserInterface;
-
+// TODO: Na token bude zvast tabulka a bude se ukl8dat token jak pro admina tak pro web
 #[Entity, Table('User')]
 class User implements UserInterface
 {
