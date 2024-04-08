@@ -158,9 +158,7 @@ class AuthService implements AuthServiceInterface
         $accessToken = $this->tokenService->createAccessToken($user, $roleValueArray);
 
         return [
-            // 'uuid' => $user->getUuid(),
-            // 'login' => $user->getLogin(),
-            // 'userRoles' => $roleValueArray,
+            'login' => $user->getLogin(),
             'accessToken' => $accessToken
         ];
     }
@@ -200,9 +198,7 @@ class AuthService implements AuthServiceInterface
         $accessToken = $this->tokenService->createAccessToken($user, $roleValueArray);
 
         return [
-            // 'uuid' => $user->getUuid(),
-            // 'login' => $user->getLogin(),
-            // 'userRoles' => $roleValueArray,
+            'login' => $user->getLogin(),
             'accessToken' => $accessToken
         ];
     }
