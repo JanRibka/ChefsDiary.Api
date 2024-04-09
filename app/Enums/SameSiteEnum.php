@@ -6,7 +6,7 @@ namespace JR\ChefsDiary\Enums;
 
 enum SameSiteEnum: string
 {
-    case STRICT = 'Strict';
-    case LAX = 'Lax';
-    case NONE = 'None';
+    case STRICT = 'strict';
+    case LAX = 'lax';
+    case NONE = 'none';
 }

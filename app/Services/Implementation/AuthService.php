@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace JR\ChefsDiary\Services\Implementation;
 
+use JR\ChefsDiary\Enums\DomainEnum;
 use JR\ChefsDiary\DataObjects\Data\UserData;
 use JR\ChefsDiary\Enums\AuthAttemptStatusEnum;
 use JR\ChefsDiary\Enums\LogoutAttemptStatusEnum;
 use JR\ChefsDiary\Shared\Helpers\UserRoleHelper;
+use JR\ChefsDiary\DataObjects\Data\UserTokenData;
 use JR\ChefsDiary\DataObjects\Configs\TokenConfig;
 use JR\ChefsDiary\DataObjects\Data\CookieConfigData;
 use JR\ChefsDiary\DataObjects\Data\RegisterUserData;
@@ -108,7 +110,7 @@ class AuthService implements AuthServiceInterface
         if (!$refreshToken) {
             return RefreshTokenAttemptStatusEnum::NO_COOKIE;
         }
-        
+
         $this->cookieService->delete($this->authCookieConfig->name);
         $user = $this->userRepository->getByRefreshToken($refreshToken);
 
@@ -119,17 +121,12 @@ class AuthService implements AuthServiceInterface
             if (!$decoded) {
                 return RefreshTokenAttemptStatusEnum::NO_USER;
             }
-            
+
             $hackedLogin = $decoded->login;
             $hackedUser = $this->userRepository->getByLogin($hackedLogin);
 
-            $this->userRepository->update(
-                $hackedUser,
-                new UserData(
-                    null
-                )
-            );
-            
+            $this->userRepository->createUpdateRefreshToken($hackedUser, null, DomainEnum::WEB);
+
             return RefreshTokenAttemptStatusEnum::NO_USER;
         }
 
@@ -148,20 +145,14 @@ class AuthService implements AuthServiceInterface
         $roleValueArray = UserRoleHelper::getRoleValueArrayFromUserRoles($userRoles);
         $refreshToken = $this->tokenService->createRefreshToken($user);
 
-        $this->userRepository->update(
-            $user,
-            new UserData(
-                $refreshToken
-            )
-        );
-
+        $this->userRepository->createUpdateRefreshToken($user, $refreshToken, DomainEnum::WEB);
         $this->userRepository->logLoginAttempt($user, true);
 
         $config = new CookieConfigData(
             $this->authCookieConfig->secure,
             $this->authCookieConfig->httpOnly,
             $this->authCookieConfig->sameSite,
-            $this->authCookieConfig->expires,
+            $persistLogin ? $this->authCookieConfig->expires : "session",
             $this->authCookieConfig->path
         );
 
@@ -181,12 +172,7 @@ class AuthService implements AuthServiceInterface
 
     private function logout(UserInterface $user): LogoutAttemptStatusEnum
     {
-        $this->userRepository->update(
-            $user,
-            new UserData(
-                null
-            )
-        );
+        $this->userRepository->createUpdateRefreshToken($user, null, DomainEnum::WEB);
 
         $config = new CookieConfigData(
             $this->authCookieConfig->secure,

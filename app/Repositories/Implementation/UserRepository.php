@@ -5,14 +5,18 @@ declare(strict_types=1);
 namespace JR\ChefsDiary\Repositories\Implementation;
 
 use DateTime;
+use JR\ChefsDiary\Enums\DomainEnum;
 use JR\ChefsDiary\Enums\UserRoleEnum;
 use JR\ChefsDiary\DataObjects\Data\UserData;
+use JR\ChefsDiary\DataObjects\Data\UserTokenData;
 use JR\ChefsDiary\Entity\User\Implementation\User;
 use JR\ChefsDiary\DataObjects\Data\RegisterUserData;
 use JR\ChefsDiary\Entity\User\Contract\UserInterface;
 use JR\ChefsDiary\Entity\User\Implementation\UserInfo;
 use JR\ChefsDiary\Services\Implementation\HashService;
 use JR\ChefsDiary\Entity\User\Implementation\UserRoles;
+use JR\ChefsDiary\Entity\User\Implementation\UserToken;
+use JR\ChefsDiary\Entity\User\Contract\UserTokenInterface;
 use JR\ChefsDiary\Entity\User\Implementation\UserRoleType;
 use JR\ChefsDiary\Entity\User\Implementation\UserLogHistory;
 use JR\ChefsDiary\Repositories\Contract\UserRepositoryInterface;
@@ -117,10 +121,54 @@ class UserRepository implements UserRepositoryInterface
 
     public function update(UserInterface $user, UserData $data): void
     {
-        if (!!$data->refreshToken) {
-            $user->setRefreshToken($data->refreshToken);
-        }
+        // if (!!$data->refreshToken) {
+        //     $user->setRefreshToken($data->refreshToken);
+        // }
 
         $this->entityManagerService->sync($user);
+    }
+
+    public function getRefreshTokenByUserIdAndDomain(int $idUser, string|null $domain): UserTokenInterface|null
+    {
+        $criteria = ['User' => $idUser];
+
+        if ($domain !== null) {
+            $criteria['Domain'] = $domain;
+        }
+
+        return $this->entityManagerService->getRepository(UserToken::class)
+            ->findOneBy($criteria);
+    }
+
+    public function updateUserToken(UserTokenInterface $userToken, UserTokenData $data): void
+    {
+        if (!!$data->refreshToken) {
+            $userToken->setRefreshToken($data->refreshToken);
+        }
+
+        $this->entityManagerService->sync($userToken);
+    }
+
+    public function createUpdateRefreshToken(UserInterface $user, string|null $token, DomainEnum $domain): void
+    {
+        $refreshToken = $this->getRefreshTokenByUserIdAndDomain($user->getId(), $domain->value);
+
+        if ($refreshToken) {
+            $this->updateUserToken(
+                $refreshToken,
+                new UserTokenData(
+                    $token
+                )
+            );
+        } else if ($token !== null) {
+            $userToken = new UserToken();
+
+            $userToken
+                ->setUser($user)
+                ->setDomain($domain->value)
+                ->setRefreshToken($token);
+
+            $this->entityManagerService->sync($userToken);
+        }
     }
 }

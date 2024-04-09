@@ -21,7 +21,7 @@ class CookieService implements CookieServiceInterface
             'path' => $config?->path,
             'httpOnly' => $config?->httpOnly,
             'secure' => $config?->secure,
-            'sameSite' => $config?->sameSite,
+            'sameSite' => $config?->sameSite->value,
         ]);
     }
 
@@ -37,7 +37,7 @@ class CookieService implements CookieServiceInterface
             'path' => $config->path,
             'httpOnly' => $config->httpOnly,
             'secure' => $config->secure,
-            'sameSite' => $config->sameSite,
+            'sameSite' => $config->sameSite->value,
         ]);
     }
 

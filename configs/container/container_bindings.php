@@ -9,6 +9,7 @@ use Doctrine\ORM\ORMSetup;
 use Slim\Factory\AppFactory;
 use Doctrine\ORM\EntityManager;
 use Doctrine\DBAL\DriverManager;
+use JR\ChefsDiary\Enums\SameSiteEnum;
 use Psr\Container\ContainerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use DoctrineExtensions\Query\Mysql\Year;
@@ -117,7 +118,7 @@ return [
             $config->get('auth_cookie.name'),
             $config->get('auth_cookie.secure'),
             $config->get('auth_cookie.http_only'),
-            $config->get('auth_cookie.same_site'),
+            SameSiteEnum::from($config->get('auth_cookie.same_site')),
             $config->get('auth_cookie.expires'),
             $config->get('auth_cookie.path')
         ),

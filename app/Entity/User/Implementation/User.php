@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use JR\ChefsDiary\Entity\User\Contract\UserInterface;
-// TODO: Na token bude zvast tabulka a bude se ukl8dat token jak pro admina tak pro web
+
 #[Entity, Table('User')]
 class User implements UserInterface
 {
@@ -28,9 +28,6 @@ class User implements UserInterface
 
     #[Column(length: 75)]
     private string $Password;
-
-    #[Column(length: 255, nullable: true)]
-    private string|null $RefreshToken;
 
     #[Column(options: ['default' => false], nullable: false)]
     private bool|null $IsDisabled;
@@ -58,11 +55,6 @@ class User implements UserInterface
     public function getPassword(): string
     {
         return $this->Password;
-    }
-
-    public function getRefreshToken(): string
-    {
-        return $this->RefreshToken;
     }
 
     public function getIsDisabled(): bool
@@ -94,13 +86,6 @@ class User implements UserInterface
     public function setPassword(string $password): User
     {
         $this->Password = $password;
-
-        return $this;
-    }
-
-    public function setRefreshToken(string $refreshToken): User
-    {
-        $this->RefreshToken = $refreshToken;
 
         return $this;
     }

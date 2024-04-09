@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace JR\ChefsDiary\Repositories\Contract;
 
+use JR\ChefsDiary\Enums\DomainEnum;
 use JR\ChefsDiary\DataObjects\Data\UserData;
+use JR\ChefsDiary\DataObjects\Data\UserTokenData;
 use JR\ChefsDiary\DataObjects\Data\RegisterUserData;
 use JR\ChefsDiary\Entity\User\Contract\UserInterface;
 use JR\ChefsDiary\Entity\User\Contract\UserRolesInterface;
+use JR\ChefsDiary\Entity\User\Contract\UserTokenInterface;
 
 interface UserRepositoryInterface
 {
@@ -30,4 +33,10 @@ interface UserRepositoryInterface
     public function getUserRolesByUserId(int $idUser): array;
 
     public function update(UserInterface $user, UserData $data): void;
+
+    public function getRefreshTokenByUserIdAndDomain(int $idUser, string|null $domain): UserTokenInterface|null;
+
+    public function updateUserToken(UserTokenInterface $userToken, UserTokenData $data): void;
+
+    public function createUpdateRefreshToken(UserInterface $user, string|null $token, DomainEnum $domain): void;
 }
