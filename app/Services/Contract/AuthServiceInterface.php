@@ -24,5 +24,5 @@ interface AuthServiceInterface
 
     public function attemptLogout(): LogoutAttemptStatusEnum;
 
-    public function attemptRefreshToken(): RefreshTokenAttemptStatusEnum|array;
+    public function attemptRefreshToken(array $credentials): RefreshTokenAttemptStatusEnum|array;
 }

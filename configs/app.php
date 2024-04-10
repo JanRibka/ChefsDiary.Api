@@ -5,7 +5,7 @@ declare(strict_types=1);
 use JR\ChefsDiary\Enums\AppEnvironmentEnum;
 
 $boolean = function (mixed $value) {
-    if (in_array($value, ['true', 1, '1', true, 'yes'], true)) {
+    if (in_array($value, ['true', 1, '1', true, 'yes', 'on'], true)) {
         return true;
     }
 

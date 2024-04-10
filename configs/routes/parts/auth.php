@@ -10,7 +10,8 @@ function getAuthRoutes(RouteCollectorProxy $api)
 {
     $api->group('/auth', function (RouteCollectorProxy $auth) {
         $auth->get('/refreshToken', [AuthController::class, 'refreshToken']);
-        $auth->post('/logout', [AuthController::class, 'logout'])->add(VerifyTokenMiddleware::class);
+        $auth->post('/logout', [AuthController::class, 'logout']);
+        $auth->post('/test', [AuthController::class, 'test'])->add(VerifyTokenMiddleware::class);
     });
 
     $api->group('/auth', function (RouteCollectorProxy $auth) {

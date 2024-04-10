@@ -47,7 +47,7 @@ class UserRepository implements UserRepositoryInterface
             ->findOneBy(
                 ['RefreshToken' => $refreshToken]
             )
-            ->getUser();
+                ?->getUser() ?? null;
     }
 
     public function createUser(RegisterUserData $data): UserInterface
@@ -132,12 +132,18 @@ class UserRepository implements UserRepositoryInterface
         $this->entityManagerService->sync($user);
     }
 
-    public function getRefreshTokenByUserIdAndDomain(int $idUser, string|null $domain): UserTokenInterface|null
+    public function refreshTokenExists(string $refreshToken): bool
+    {
+        return !!$this->entityManagerService->getRepository(UserToken::class)
+            ->findOneBy(['RefreshToken' => $refreshToken]);
+    }
+
+    public function getRefreshTokenByUserIdAndDomain(int $idUser, DomainEnum|null $domain): UserTokenInterface|null
     {
         $criteria = ['User' => $idUser];
 
         if ($domain !== null) {
-            $criteria['Domain'] = $domain;
+            $criteria['Domain'] = $domain->value;
         }
 
         return $this->entityManagerService->getRepository(UserToken::class)
@@ -153,9 +159,9 @@ class UserRepository implements UserRepositoryInterface
         $this->entityManagerService->sync($userToken);
     }
 
-    public function createUpdateRefreshToken(UserInterface $user, string|null $token, DomainEnum $domain): void
+    public function createUpdateRefreshToken(UserInterface $user, string $token, DomainEnum $domain): void
     {
-        $refreshToken = $this->getRefreshTokenByUserIdAndDomain($user->getId(), $domain->value);
+        $refreshToken = $this->getRefreshTokenByUserIdAndDomain($user->getId(), $domain);
 
         if ($refreshToken) {
             $this->updateUserToken(
@@ -174,5 +180,27 @@ class UserRepository implements UserRepositoryInterface
 
             $this->entityManagerService->sync($userToken);
         }
+    }
+
+    public function deleteRefreshTokenByUserIdAndDomain(int $idUser, DomainEnum $domain): void
+    {
+        $userToken = $this->getRefreshTokenByUserIdAndDomain($idUser, $domain);
+
+        if ($userToken) {
+            $this->entityManagerService->remove($userToken);
+            $this->entityManagerService->flush();
+        }
+    }
+
+    public function deleteRefreshTokes(int $idUser): void
+    {
+        $userTokens = $this->entityManagerService->getRepository(UserToken::class)
+            ->findBy(['User' => $idUser]);
+
+        foreach ($userTokens as $userToken) {
+            $this->entityManagerService->remove($userToken);
+        }
+
+        $this->entityManagerService->flush();
     }
 }

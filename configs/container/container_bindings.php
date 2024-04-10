@@ -149,7 +149,7 @@ return [
             $config->get('token.key_refresh')
         ),
         $container->get(
-            RequestValidatorFactoryInterface::class
+            SessionServiceInterface::class
         )
     ),
     EntityManagerServiceInterface::class => fn(EntityManagerInterface $entityManager) => new EntityManagerService(

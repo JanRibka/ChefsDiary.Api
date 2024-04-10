@@ -80,7 +80,7 @@ class AuthService implements AuthServiceInterface
         //     return AuthAttemptStatus::TWO_FACTOR_AUTH;
         // }        
 
-        return $this->login($user, $persistLogin);
+        return $this->login($user, $persistLogin, DomainEnum::WEB);
 
     }
 
@@ -100,11 +100,12 @@ class AuthService implements AuthServiceInterface
             return LogoutAttemptStatusEnum::NO_USER;
         }
 
-        return $this->logout($user);
+        return $this->logout($user, DomainEnum::WEB);
     }
 
-    public function attemptRefreshToken(): RefreshTokenAttemptStatusEnum|array
+    public function attemptRefreshToken(array $credentials): RefreshTokenAttemptStatusEnum|array
     {
+        $persistLogin = (bool) ($credentials['persistLogin'] ?? false);
         $refreshToken = $this->cookieService->get($this->authCookieConfig->name);
 
         if (!$refreshToken) {
@@ -125,12 +126,12 @@ class AuthService implements AuthServiceInterface
             $hackedLogin = $decoded->login;
             $hackedUser = $this->userRepository->getByLogin($hackedLogin);
             // TODO: O jakou se jedna domenu, by se mohlo nacitat z url
-            $this->userRepository->createUpdateRefreshToken($hackedUser, null, DomainEnum::WEB);
+            $this->userRepository->deleteRefreshTokes($hackedUser->getId());
 
             return RefreshTokenAttemptStatusEnum::NO_USER;
         }
 
-        return $this->refreshToken($user, $refreshToken);
+        return $this->refreshToken($user, $refreshToken, DomainEnum::WEB, $persistLogin);
     }
 
     #region Private methods
@@ -139,14 +140,32 @@ class AuthService implements AuthServiceInterface
         return password_verify($password, $user->getPassword());
     }
 
-    private function login(UserInterface $user, bool $persistLogin): array
+    private function login(UserInterface $user, bool $persistLogin, DomainEnum $domain): array
     {
         $userRoles = $this->userRepository->getUserRolesByUserId($user->getId());
         $roleValueArray = UserRoleHelper::getRoleValueArrayFromUserRoles($userRoles);
         $refreshToken = $this->tokenService->createRefreshToken($user);
+        $tokenCookie = $this->cookieService->get($this->authCookieConfig->name);
 
-        $this->userRepository->createUpdateRefreshToken($user, $refreshToken, DomainEnum::WEB);
+        $this->userRepository->createUpdateRefreshToken($user, $refreshToken, $domain);
         $this->userRepository->logLoginAttempt($user, true);
+
+        if ($tokenCookie) {
+            // Scenario added here: 
+            // 1) User logs in but never uses RT and does not logout 
+            // 2) RT is stolen
+            // 3) If 1 & 2, reuse detection is needed to clear all RTs when user logs in
+
+            $foundToken = $this->userRepository->refreshTokenExists($tokenCookie);
+
+            // Detected refresh token reuse!
+            if (!$foundToken) {
+                // Clear out ALL previous refresh tokens
+                $this->userRepository->deleteRefreshTokes($user->getId());
+            }
+
+            $this->cookieService->delete($this->authCookieConfig->name);
+        }
 
         $config = new CookieConfigData(
             $this->authCookieConfig->secure,
@@ -170,9 +189,9 @@ class AuthService implements AuthServiceInterface
         ];
     }
 
-    private function logout(UserInterface $user): LogoutAttemptStatusEnum
+    private function logout(UserInterface $user, DomainEnum $domain): LogoutAttemptStatusEnum
     {
-        $this->userRepository->createUpdateRefreshToken($user, null, DomainEnum::WEB);
+        $this->userRepository->deleteRefreshTokenByUserIdAndDomain($user->getId(), $domain);
 
         $config = new CookieConfigData(
             $this->authCookieConfig->secure,
@@ -187,17 +206,38 @@ class AuthService implements AuthServiceInterface
         return LogoutAttemptStatusEnum::LOGOUT_SUCCESS;
     }
 
-    private function refreshToken(UserInterface $user, string $refreshToken): RefreshTokenAttemptStatusEnum|array
+    private function refreshToken(UserInterface $user, string $refreshToken, DomainEnum $domain, bool $persistLogin): RefreshTokenAttemptStatusEnum|array
     {
         $decoded = $this->tokenService->decodeToken($refreshToken, $this->tokenConfig->keyRefresh);
 
+        if (!$decoded) {
+            $this->userRepository->deleteRefreshTokenByUserIdAndDomain($user->getId(), $domain);
+        }
         if ($user->getUuid() !== $decoded->uuid) {
             return RefreshTokenAttemptStatusEnum::USER_NOT_EQUAL;
         }
 
+        // Refresh token was still valid
         $userRoles = $this->userRepository->getUserRolesByUserId($user->getId());
         $roleValueArray = UserRoleHelper::getRoleValueArrayFromUserRoles($userRoles);
         $accessToken = $this->tokenService->createAccessToken($user, $roleValueArray);
+        $newRefreshToken = $this->tokenService->createRefreshToken($user);
+
+        $this->userRepository->createUpdateRefreshToken($user, $newRefreshToken, $domain);
+
+        $config = new CookieConfigData(
+            $this->authCookieConfig->secure,
+            $this->authCookieConfig->httpOnly,
+            $this->authCookieConfig->sameSite,
+            $persistLogin ? $this->authCookieConfig->expires : "session",
+            $this->authCookieConfig->path
+        );
+
+        $this->cookieService->set(
+            $this->authCookieConfig->name,
+            $newRefreshToken,
+            $config
+        );
 
         return [
             'login' => $user->getLogin(),

@@ -34,9 +34,15 @@ interface UserRepositoryInterface
 
     public function update(UserInterface $user, UserData $data): void;
 
-    public function getRefreshTokenByUserIdAndDomain(int $idUser, string|null $domain): UserTokenInterface|null;
+    public function refreshTokenExists(string $refreshToken): bool;
+
+    public function getRefreshTokenByUserIdAndDomain(int $idUser, DomainEnum|null $domain): UserTokenInterface|null;
 
     public function updateUserToken(UserTokenInterface $userToken, UserTokenData $data): void;
 
-    public function createUpdateRefreshToken(UserInterface $user, string|null $token, DomainEnum $domain): void;
+    public function createUpdateRefreshToken(UserInterface $user, string $token, DomainEnum $domain): void;
+
+    public function deleteRefreshTokenByUserIdAndDomain(int $idUser, DomainEnum $domain): void;
+
+    public function deleteRefreshTokes(int $idUser): void;
 }

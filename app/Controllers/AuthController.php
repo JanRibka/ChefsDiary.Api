@@ -6,6 +6,7 @@ namespace JR\ChefsDiary\Controllers;
 
 use JR\ChefsDiary\Enums\HttpStatusCode;
 use JR\ChefsDiary\Enums\AuthAttemptStatusEnum;
+use JR\ChefsDiary\Shared\Helpers\BooleanHelper;
 use JR\ChefsDiary\Enums\LogoutAttemptStatusEnum;
 use JR\ChefsDiary\Exceptions\ValidationException;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -111,10 +112,15 @@ class AuthController
      * @return \Psr\Http\Message\ResponseInterface
      * @author Jan Ribka
      */
-    public function refreshToken(Response $response): Response
+    public function refreshToken(Request $request, Response $response): Response
     {
+        $parseBoolean = BooleanHelper::parse();
 
-        $status = $this->authService->attemptRefreshToken();
+        $queryParams = $request->getQueryParams();
+        $persistLogin = $parseBoolean($queryParams['persistLogin']);
+        $data = [$persistLogin];
+
+        $status = $this->authService->attemptRefreshToken($data);
 
         if ($status === RefreshTokenAttemptStatusEnum::NO_COOKIE) {
             throw new ValidationException(['unauthorized' => ['noCookie']], HttpStatusCode::UNAUTHORIZED->value);
@@ -130,5 +136,10 @@ class AuthController
 
 
         return $this->responseFormatter->asJson($response, $status);
+    }
+
+    public function test(Request $request, Response $response): Response
+    {
+        return $response->withStatus(HttpStatusCode::OK->value);
     }
 }
