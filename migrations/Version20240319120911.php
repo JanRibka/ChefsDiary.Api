@@ -25,19 +25,19 @@ final class Version20240319120911 extends AbstractMigration
         $this->addSql('CREATE TABLE UserLogHistory (IdUserLogHistory INT UNSIGNED AUTO_INCREMENT NOT NULL, LoginAttemptDate DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL, LoginSuccessful TINYINT(1) DEFAULT 0 NOT NULL, IdUser INT UNSIGNED NOT NULL, INDEX IDX_CB8BAA07F9C28DE1 (IdUser), PRIMARY KEY(IdUserLogHistory)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE UserRoleType (IdUserRoleType INT UNSIGNED AUTO_INCREMENT NOT NULL, Code VARCHAR(20) NOT NULL, Value SMALLINT NOT NULL, Description VARCHAR(20) NOT NULL, PRIMARY KEY(IdUserRoleType)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE UserRoles (IdUserRole INT UNSIGNED AUTO_INCREMENT NOT NULL, IdUser INT UNSIGNED NOT NULL, IdUserRoleType INT UNSIGNED NOT NULL, INDEX IDX_D2AABFB2F9C28DE1 (IdUser), INDEX IDX_D2AABFB2932C2497 (IdUserRoleType), PRIMARY KEY(IdUserRole)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('ALTER TABLE UserInfo ADD CONSTRAINT FK_34B0844EF9C28DE1 FOREIGN KEY (IdUser) REFERENCES User (IdUser)');
-        $this->addSql('ALTER TABLE UserLogHistory ADD CONSTRAINT FK_CB8BAA07F9C28DE1 FOREIGN KEY (IdUser) REFERENCES User (IdUser)');
-        $this->addSql('ALTER TABLE UserRoles ADD CONSTRAINT FK_D2AABFB2F9C28DE1 FOREIGN KEY (IdUser) REFERENCES User (IdUser)');
-        $this->addSql('ALTER TABLE UserRoles ADD CONSTRAINT FK_D2AABFB2932C2497 FOREIGN KEY (IdUserRoleType) REFERENCES UserRoleType (IdUserRoleType)');
+        $this->addSql('ALTER TABLE UserInfo ADD CONSTRAINT FK_UserInfo_IdUser FOREIGN KEY (IdUser) REFERENCES User (IdUser)');
+        $this->addSql('ALTER TABLE UserLogHistory ADD CONSTRAINT FK_UserLogHistory_IdUser FOREIGN KEY (IdUser) REFERENCES User (IdUser)');
+        $this->addSql('ALTER TABLE UserRoles ADD CONSTRAINT FK_UserRoles_IdUser FOREIGN KEY (IdUser) REFERENCES User (IdUser)');
+        $this->addSql('ALTER TABLE UserRoles ADD CONSTRAINT FK_UserRoles_IdUserRoleType FOREIGN KEY (IdUserRoleType) REFERENCES UserRoleType (IdUserRoleType)');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE UserInfo DROP FOREIGN KEY FK_34B0844EF9C28DE1');
-        $this->addSql('ALTER TABLE UserLogHistory DROP FOREIGN KEY FK_CB8BAA07F9C28DE1');
-        $this->addSql('ALTER TABLE UserRoles DROP FOREIGN KEY FK_D2AABFB2F9C28DE1');
-        $this->addSql('ALTER TABLE UserRoles DROP FOREIGN KEY FK_D2AABFB2932C2497');
+        $this->addSql('ALTER TABLE UserInfo DROP FOREIGN KEY FK_UserInfo_IdUser');
+        $this->addSql('ALTER TABLE UserLogHistory DROP FOREIGN KEY FK_UserLogHistory_IdUser');
+        $this->addSql('ALTER TABLE UserRoles DROP FOREIGN KEY FK_UserRoles_IdUser');
+        $this->addSql('ALTER TABLE UserRoles DROP FOREIGN KEY FK_UserRoles_IdUserRoleType');
         $this->addSql('DROP TABLE User');
         $this->addSql('DROP TABLE UserInfo');
         $this->addSql('DROP TABLE UserLogHistory');
