@@ -43,7 +43,11 @@ class UserRepository implements UserRepositoryInterface
 
     public function getByRefreshToken(string $refreshToken): ?UserInterface
     {
-        return $this->entityManagerService->getRepository(User::class)->findOneBy(['RefreshToken' => $refreshToken]);
+        return $this->entityManagerService->getRepository(UserToken::class)
+            ->findOneBy(
+                ['RefreshToken' => $refreshToken]
+            )
+            ->getUser();
     }
 
     public function createUser(RegisterUserData $data): UserInterface

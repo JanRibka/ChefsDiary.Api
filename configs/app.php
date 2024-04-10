@@ -50,8 +50,13 @@ return [
         'same_site' => $_ENV['AUTH_COOKIE_SAME_SITE'] ?? 'lax',
         'expires' => time() + $_ENV['TOKEN_EXP_REFRESH'] ?? 0,
         'path' => $_ENV['AUTH_COOKIE_PATH'] ?? ''
-
-
-    ]
-
+    ],
+    'session' => [
+        'token_session_name' => $appSnakeName . '_token_session',
+        'name' => $appSnakeName . '_session',
+        'flash_name' => $appSnakeName . '_flash',
+        'secure' => $boolean($_ENV['SESSION_SECURE'] ?? true),
+        'httponly' => $boolean($_ENV['SESSION_HTTP_ONLY'] ?? true),
+        'samesite' => $_ENV['SESSION_SAME_SITE'] ?? 'lax',
+    ],
 ];

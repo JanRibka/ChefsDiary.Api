@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace JR\ChefsDiary\Services\Contract;
 
-interface SessionInterface
+interface SessionServiceInterface
 {
     public function start(): void;
 

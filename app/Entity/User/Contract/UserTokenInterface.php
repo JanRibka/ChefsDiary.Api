@@ -8,5 +8,6 @@ use JR\ChefsDiary\Entity\User\Implementation\UserToken;
 
 interface UserTokenInterface
 {
+    public function getUser(): UserInterface;
     public function setRefreshToken(string|null $refreshToken): UserToken;
 }

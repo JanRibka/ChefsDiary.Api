@@ -5,11 +5,9 @@ declare(strict_types=1);
 namespace JR\ChefsDiary\Services\Implementation;
 
 use JR\ChefsDiary\Enums\DomainEnum;
-use JR\ChefsDiary\DataObjects\Data\UserData;
 use JR\ChefsDiary\Enums\AuthAttemptStatusEnum;
 use JR\ChefsDiary\Enums\LogoutAttemptStatusEnum;
 use JR\ChefsDiary\Shared\Helpers\UserRoleHelper;
-use JR\ChefsDiary\DataObjects\Data\UserTokenData;
 use JR\ChefsDiary\DataObjects\Configs\TokenConfig;
 use JR\ChefsDiary\DataObjects\Data\CookieConfigData;
 use JR\ChefsDiary\DataObjects\Data\RegisterUserData;
@@ -19,6 +17,7 @@ use JR\ChefsDiary\DataObjects\Configs\AuthCookieConfig;
 use JR\ChefsDiary\Services\Contract\AuthServiceInterface;
 use JR\ChefsDiary\Services\Contract\TokenServiceInterface;
 use JR\ChefsDiary\Services\Contract\CookieServiceInterface;
+use JR\ChefsDiary\Services\Contract\SessionServiceInterface;
 use JR\ChefsDiary\Repositories\Contract\UserRepositoryInterface;
 
 class AuthService implements AuthServiceInterface
@@ -28,7 +27,8 @@ class AuthService implements AuthServiceInterface
         private readonly TokenServiceInterface $tokenService,
         private readonly CookieServiceInterface $cookieService,
         private readonly AuthCookieConfig $authCookieConfig,
-        private readonly TokenConfig $tokenConfig
+        private readonly TokenConfig $tokenConfig,
+        private readonly SessionServiceInterface $sessionService
     ) {
     }
 
@@ -124,7 +124,7 @@ class AuthService implements AuthServiceInterface
 
             $hackedLogin = $decoded->login;
             $hackedUser = $this->userRepository->getByLogin($hackedLogin);
-
+            // TODO: O jakou se jedna domenu, by se mohlo nacitat z url
             $this->userRepository->createUpdateRefreshToken($hackedUser, null, DomainEnum::WEB);
 
             return RefreshTokenAttemptStatusEnum::NO_USER;

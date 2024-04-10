@@ -41,6 +41,11 @@ class UserToken implements UserTokenInterface
         return $this->IdUserToken;
     }
 
+    public function getUser(): UserInterface
+    {
+        return $this->User;
+    }
+
     public function getDomain(): string
     {
         return $this->Domain;

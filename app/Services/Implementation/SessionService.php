@@ -6,9 +6,9 @@ namespace JR\ChefsDiary\Services\Implementation;
 
 use JR\ChefsDiary\Exceptions\SessionException;
 use JR\ChefsDiary\DataObjects\Configs\SessionConfig;
-use JR\ChefsDiary\Services\Contract\SessionInterface;
+use JR\ChefsDiary\Services\Contract\SessionServiceInterface;
 
-class SessionService implements SessionInterface
+class SessionService implements SessionServiceInterface
 {
     public function __construct(
         private readonly SessionConfig $config
