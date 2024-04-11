@@ -56,14 +56,14 @@ class AuthService implements AuthServiceInterface
     {
         // web 
         //	accessToken 20-30 min
-        //	refresh token 30 dnů bez prodlužování
+        //	refresh token 7 dnů s prodlužováním
         	
         // Administraci
         //	accessToken 10 min
         //	refreshToken 1 hodina s prodlužování
         	
         // Podle url budu rozlišovat jak nastavit token.
-        // V cookie pude path /amin a /, podle toho jestli je administrace nebo web
+        // V cookie pude path /amin a /, podle toho jestli je administrace nebo web a budou mít různé názvy
 
         // Udělat Url helper, který bude zjištovat zda je v url admin
         
