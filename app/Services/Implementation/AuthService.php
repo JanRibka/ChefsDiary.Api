@@ -54,6 +54,19 @@ class AuthService implements AuthServiceInterface
      */
     public function attemptLogin(array $credentials): AuthAttemptStatusEnum|array
     {
+        // web 
+        //	accessToken 20-30 min
+        //	refresh token 8 dnů s prodlužováním
+        	
+        // Administraci
+        //	accessToken 10 min
+        //	refreshToken 1 hodina s prodlužování
+        	
+        // Podle url budu rozlišovat jak nastavit token.
+        // V cookie pude path /amin a /, podle toho jestli je administrace nebo web a budou mít různé názvy
+        // Do session dat session_log_info a session_log_info_admin, kde bude název kukiny s tokenem. POkud ses zavolá refresh token?? tak se zkontroloje zda je platnost kukiny session a session nexistuje, tak se kukina smaže
+        // Udělat Url helper, který bude zjištovat zda je v url admin
+        
         $login = $credentials['login'];
         $password = $credentials['password'];
         $persistLogin = (bool) ($credentials['persistLogin'] ?? false);
