@@ -56,7 +56,7 @@ class AuthService implements AuthServiceInterface
     {
         // web 
         //	accessToken 20-30 min
-        //	refresh token 7 dnů s prodlužováním
+        //	refresh token 8 dnů s prodlužováním
         	
         // Administraci
         //	accessToken 10 min
