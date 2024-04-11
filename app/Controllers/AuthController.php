@@ -118,7 +118,7 @@ class AuthController
 
         $queryParams = $request->getQueryParams();
         $persistLogin = $parseBoolean($queryParams['persistLogin']);
-        $data = [$persistLogin];
+        $data = ['persistLogin' => $persistLogin];
 
         $status = $this->authService->attemptRefreshToken($data);
 
