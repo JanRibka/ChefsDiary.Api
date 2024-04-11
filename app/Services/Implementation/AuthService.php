@@ -64,6 +64,8 @@ class AuthService implements AuthServiceInterface
         	
         // Podle url budu rozlišovat jak nastavit token.
         // V cookie pude path /amin a /, podle toho jestli je administrace nebo web
+
+        // Udělat Url helper, který bude zjištovat zda je v url admin
         
         $login = $credentials['login'];
         $password = $credentials['password'];
