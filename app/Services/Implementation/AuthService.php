@@ -6,6 +6,7 @@ namespace JR\ChefsDiary\Services\Implementation;
 
 use JR\ChefsDiary\Enums\DomainEnum;
 use JR\ChefsDiary\Enums\AuthAttemptStatusEnum;
+use JR\ChefsDiary\Shared\Helpers\BooleanHelper;
 use JR\ChefsDiary\Enums\LogoutAttemptStatusEnum;
 use JR\ChefsDiary\Shared\Helpers\UserRoleHelper;
 use JR\ChefsDiary\DataObjects\Configs\TokenConfig;
@@ -66,10 +67,11 @@ class AuthService implements AuthServiceInterface
         // V cookie pude path /amin a /, podle toho jestli je administrace nebo web a budou mít různé názvy
         // Do session dat session_log_info a session_log_info_admin, kde bude název kukiny s tokenem. POkud ses zavolá refresh token?? tak se zkontroloje zda je platnost kukiny session a session nexistuje, tak se kukina smaže
         // Udělat Url helper, který bude zjištovat zda je v url admin
+        $parseBoolean = BooleanHelper::parse();
 
         $login = $credentials['login'];
         $password = $credentials['password'];
-        $persistLogin = (bool) ($credentials['persistLogin'] ?? false);
+        $persistLogin = $parseBoolean(($credentials['persistLogin'] ?? false));
         $user = $this->userRepository->getByLogin($login);
 
         if (!$user) {
@@ -180,23 +182,26 @@ class AuthService implements AuthServiceInterface
             $this->cookieService->delete($this->authCookieConfig->name);
         }
 
-        $config = new CookieConfigData(
-            $this->authCookieConfig->secure,
-            $this->authCookieConfig->httpOnly,
-            $this->authCookieConfig->sameSite,
-            $persistLogin ? $this->authCookieConfig->expires : "session",
-            $this->authCookieConfig->path
-        );
-
-        $this->cookieService->set(
-            $this->authCookieConfig->name,
-            $refreshToken,
-            $config
-        );
-
-        if (!$persistLogin) {
+        if ($persistLogin) {
             // TODO: Nazev bude z configu a buse se tvorit jenom pokud nen9 persist
-            $this->sessionService->put('session_log_info', uniqid());
+            // $this->sessionService->put('session_log_info', uniqid());
+            $this->sessionService->start();
+        } else {
+            // $config = new CookieConfigData(
+            //     $this->authCookieConfig->secure,
+            //     $this->authCookieConfig->httpOnly,
+            //     $this->authCookieConfig->sameSite,
+            //     $this->authCookieConfig->expires,
+            //     $this->authCookieConfig->path
+            // );
+
+            // $this->cookieService->set(
+            //     $this->authCookieConfig->name,
+            //     $refreshToken,
+            //     $config
+            // );
+
+            $this->cookieService->start();
         }
 
         $accessToken = $this->tokenService->createAccessToken($user, $roleValueArray);

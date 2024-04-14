@@ -13,6 +13,12 @@ class CookieService implements CookieServiceInterface
     {
     }
 
+    public function start(): void
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+    }
 
     public function set(string $key, string $value, CookieConfigData|null $config = null): void
     {
