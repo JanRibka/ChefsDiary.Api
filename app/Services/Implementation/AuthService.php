@@ -194,8 +194,10 @@ class AuthService implements AuthServiceInterface
             $config
         );
 
-        // TODO: Nazev bude z configu a buse se tvorit jenom pokud nen9 persist
-        $this->sessionService->put('session_log_info', uniqid());
+        if (!$persistLogin) {
+            // TODO: Nazev bude z configu a buse se tvorit jenom pokud nen9 persist
+            $this->sessionService->put('session_log_info', uniqid());
+        }
 
         $accessToken = $this->tokenService->createAccessToken($user, $roleValueArray);
 
