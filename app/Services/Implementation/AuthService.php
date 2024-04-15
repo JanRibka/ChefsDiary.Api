@@ -182,27 +182,41 @@ class AuthService implements AuthServiceInterface
             $this->cookieService->delete($this->authCookieConfig->name);
         }
 
-        if ($persistLogin) {
-            // TODO: Nazev bude z configu a buse se tvorit jenom pokud nen9 persist
-            // $this->sessionService->put('session_log_info', uniqid());
-            $this->sessionService->start();
-        } else {
-            // $config = new CookieConfigData(
-            //     $this->authCookieConfig->secure,
-            //     $this->authCookieConfig->httpOnly,
-            //     $this->authCookieConfig->sameSite,
-            //     $this->authCookieConfig->expires,
-            //     $this->authCookieConfig->path
-            // );
+        $config = new CookieConfigData(
+            $this->authCookieConfig->secure,
+            $this->authCookieConfig->httpOnly,
+            $this->authCookieConfig->sameSite,
+            $this->authCookieConfig->expires,
+            $this->authCookieConfig->path
+        );
 
-            // $this->cookieService->set(
-            //     $this->authCookieConfig->name,
-            //     $refreshToken,
-            //     $config
-            // );
+        $this->cookieService->set(
+            $this->authCookieConfig->name,
+            $refreshToken,
+            $config
+        );
 
-            $this->cookieService->start();
-        }
+        // if ($persistLogin) {
+        //     // TODO: Nazev bude z configu a buse se tvorit jenom pokud nen9 persist
+        //     // $this->sessionService->put('session_log_info', uniqid());
+        //     $this->sessionService->start();
+        // } else {
+        //     // $config = new CookieConfigData(
+        //     //     $this->authCookieConfig->secure,
+        //     //     $this->authCookieConfig->httpOnly,
+        //     //     $this->authCookieConfig->sameSite,
+        //     //     $this->authCookieConfig->expires,
+        //     //     $this->authCookieConfig->path
+        //     // );
+
+        //     // $this->cookieService->set(
+        //     //     $this->authCookieConfig->name,
+        //     //     $refreshToken,
+        //     //     $config
+        //     // );
+
+        //     $this->cookieService->start();
+        // }
 
         $accessToken = $this->tokenService->createAccessToken($user, $roleValueArray);
 
