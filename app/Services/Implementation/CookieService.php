@@ -39,7 +39,7 @@ class CookieService implements CookieServiceInterface
     public function delete(string $key, CookieConfigData|null $config = null): void
     {
         setcookie($key, "", [
-            'expires' => time(),
+            'expires' => time() - 3600,
             'path' => $config->path,
             'httpOnly' => $config->httpOnly,
             'secure' => $config->secure,
