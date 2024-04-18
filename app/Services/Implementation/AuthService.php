@@ -162,7 +162,6 @@ class AuthService implements AuthServiceInterface
         $refreshToken = $this->tokenService->createRefreshToken($user);
         $tokenCookie = $this->cookieService->get($this->authCookieConfig->name);
 
-        $this->userRepository->createUpdateRefreshToken($user, $refreshToken, $domain);
         $this->userRepository->logLoginAttempt($user, true);
 
         if ($tokenCookie) {
@@ -194,6 +193,11 @@ class AuthService implements AuthServiceInterface
             $this->authCookieConfig->name,
             $refreshToken,
             $config
+        );
+        $this->userRepository->createUpdateRefreshToken(
+            $user,
+            $refreshToken,
+            $domain
         );
 
         // if ($persistLogin) {

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Slim\App;
 use JR\ChefsDiary\Config;
+use JR\ChefsDiary\Middleware\StartSessionMiddleware;
 use JR\ChefsDiary\Middleware\ValidationExceptionMiddleware;
 
 return function (App $app) {
@@ -11,6 +12,7 @@ return function (App $app) {
     $config = $container->get(Config::class);
 
     $app->add(ValidationExceptionMiddleware::class);
+    $app->add(StartSessionMiddleware::class);
 
     $app->addBodyParsingMiddleware();
     $app->addErrorMiddleware(
