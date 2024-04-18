@@ -42,7 +42,7 @@ class AuthService implements AuthServiceInterface
     public function register(RegisterUserData $data): UserInterface
     {
         $user = $this->userRepository->createUser($data);
-        // TODO: Tady se bude pos9lat email s potvrzenim registrace
+        // TODO: Tady se bude pos9lat email s potvrzenim registrace a prihlaseni uzuvatele
 
         return $user;
     }
