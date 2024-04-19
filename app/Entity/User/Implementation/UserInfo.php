@@ -13,10 +13,12 @@ use Doctrine\ORM\Mapping\OneToOne;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use JR\ChefsDiary\Entity\Traits\HasTimestamp;
+use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use JR\ChefsDiary\Entity\User\Contract\UserInterface;
 use JR\ChefsDiary\Entity\User\Contract\UserInfoInterface;
 
 #[Entity, Table('UserInfo')]
+#[HasLifecycleCallbacks]
 class UserInfo implements UserInfoInterface
 {
     use HasTimestamp;
@@ -42,10 +44,6 @@ class UserInfo implements UserInfoInterface
     #[Column(length: 25, nullable: true)]
     private string|null $Phone;
 
-    #[Column(options: ['default' => 'CURRENT_TIMESTAMP'], nullable: false)]
-    private DateTime $CreatedAt;
-
-
 
     // Getters
     public function getId(): int
@@ -61,11 +59,6 @@ class UserInfo implements UserInfoInterface
     public function getUserPhone(): string|null
     {
         return $this->Phone;
-    }
-
-    public function getUserCreatedAt(): DateTime
-    {
-        return $this->CreatedAt;
     }
 
 
@@ -87,13 +80,6 @@ class UserInfo implements UserInfoInterface
     public function setPhone(string $phone): UserInfo
     {
         $this->Phone = $phone;
-
-        return $this;
-    }
-
-    public function setUserCreatedAt(DateTime $createdAt): UserInfo
-    {
-        $this->CreatedAt = $createdAt;
 
         return $this;
     }
