@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use JR\ChefsDiary\Enums\StorageDriverEnum;
 use JR\ChefsDiary\Enums\AppEnvironmentEnum;
 
 $boolean = function (mixed $value) {
@@ -58,5 +59,16 @@ return [
         'secure' => $boolean($_ENV['SESSION_SECURE'] ?? true),
         'httponly' => $boolean($_ENV['SESSION_HTTP_ONLY'] ?? true),
         'samesite' => $_ENV['SESSION_SAME_SITE'] ?? 'lax',
+    ],
+    'storage' => [
+        'driver' => ($_ENV['STORAGE_DRIVER'] ?? '') === 's3' ? StorageDriverEnum::Remote_DO : StorageDriverEnum::Local,
+        's3' => [
+            'key' => $_ENV['S3_KEY'],
+            'secret' => $_ENV['S3_SECRET'],
+            'region' => $_ENV['S3_REGION'],
+            'version' => $_ENV['S3_VERSION'],
+            'endpoint' => $_ENV['S3_ENDPOINT'],
+            'bucket' => $_ENV['S3_BUCKET'],
+        ],
     ],
 ];

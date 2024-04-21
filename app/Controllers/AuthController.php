@@ -140,6 +140,7 @@ class AuthController
 
     public function test(Request $request, Response $response): Response
     {
+        // TODO: Pro import pou6iju validaci UploadReceiptRequestValidator z tutorialu a vytvo59m na to service. Bude validace na obraky a zvlast na ostatni soubory
         return $response->withStatus(HttpStatusCode::OK->value);
     }
 }

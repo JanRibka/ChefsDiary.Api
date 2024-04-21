@@ -3,20 +3,25 @@
 declare(strict_types=1);
 
 use Slim\App;
+use Aws\S3\S3Client;
 use function DI\create;
 use JR\ChefsDiary\Config;
 use Doctrine\ORM\ORMSetup;
 use Slim\Factory\AppFactory;
 use Doctrine\ORM\EntityManager;
 use Doctrine\DBAL\DriverManager;
+use League\Flysystem\Filesystem;
 use JR\ChefsDiary\Enums\SameSiteEnum;
 use Psr\Container\ContainerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use DoctrineExtensions\Query\Mysql\Year;
 use DoctrineExtensions\Query\Mysql\Month;
+use JR\ChefsDiary\Enums\StorageDriverEnum;
+use League\Flysystem\AwsS3V3\AwsS3V3Adapter;
 use DoctrineExtensions\Query\Mysql\DateFormat;
 use Psr\Http\Message\ResponseFactoryInterface;
 use JR\ChefsDiary\DataObjects\Configs\TokenConfig;
+use League\Flysystem\Local\LocalFilesystemAdapter;
 use JR\ChefsDiary\DataObjects\Configs\SessionConfig;
 use JR\ChefsDiary\Shared\RouteEntityBindingStrategy;
 use JR\ChefsDiary\Services\Implementation\AuthService;
@@ -172,4 +177,33 @@ return [
     UserRepositoryInterface::class => fn(ContainerInterface $container) => $container->get(
         UserRepository::class
     ),
+
+        // Other
+    Filesystem::class => function (Config $config) {
+        $digitalOcean = function (array $options) {
+            $client = new S3Client(
+                [
+                    'credentials' => [
+                        'key' => $options['key'],
+                        'secret' => $options['secret'],
+                    ],
+                    'region' => $options['region'],
+                    'version' => $options['version'],
+                    'endpoint' => $options['endpoint'],
+                ]
+            );
+
+            return new AwsS3V3Adapter(
+                $client,
+                $options['bucket']
+            );
+        };
+
+        $adapter = match ($config->get('storage.driver')) {
+            StorageDriverEnum::Local => new LocalFilesystemAdapter(STORAGE_PATH),
+            StorageDriverEnum::Remote_DO => $digitalOcean($config->get('storage.s3'))
+        };
+
+        return new Filesystem($adapter);
+    },
 ];
