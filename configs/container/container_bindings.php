@@ -5,18 +5,22 @@ declare(strict_types=1);
 use Slim\App;
 use Aws\S3\S3Client;
 use function DI\create;
+
+use Clockwork\Clockwork;
 use JR\ChefsDiary\Config;
 use Doctrine\ORM\ORMSetup;
 use Slim\Factory\AppFactory;
 use Doctrine\ORM\EntityManager;
 use Doctrine\DBAL\DriverManager;
 use League\Flysystem\Filesystem;
+use Clockwork\Storage\FileStorage;
 use JR\ChefsDiary\Enums\SameSiteEnum;
 use Psr\Container\ContainerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use DoctrineExtensions\Query\Mysql\Year;
 use DoctrineExtensions\Query\Mysql\Month;
 use JR\ChefsDiary\Enums\StorageDriverEnum;
+use Clockwork\DataSource\DoctrineDataSource;
 use League\Flysystem\AwsS3V3\AwsS3V3Adapter;
 use DoctrineExtensions\Query\Mysql\DateFormat;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -205,5 +209,13 @@ return [
         };
 
         return new Filesystem($adapter);
+    },
+    Clockwork::class => function (EntityManagerInterface $entityManager) {
+        $clockwork = new Clockwork();
+
+        $clockwork->storage(new FileStorage(STORAGE_PATH . '/clockwork'));
+        $clockwork->addDataSource(new DoctrineDataSource($entityManager));
+
+        return $clockwork;
     },
 ];
