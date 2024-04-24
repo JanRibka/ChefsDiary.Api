@@ -16,6 +16,7 @@ use JR\ChefsDiary\Entity\User\Implementation\UserInfo;
 use JR\ChefsDiary\Services\Implementation\HashService;
 use JR\ChefsDiary\Entity\User\Implementation\UserRoles;
 use JR\ChefsDiary\Entity\User\Implementation\UserToken;
+use JR\ChefsDiary\Entity\User\Contract\UserInfoInterface;
 use JR\ChefsDiary\Entity\User\Contract\UserTokenInterface;
 use JR\ChefsDiary\Entity\User\Implementation\UserRoleType;
 use JR\ChefsDiary\Entity\User\Implementation\UserLogHistory;
@@ -202,5 +203,27 @@ class UserRepository implements UserRepositoryInterface
         }
 
         $this->entityManagerService->flush();
+    }
+
+    public function getUserInfoByUserId(int $idUser): UserInfoInterface
+    {
+        return $this->entityManagerService->getRepository(UserInfo::class)
+            ->findOneBy(['User' => $idUser]);
+    }
+
+    public function verifyUser(UserInterface $user): void
+    {
+        $userInfo = $this->getUserInfoByUserId($user->getId());
+
+        $userInfo->setVerifiedAt(new DateTime());
+
+        $this->entityManagerService->sync($userInfo);
+    }
+
+    public function updatePassword(UserInterface $user, string $password): void
+    {
+        $user->setPassword($this->hashService->hashPassword($password));
+
+        $this->entityManagerService->sync($user);
     }
 }

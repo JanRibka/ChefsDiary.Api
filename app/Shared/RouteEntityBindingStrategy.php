@@ -7,6 +7,7 @@ namespace JR\ChefsDiary\Shared;
 use ReflectionMethod;
 use ReflectionFunction;
 use ReflectionFunctionAbstract;
+use JR\ChefsDiary\Enums\HttpStatusCode;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -59,9 +60,9 @@ class RouteEntityBindingStrategy implements InvocationStrategyInterface
                     }
 
                     $entity = $this->entityManagerService->find($typeName, $entityId);
-                    // TODO: Tady bude hodnota z Enumu
+
                     if (!$entity) {
-                        return $this->responseFactory->createResponse(404, 'Resource Not Found');
+                        return $this->responseFactory->createResponse(HttpStatusCode::NOT_FOUND->value, 'Resource Not Found');
                     }
 
                     $resolvedArguments[] = $entity;

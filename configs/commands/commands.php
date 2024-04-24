@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
-return [
+use JR\ChefsDiary\Command\GenerateAppKeyCommand;
 
+return [
+    GenerateAppKeyCommand::class,
 ];

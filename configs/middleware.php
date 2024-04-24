@@ -16,6 +16,7 @@ return function (App $app) {
 
     $app->add(ValidationExceptionMiddleware::class);
     $app->add(StartSessionMiddleware::class);
+
     if (AppEnvironmentEnum::isDevelopment($config->get('app_environment'))) {
         $app->add(new ClockworkMiddleware($app, $container->get(Clockwork::class)));
     }

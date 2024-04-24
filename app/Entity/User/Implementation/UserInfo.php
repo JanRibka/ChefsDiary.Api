@@ -44,6 +44,9 @@ class UserInfo implements UserInfoInterface
     #[Column(length: 25, nullable: true)]
     private string|null $Phone;
 
+    #[Column(nullable: true)]
+    private DateTime|null $VerifiedAt;
+
 
     // Getters
     public function getId(): int
@@ -51,14 +54,24 @@ class UserInfo implements UserInfoInterface
         return $this->IdUserInfo;
     }
 
-    public function getUserEmail(): string|null
+    public function getUser(): UserInterface
+    {
+        return $this->User;
+    }
+
+    public function getEmail(): string|null
     {
         return $this->Email;
     }
 
-    public function getUserPhone(): string|null
+    public function getPhone(): string|null
     {
         return $this->Phone;
+    }
+
+    public function getVerifiedAt(): DateTime|null
+    {
+        return $this->VerifiedAt;
     }
 
 
@@ -80,6 +93,13 @@ class UserInfo implements UserInfoInterface
     public function setPhone(string $phone): UserInfo
     {
         $this->Phone = $phone;
+
+        return $this;
+    }
+
+    public function setVerifiedAt(DateTime $verifiedAt): UserInfo
+    {
+        $this->VerifiedAt = $verifiedAt;
 
         return $this;
     }

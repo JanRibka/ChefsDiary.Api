@@ -13,4 +13,5 @@ interface UserInterface
     public function getLogin(): string;
     public function getPassword(): string;
     public function getIsDisabled(): bool;
+    public function setPassword(string $password): User;
 }

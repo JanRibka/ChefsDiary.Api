@@ -71,4 +71,9 @@ return [
             'bucket' => $_ENV['S3_BUCKET'],
         ],
     ],
+    'mailer' => [
+        'driver' => $_ENV['MAILER_DRIVER'] ?? 'log',
+        'dsn' => $_ENV['MAILER_DSN'],
+        'from' => $_ENV['MAILER_FROM'],
+    ],
 ];

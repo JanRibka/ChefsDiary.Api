@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace JR\ChefsDiary\Shared\Interfaces;
 
-// TODO: TOto tu asi nen9 potreba
+use JR\ChefsDiary\Entity\User\Contract\UserInterface;
+
 interface OwnableInterface
 {
     public function getUser(): UserInterface;

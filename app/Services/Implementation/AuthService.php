@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace JR\ChefsDiary\Services\Implementation;
 
 use JR\ChefsDiary\Enums\DomainEnum;
+use JR\ChefsDiary\Mail\SignUpEmail;
 use JR\ChefsDiary\Enums\AuthAttemptStatusEnum;
 use JR\ChefsDiary\Shared\Helpers\BooleanHelper;
 use JR\ChefsDiary\Enums\LogoutAttemptStatusEnum;
@@ -29,7 +30,8 @@ class AuthService implements AuthServiceInterface
         private readonly CookieServiceInterface $cookieService,
         private readonly AuthCookieConfig $authCookieConfig,
         private readonly TokenConfig $tokenConfig,
-        private readonly SessionServiceInterface $sessionService
+        private readonly SessionServiceInterface $sessionService,
+        private readonly SignUpEmail $signUpEmail
     ) {
     }
 
@@ -42,7 +44,9 @@ class AuthService implements AuthServiceInterface
     public function register(RegisterUserData $data): UserInterface
     {
         $user = $this->userRepository->createUser($data);
-        // TODO: Tady se bude pos9lat email s potvrzenim registrace a prihlaseni uzuvatele
+        $userInfo = $this->userRepository->getUserInfoByUserId($user->getId());
+
+        $this->signUpEmail->send($userInfo);
 
         return $user;
     }

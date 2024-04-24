@@ -6,7 +6,7 @@ namespace JR\ChefsDiary\Filters;
 
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Query\Filter\SQLFilter;
-use JR\ChefsDiary\Shared\OwnableInterface;
+use JR\ChefsDiary\Shared\Interfaces\OwnableInterface;
 
 class UserFilter extends SQLFilter
 {
@@ -16,6 +16,6 @@ class UserFilter extends SQLFilter
             return '';
         }
 
-        return $targetTableAlias . 'user_id = ' . $this->getParameter('user_id');
+        return $targetTableAlias . 'IdUser = ' . $this->getParameter('IdUser');
     }
 }

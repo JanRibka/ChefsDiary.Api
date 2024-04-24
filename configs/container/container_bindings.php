@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 use Slim\App;
 use Aws\S3\S3Client;
-use function DI\create;
+use Slim\Views\Twig;
 
+use function DI\create;
 use Clockwork\Clockwork;
 use JR\ChefsDiary\Config;
 use Doctrine\ORM\ORMSetup;
@@ -14,16 +15,27 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\DBAL\DriverManager;
 use League\Flysystem\Filesystem;
 use Clockwork\Storage\FileStorage;
+use Twig\Extra\Intl\IntlExtension;
+use JR\ChefsDiary\Mail\SignUpEmail;
+use Symfony\Component\Mailer\Mailer;
 use JR\ChefsDiary\Enums\SameSiteEnum;
+use JR\ChefsDiary\Filters\UserFilter;
 use Psr\Container\ContainerInterface;
+use Symfony\Component\Mailer\Transport;
 use Doctrine\ORM\EntityManagerInterface;
 use DoctrineExtensions\Query\Mysql\Year;
 use DoctrineExtensions\Query\Mysql\Month;
+use Slim\Interfaces\RouteParserInterface;
 use JR\ChefsDiary\Enums\StorageDriverEnum;
+use Symfony\Bridge\Twig\Mime\BodyRenderer;
+use JR\ChefsDiary\Enums\AppEnvironmentEnum;
 use Clockwork\DataSource\DoctrineDataSource;
 use League\Flysystem\AwsS3V3\AwsS3V3Adapter;
+use Symfony\Component\Mailer\MailerInterface;
 use DoctrineExtensions\Query\Mysql\DateFormat;
 use Psr\Http\Message\ResponseFactoryInterface;
+use Symfony\Bridge\Twig\Extension\AssetExtension;
+use Symfony\Component\Mime\BodyRendererInterface;
 use JR\ChefsDiary\DataObjects\Configs\TokenConfig;
 use League\Flysystem\Local\LocalFilesystemAdapter;
 use JR\ChefsDiary\DataObjects\Configs\SessionConfig;
@@ -32,6 +44,7 @@ use JR\ChefsDiary\Services\Implementation\AuthService;
 use JR\ChefsDiary\DataObjects\Configs\AuthCookieConfig;
 use JR\ChefsDiary\Services\Implementation\TokenService;
 use JR\ChefsDiary\Services\Implementation\CookieService;
+use JR\ChefsDiary\Services\Implementation\MailerService;
 use JR\ChefsDiary\Services\Contract\AuthServiceInterface;
 use JR\ChefsDiary\Services\Implementation\SessionService;
 use JR\ChefsDiary\Services\Contract\TokenServiceInterface;
@@ -39,11 +52,13 @@ use JR\ChefsDiary\Services\Contract\CookieServiceInterface;
 use JR\ChefsDiary\RequestValidators\RequestValidatorFactory;
 use JR\ChefsDiary\Services\Contract\SessionServiceInterface;
 use JR\ChefsDiary\Repositories\Implementation\UserRepository;
+use Symfony\WebpackEncoreBundle\Twig\EntryFilesTwigExtension;
 use JR\ChefsDiary\Services\Implementation\EntityManagerService;
 use JR\ChefsDiary\Repositories\Contract\UserRepositoryInterface;
 use JR\ChefsDiary\Services\Contract\EntityManagerServiceInterface;
 use JR\ChefsDiary\RequestValidators\RequestValidatorFactoryInterface;
 
+// TODO: Pokud budu chtít filtrovat data podle uživatele, tak to musím udělat pomocí filtrů. Video 129
 return [
         // Project config
     App::class => function (ContainerInterface $container) {
@@ -81,8 +96,8 @@ return [
             $config->get('doctrine.dev_mode')
         );
 
-        // $ormConfig->addFilter('user', UserFilter::class);
-    
+        $ormConfig->addFilter('user', UserFilter::class);
+
         if (class_exists('DoctrineExtensions\Query\Mysql\Year')) {
             $ormConfig->addCustomDatetimeFunction('YEAR', Year::class);
         }
@@ -159,6 +174,9 @@ return [
         ),
         $container->get(
             SessionServiceInterface::class
+        ),
+        $container->get(
+            SignUpEmail::class
         )
     ),
     EntityManagerServiceInterface::class => fn(EntityManagerInterface $entityManager) => new EntityManagerService(
@@ -183,6 +201,18 @@ return [
     ),
 
         // Other
+    Twig::class => function (Config $config, ContainerInterface $container) {
+        $twig = Twig::create(TEMPLATE_PATH, [
+            'cache' => STORAGE_PATH . '/cache/templates',
+            'auto_reload' => AppEnvironmentEnum::isDevelopment($config->get('app_environment')),
+        ]);
+
+        $twig->addExtension(new IntlExtension());
+        $twig->addExtension(new EntryFilesTwigExtension($container));
+        $twig->addExtension(new AssetExtension($container->get('webpack_encore.packages')));
+
+        return $twig;
+    },
     Filesystem::class => function (Config $config) {
         $digitalOcean = function (array $options) {
             $client = new S3Client(
@@ -218,4 +248,15 @@ return [
 
         return $clockwork;
     },
+    MailerInterface::class => function (Config $config) {
+        if ($config->get('mailer.driver') === 'log') {
+            return new MailerService();
+        }
+
+        $transport = Transport::fromDsn($config->get('mailer.dsn'));
+
+        return new Mailer($transport);
+    },
+    BodyRendererInterface::class => fn(Twig $twig) => new BodyRenderer($twig->getEnvironment()),
+    RouteParserInterface::class => fn(App $app) => $app->getRouteCollector()->getRouteParser(),
 ];
