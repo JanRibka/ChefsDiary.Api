@@ -5,8 +5,8 @@ declare(strict_types=1);
 use Slim\App;
 use Aws\S3\S3Client;
 use Slim\Views\Twig;
-
 use function DI\create;
+
 use Clockwork\Clockwork;
 use JR\ChefsDiary\Config;
 use Doctrine\ORM\ORMSetup;
@@ -27,6 +27,7 @@ use DoctrineExtensions\Query\Mysql\Year;
 use DoctrineExtensions\Query\Mysql\Month;
 use Slim\Interfaces\RouteParserInterface;
 use JR\ChefsDiary\Enums\StorageDriverEnum;
+use JR\ChefsDiary\Mail\TwoFactorAuthEmail;
 use Symfony\Bridge\Twig\Mime\BodyRenderer;
 use JR\ChefsDiary\Enums\AppEnvironmentEnum;
 use Clockwork\DataSource\DoctrineDataSource;
@@ -56,6 +57,7 @@ use Symfony\WebpackEncoreBundle\Twig\EntryFilesTwigExtension;
 use JR\ChefsDiary\Services\Implementation\EntityManagerService;
 use JR\ChefsDiary\Repositories\Contract\UserRepositoryInterface;
 use JR\ChefsDiary\Services\Contract\EntityManagerServiceInterface;
+use JR\ChefsDiary\Services\Contract\UserLoginCodeServiceInterface;
 use JR\ChefsDiary\RequestValidators\RequestValidatorFactoryInterface;
 
 // TODO: Pokud budu chtít filtrovat data podle uživatele, tak to musím udělat pomocí filtrů. Video 129
@@ -177,6 +179,12 @@ return [
         ),
         $container->get(
             SignUpEmail::class
+        ),
+        $container->get(
+            TwoFactorAuthEmail::class
+        ),
+        $container->get(
+            UserLoginCodeServiceInterface::class
         )
     ),
     EntityManagerServiceInterface::class => fn(EntityManagerInterface $entityManager) => new EntityManagerService(

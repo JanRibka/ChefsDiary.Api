@@ -6,6 +6,7 @@ namespace JR\ChefsDiary\Services\Implementation;
 
 use JR\ChefsDiary\Enums\DomainEnum;
 use JR\ChefsDiary\Mail\SignUpEmail;
+use JR\ChefsDiary\Mail\TwoFactorAuthEmail;
 use JR\ChefsDiary\Enums\AuthAttemptStatusEnum;
 use JR\ChefsDiary\Shared\Helpers\BooleanHelper;
 use JR\ChefsDiary\Enums\LogoutAttemptStatusEnum;
@@ -21,6 +22,7 @@ use JR\ChefsDiary\Services\Contract\TokenServiceInterface;
 use JR\ChefsDiary\Services\Contract\CookieServiceInterface;
 use JR\ChefsDiary\Services\Contract\SessionServiceInterface;
 use JR\ChefsDiary\Repositories\Contract\UserRepositoryInterface;
+use JR\ChefsDiary\Services\Contract\UserLoginCodeServiceInterface;
 
 class AuthService implements AuthServiceInterface
 {
@@ -31,7 +33,9 @@ class AuthService implements AuthServiceInterface
         private readonly AuthCookieConfig $authCookieConfig,
         private readonly TokenConfig $tokenConfig,
         private readonly SessionServiceInterface $sessionService,
-        private readonly SignUpEmail $signUpEmail
+        private readonly SignUpEmail $signUpEmail,
+        private readonly TwoFactorAuthEmail $twoFactorAuthEmail,
+        private readonly UserLoginCodeServiceInterface $userLoginCodeService
     ) {
     }
 
@@ -92,15 +96,42 @@ class AuthService implements AuthServiceInterface
             return AuthAttemptStatusEnum::FAILED;
         }
 
-        // TODO: Dvoufazove overeni
-        // if ($user->hasTwoFactorAuthEnabled()) {
-        //     $this->startLoginWith2FA($user);
+        if ($user->getTwoFactor()) {
+            $this->login2FA($user);
 
-        //     return AuthAttemptStatus::TWO_FACTOR_AUTH;
-        // }        
+            return AuthAttemptStatusEnum::TWO_FACTOR;
+        }
 
         return $this->login($user, $persistLogin, DomainEnum::WEB);
+    }
 
+    public function attemptTwoFactorLogin(array $data): bool
+    {
+        // $userId = $this->session->get('2fa');
+
+        // if (!$userId) {
+        //     return false;
+        // }
+
+        // $user = $this->userRepository->getById($userId);
+
+        // if (!$user || $user->getEmail() !== $data['email']) {
+        //     return false;
+        // }
+
+        // if (!$this->userLoginCodeService->verify($user, $data['code'])) {
+        //     return false;
+        // }
+
+        // $this->session->forget('2fa');
+
+        // $this->logIn($user);
+
+        // $this->userLoginCodeService->deactivateAllActiveCodes($user);
+
+        // return true;
+
+        return true;
     }
 
     public function attemptLogout(): LogoutAttemptStatusEnum
@@ -144,7 +175,7 @@ class AuthService implements AuthServiceInterface
 
             $hackedLogin = $decoded->login;
             $hackedUser = $this->userRepository->getByLogin($hackedLogin);
-            // TODO: O jakou se jedna domenu, by se mohlo nacitat z url
+            // TODO: O jakou se jedna domenu, by se mohlo nacitat z url. V enumu pro domeny bude funkce na to
             $this->userRepository->deleteRefreshTokes($hackedUser->getId());
 
             return RefreshTokenAttemptStatusEnum::NO_USER;
@@ -232,6 +263,15 @@ class AuthService implements AuthServiceInterface
             'login' => $user->getLogin(),
             'accessToken' => $accessToken
         ];
+    }
+
+    private function login2FA(UserInterface $user): void
+    {
+        // TODO: POdobn2 jako u příhlášení
+
+        $userInfo = $this->userRepository->getUserInfoByUserId($user->getId());
+
+        $this->twoFactorAuthEmail->send($this->userLoginCodeService->generate($user), $userInfo);
     }
 
     private function logout(UserInterface $user, DomainEnum $domain): LogoutAttemptStatusEnum

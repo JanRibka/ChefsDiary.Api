@@ -13,6 +13,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use JR\ChefsDiary\DataObjects\Data\RegisterUserData;
 use JR\ChefsDiary\Enums\RefreshTokenAttemptStatusEnum;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use App\RequestValidators\TwoFactorLoginRequestValidator;
 use JR\ChefsDiary\Services\Contract\AuthServiceInterface;
 use JR\ChefsDiary\Shared\ResponseFormatter\ResponseFormatter;
 use JR\ChefsDiary\RequestValidators\Auth\UserLoginRequestValidator;
@@ -76,12 +77,31 @@ class AuthController
             throw new ValidationException(['forbidden' => ['accessDenied']], HttpStatusCode::FORBIDDEN->value);
         }
 
-        // TODO: Dvoufazove overeni
-        // if ($status === AuthAttemptStatus::TWO_FACTOR_AUTH) {
-        //     return $this->responseFormatter->asJson($response, ['two_factor' => true]);
-        // }
+        if ($status === AuthAttemptStatusEnum::TWO_FACTOR) {
+            return $this->responseFormatter->asJson($response, ['twoFactor' => true]);
+        }
 
         return $this->responseFormatter->asJson($response, $status);
+    }
+
+    /**
+     * Two factor login
+     * @param \Psr\Http\Message\ServerRequestInterface $request
+     * @param \Psr\Http\Message\ResponseInterface $response
+     * @return \Psr\Http\Message\ResponseInterface
+     * @author Jan Ribka
+     */
+    public function twoFactorLogin(Request $request, Response $response): Response
+    {
+        $data = $this->requestValidatorFactory->make(TwoFactorLoginRequestValidator::class)->validate(
+            $request->getParsedBody()
+        );
+
+        if (!$this->authService->attemptTwoFactorLogin($data)) {
+            throw new ValidationException(['code' => ['invalidCode']], HttpStatusCode::UNAUTHORIZED->value);
+        }
+
+        return $response;
     }
 
     /**

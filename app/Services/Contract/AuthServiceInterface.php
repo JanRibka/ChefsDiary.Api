@@ -22,6 +22,8 @@ interface AuthServiceInterface
      */
     public function attemptLogin(array $credentials): AuthAttemptStatusEnum|array;
 
+    public function attemptTwoFactorLogin(array $data): bool;
+
     public function attemptLogout(): LogoutAttemptStatusEnum;
 
     public function attemptRefreshToken(array $credentials): RefreshTokenAttemptStatusEnum|array;

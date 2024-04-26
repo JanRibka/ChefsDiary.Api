@@ -35,6 +35,12 @@ class User implements UserInterface
     #[Column(nullable: true)]
     private DateTime|null $LoginRestrictedUntil;
 
+    #[Column(options: ['default' => false])]
+    private bool $TwoFactor;
+
+    #[Column(nullable: true)]
+    private DateTime|null $VerifiedAt;
+
 
     // Getters
     public function getId(): int
@@ -65,6 +71,16 @@ class User implements UserInterface
     public function getLoginRestrictedUntil(): DateTime
     {
         return $this->LoginRestrictedUntil;
+    }
+
+    public function getTwoFactor(): bool
+    {
+        return $this->TwoFactor;
+    }
+
+    public function getVerifiedAt(): DateTime
+    {
+        return $this->VerifiedAt;
     }
 
 
@@ -100,6 +116,20 @@ class User implements UserInterface
     public function setLoginRestrictedUntil(DateTime $loginRestrictedUntil): User
     {
         $this->LoginRestrictedUntil = $loginRestrictedUntil;
+
+        return $this;
+    }
+
+    public function setTwoFactor(bool $twoFactor): User
+    {
+        $this->TwoFactor = $twoFactor;
+
+        return $this;
+    }
+
+    public function setVerifiedAt(DateTime $verifiedAt): User
+    {
+        $this->VerifiedAt = $verifiedAt;
 
         return $this;
     }
