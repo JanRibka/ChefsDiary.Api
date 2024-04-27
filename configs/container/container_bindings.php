@@ -122,6 +122,30 @@ return [
         );
     },
 
+        // Configs
+    TokenConfig::class => fn(Config $config) => new TokenConfig(
+        $config->get('token.exp_access'),
+        $config->get('token.exp_refresh'),
+        $config->get('token.algorithm'),
+        $config->get('token.key_access'),
+        $config->get('token.key_refresh')
+    ),
+    SessionConfig::class => fn(Config $config) => new SessionConfig(
+        $config->get('session.name', ''),
+        $config->get('session.flash_name', 'flash'),
+        $config->get('session.secure', true),
+        $config->get('session.httponly', true),
+        SameSiteEnum::from($config->get('session.samesite', 'lax'))
+    ),
+    AuthCookieConfig::class => fn(Config $config) => new AuthCookieConfig(
+        $config->get('auth_cookie.name'),
+        $config->get('auth_cookie.secure'),
+        $config->get('auth_cookie.http_only'),
+        SameSiteEnum::from($config->get('auth_cookie.same_site')),
+        $config->get('auth_cookie.expires'),
+        $config->get('auth_cookie.path')
+    ),
+
         // Factories
     RequestValidatorFactoryInterface::class => fn(ContainerInterface $container) => $container->get(
         RequestValidatorFactory::class
@@ -133,25 +157,17 @@ return [
         $container->get(
             ResponseFactoryInterface::class
         ),
-        new TokenConfig(
-            $config->get('token.exp_access'),
-            $config->get('token.exp_refresh'),
-            $config->get('token.algorithm'),
-            $config->get('token.key_access'),
-            $config->get('token.key_refresh')
-        )
+        $container->get(
+            TokenConfig::class
+        ),
     ),
     CookieServiceInterface::class => fn(ContainerInterface $container) => $container->get(
         CookieService::class
     ),
     SessionServiceInterface::class => fn(Config $config) => new SessionService(
-        new SessionConfig(
-            $config->get('session.name', ''),
-            $config->get('session.flash_name', 'flash'),
-            $config->get('session.secure', true),
-            $config->get('session.httponly', true),
-            SameSiteEnum::from($config->get('session.samesite', 'lax'))
-        )
+        $container->get(
+            SessionConfig::class
+        ),
     ),
     AuthServiceInterface::class => fn(Config $config, ContainerInterface $container) => new AuthService(
         $container->get(
@@ -163,20 +179,11 @@ return [
         $container->get(
             CookieServiceInterface::class
         ),
-        new AuthCookieConfig(
-            $config->get('auth_cookie.name'),
-            $config->get('auth_cookie.secure'),
-            $config->get('auth_cookie.http_only'),
-            SameSiteEnum::from($config->get('auth_cookie.same_site')),
-            $config->get('auth_cookie.expires'),
-            $config->get('auth_cookie.path')
+        $container->get(
+            AuthCookieConfig::class
         ),
-        new TokenConfig(
-            $config->get('token.exp_access'),
-            $config->get('token.exp_refresh'),
-            $config->get('token.algorithm'),
-            $config->get('token.key_access'),
-            $config->get('token.key_refresh')
+        $container->get(
+            ResponseFactoryInterface::class
         ),
         $container->get(
             SessionServiceInterface::class
@@ -198,13 +205,9 @@ return [
         $container->get(
             ResponseFactoryInterface::class
         ),
-        new TokenConfig(
-            $config->get('token.exp_access'),
-            $config->get('token.exp_refresh'),
-            $config->get('token.algorithm'),
-            $config->get('token.key_access'),
-            $config->get('token.key_refresh')
-        )
+        $container->get(
+            ResponseFactoryInterface::class
+        ),
     ),
 
         // Repositories
@@ -225,6 +228,7 @@ return [
 
         return $twig;
     },
+        // TODO: FileSystem asi není potřeba, ale může se hodit
     Filesystem::class => function (Config $config) {
         $digitalOcean = function (array $options) {
             $client = new S3Client(
