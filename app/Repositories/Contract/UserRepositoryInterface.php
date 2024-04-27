@@ -9,6 +9,7 @@ use JR\ChefsDiary\DataObjects\Data\UserData;
 use JR\ChefsDiary\DataObjects\Data\UserTokenData;
 use JR\ChefsDiary\DataObjects\Data\RegisterUserData;
 use JR\ChefsDiary\Entity\User\Contract\UserInterface;
+use App\Entity\User\Contract\UserPasswordResetInterface;
 use JR\ChefsDiary\Entity\User\Contract\UserInfoInterface;
 use JR\ChefsDiary\Entity\User\Contract\UserRolesInterface;
 use JR\ChefsDiary\Entity\User\Contract\UserTokenInterface;
@@ -36,5 +37,9 @@ interface UserRepositoryInterface
     public function deleteRefreshTokenByUserIdAndDomain(int $idUser, DomainEnum $domain): void;
     public function deleteRefreshTokes(int $idUser): void;
     public function getUserInfoByUserId(int $idUser): UserInfoInterface;
+    public function getUserInfoByEmail(string $email): UserInfoInterface;
     public function verifyUser(UserInterface $user): void;
+    public function updatePassword(UserInterface $user, string $password): void;
+    public function findUserPasswordResetByToken(string $token): UserPasswordResetInterface|null;
+    public function deactivateAllUserPasswordResets(string $email): void;
 }

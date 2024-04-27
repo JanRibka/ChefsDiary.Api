@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace JR\ChefsDiary\Controllers;
 
-use RuntimeException;
 use JR\ChefsDiary\Enums\HttpStatusCode;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use JR\ChefsDiary\Entity\User\Implementation\User;
 use JR\ChefsDiary\Services\Contract\VerifyServiceInterface;
 
-class VerifyController
+class VerifyUserController
 {
     public function __construct(
         private readonly VerifyServiceInterface $verifyService

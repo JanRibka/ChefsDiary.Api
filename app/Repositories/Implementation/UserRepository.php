@@ -11,11 +11,13 @@ use JR\ChefsDiary\DataObjects\Data\UserData;
 use JR\ChefsDiary\DataObjects\Data\UserTokenData;
 use JR\ChefsDiary\Entity\User\Implementation\User;
 use JR\ChefsDiary\DataObjects\Data\RegisterUserData;
+use App\Entity\User\Implementation\UserPasswordReset;
 use JR\ChefsDiary\Entity\User\Contract\UserInterface;
 use JR\ChefsDiary\Entity\User\Implementation\UserInfo;
 use JR\ChefsDiary\Services\Implementation\HashService;
 use JR\ChefsDiary\Entity\User\Implementation\UserRoles;
 use JR\ChefsDiary\Entity\User\Implementation\UserToken;
+use App\Entity\User\Contract\UserPasswordResetInterface;
 use JR\ChefsDiary\Entity\User\Contract\UserInfoInterface;
 use JR\ChefsDiary\Entity\User\Contract\UserTokenInterface;
 use JR\ChefsDiary\Entity\User\Implementation\UserRoleType;
@@ -211,6 +213,12 @@ class UserRepository implements UserRepositoryInterface
             ->findOneBy(['User' => $idUser]);
     }
 
+    public function getUserInfoByEmail(string $email): UserInfoInterface
+    {
+        return $this->entityManagerService->getRepository(UserInfo::class)
+            ->findOneBy(['Email' => $email]);
+    }
+
     public function verifyUser(UserInterface $user): void
     {
         $userInfo = $this->getUserInfoByUserId($user->getId());
@@ -225,5 +233,39 @@ class UserRepository implements UserRepositoryInterface
         $user->setPassword($this->hashService->hashPassword($password));
 
         $this->entityManagerService->sync($user);
+    }
+
+    public function findUserPasswordResetByToken(string $token): UserPasswordResetInterface|null
+    {
+        return $this->entityManagerService
+            ->getRepository(UserPasswordReset::class)
+            ->createQueryBuilder('upr')
+            ->select('upr')
+            ->where('pr.Token = :token')
+            ->andWhere('pr.IsUsed = :used')
+            ->andWhere('pr.ExpireDate > :now')
+            ->setParameters(
+                [
+                    'token' => $token,
+                    'used' => true,
+                    'now' => new DateTime(),
+                ]
+            )
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function deactivateAllUserPasswordResets(string $email): void
+    {
+        $this->entityManagerService
+            ->getRepository(UserPasswordReset::class)
+            ->createQueryBuilder('upr')
+            ->update()
+            ->set('upr.IsUsed', '1')
+            ->where('upr.Email = :email')
+            ->andWhere('upr.IsUsed = 0')
+            ->setParameter('email', $email)
+            ->getQuery()
+            ->execute();
     }
 }
