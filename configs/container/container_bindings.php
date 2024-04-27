@@ -6,7 +6,6 @@ use Slim\App;
 use Aws\S3\S3Client;
 use Slim\Views\Twig;
 use function DI\create;
-
 use Clockwork\Clockwork;
 use JR\ChefsDiary\Config;
 use Doctrine\ORM\ORMSetup;
@@ -17,10 +16,12 @@ use League\Flysystem\Filesystem;
 use Clockwork\Storage\FileStorage;
 use Twig\Extra\Intl\IntlExtension;
 use JR\ChefsDiary\Mail\SignUpEmail;
+use Psr\SimpleCache\CacheInterface;
 use Symfony\Component\Mailer\Mailer;
 use JR\ChefsDiary\Enums\SameSiteEnum;
 use JR\ChefsDiary\Filters\UserFilter;
 use Psr\Container\ContainerInterface;
+use Symfony\Component\Cache\Psr16Cache;
 use Symfony\Component\Mailer\Transport;
 use Doctrine\ORM\EntityManagerInterface;
 use DoctrineExtensions\Query\Mysql\Year;
@@ -36,14 +37,17 @@ use Symfony\Component\Mailer\MailerInterface;
 use DoctrineExtensions\Query\Mysql\DateFormat;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Symfony\Bridge\Twig\Extension\AssetExtension;
+use Symfony\Component\Cache\Adapter\RedisAdapter;
 use Symfony\Component\Mime\BodyRendererInterface;
 use JR\ChefsDiary\DataObjects\Configs\TokenConfig;
 use League\Flysystem\Local\LocalFilesystemAdapter;
 use JR\ChefsDiary\DataObjects\Configs\SessionConfig;
 use JR\ChefsDiary\Shared\RouteEntityBindingStrategy;
+use Symfony\Component\RateLimiter\RateLimiterFactory;
 use JR\ChefsDiary\Services\Implementation\AuthService;
 use JR\ChefsDiary\DataObjects\Configs\AuthCookieConfig;
 use JR\ChefsDiary\Services\Implementation\TokenService;
+use Symfony\Component\RateLimiter\Storage\CacheStorage;
 use JR\ChefsDiary\Services\Implementation\CookieService;
 use JR\ChefsDiary\Services\Implementation\MailerService;
 use JR\ChefsDiary\Services\Contract\AuthServiceInterface;
@@ -267,4 +271,23 @@ return [
     },
     BodyRendererInterface::class => fn(Twig $twig) => new BodyRenderer($twig->getEnvironment()),
     RouteParserInterface::class => fn(App $app) => $app->getRouteCollector()->getRouteParser(),
+    CacheInterface::class => fn(RedisAdapter $redisAdapter) => new Psr16Cache($redisAdapter),
+    RedisAdapter::class => function (Config $config) {
+        $redis = new \Redis();
+        $config = $config->get('redis');
+
+        $redis->connect($config['host'], (int) $config['port']);
+
+        if ($config['password']) {
+            $redis->auth($config['password']);
+        }
+
+        return new RedisAdapter($redis);
+    },
+    RateLimiterFactory::class => fn(RedisAdapter $redisAdapter, Config $config) => new RateLimiterFactory(
+        $config->get('limiter'),
+        new CacheStorage($redisAdapter)
+    ),
+
+    // TODO: Pokud budu chtít napojit cache, napojím ji do dané metody podle videa 133, 19:00 a dát do env proměnné
 ];

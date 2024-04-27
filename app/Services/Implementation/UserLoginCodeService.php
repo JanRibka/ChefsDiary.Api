@@ -10,7 +10,7 @@ use JR\ChefsDiary\Entity\User\Contract\UserInterface;
 use JR\ChefsDiary\Entity\User\Implementation\UserLoginCode;
 use JR\ChefsDiary\Services\Contract\UserLoginCodeServiceInterface;
 
-class userLoginCodeService implements UserLoginCodeServiceInterface
+class UserLoginCodeService implements UserLoginCodeServiceInterface
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,

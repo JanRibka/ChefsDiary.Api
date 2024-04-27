@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Slim\Routing\RouteCollectorProxy;
 use JR\ChefsDiary\Controllers\AuthController;
+use JR\ChefsDiary\Middleware\RateLimitMiddleware;
 use JR\ChefsDiary\Middleware\VerifyTokenMiddleware;
 
 function getAuthRoutes(RouteCollectorProxy $api)
@@ -16,7 +17,9 @@ function getAuthRoutes(RouteCollectorProxy $api)
 
     $api->group('/auth', function (RouteCollectorProxy $auth) {
         $auth->post('/register', [AuthController::class, 'register']);
-        $auth->post('/login', [AuthController::class, 'login']);
+        $auth->post('/login', [AuthController::class, 'login'])
+            ->setName('login')
+            ->add(RateLimitMiddleware::class);
     });
 
     return $api;
