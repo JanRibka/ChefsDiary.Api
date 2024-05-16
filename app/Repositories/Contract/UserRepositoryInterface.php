@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace JR\ChefsDiary\Repositories\Contract;
 
+use Doctrine\ORM\QueryBuilder;
 use JR\ChefsDiary\Enums\DomainEnum;
 use JR\ChefsDiary\DataObjects\Data\UserData;
 use JR\ChefsDiary\DataObjects\Data\UserTokenData;
 use JR\ChefsDiary\DataObjects\Data\RegisterUserData;
 use JR\ChefsDiary\Entity\User\Contract\UserInterface;
 use App\Entity\User\Contract\UserPasswordResetInterface;
+use JR\ChefsDiary\DataObjects\Data\DataTableQueryParams;
 use JR\ChefsDiary\Entity\User\Contract\UserInfoInterface;
 use JR\ChefsDiary\Entity\User\Contract\UserRolesInterface;
 use JR\ChefsDiary\Entity\User\Contract\UserTokenInterface;
@@ -42,4 +44,5 @@ interface UserRepositoryInterface
     public function updatePassword(UserInterface $user, string $password): void;
     public function findUserPasswordResetByToken(string $token): UserPasswordResetInterface|null;
     public function deactivateAllUserPasswordResets(string $email): void;
+    public function getPaginatedUsersQuery(DataTableQueryParams $params): QueryBuilder;
 }

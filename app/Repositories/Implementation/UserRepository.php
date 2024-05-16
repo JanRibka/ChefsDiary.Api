@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace JR\ChefsDiary\Repositories\Implementation;
 
 use DateTime;
+use Doctrine\ORM\QueryBuilder;
 use JR\ChefsDiary\Enums\DomainEnum;
 use JR\ChefsDiary\Enums\UserRoleEnum;
 use JR\ChefsDiary\DataObjects\Data\UserData;
@@ -18,6 +19,7 @@ use JR\ChefsDiary\Services\Implementation\HashService;
 use JR\ChefsDiary\Entity\User\Implementation\UserRoles;
 use JR\ChefsDiary\Entity\User\Implementation\UserToken;
 use App\Entity\User\Contract\UserPasswordResetInterface;
+use JR\ChefsDiary\DataObjects\Data\DataTableQueryParams;
 use JR\ChefsDiary\Entity\User\Contract\UserInfoInterface;
 use JR\ChefsDiary\Entity\User\Contract\UserTokenInterface;
 use JR\ChefsDiary\Entity\User\Implementation\UserRoleType;
@@ -267,5 +269,14 @@ class UserRepository implements UserRepositoryInterface
             ->setParameter('email', $email)
             ->getQuery()
             ->execute();
+    }
+
+    public function getPaginatedUsersQuery(DataTableQueryParams $params): QueryBuilder
+    {
+        return $this->entityManagerService
+            ->getRepository(User::class)
+            ->createQueryBuilder('u')
+            ->setFirstResult($params->start)
+            ->setMaxResults($params->length);
     }
 }

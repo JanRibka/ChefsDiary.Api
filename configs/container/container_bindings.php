@@ -66,7 +66,7 @@ use JR\ChefsDiary\RequestValidators\RequestValidatorFactoryInterface;
 
 // TODO: Pokud budu chtít filtrovat data podle uživatele, tak to musím udělat pomocí filtrů. Video 129
 return [
-        // Project config
+        #region Project config
     App::class => function (ContainerInterface $container) {
         AppFactory::setContainer($container);
 
@@ -94,8 +94,9 @@ return [
     AuthServiceInterface::class => fn(ContainerInterface $container) => $container->get(
         AuthService::class
     ),
+        #endregion
 
-        // Database
+        #region Database
     EntityManagerInterface::class => function (Config $config) {
         $ormConfig = ORMSetup::createAttributeMetadataConfiguration(
             $config->get('doctrine.entity_dir'),
@@ -121,8 +122,9 @@ return [
             $ormConfig
         );
     },
+        #endregion
 
-        // Configs
+        #region Configs
     TokenConfig::class => fn(Config $config) => new TokenConfig(
         $config->get('token.exp_access'),
         $config->get('token.exp_refresh'),
@@ -145,14 +147,16 @@ return [
         $config->get('auth_cookie.expires'),
         $config->get('auth_cookie.path')
     ),
+        #endregion
 
-        // Factories
+        #region Factories
     RequestValidatorFactoryInterface::class => fn(ContainerInterface $container) => $container->get(
         RequestValidatorFactory::class
     ),
     ResponseFactoryInterface::class => fn(App $app) => $app->getResponseFactory(),
+        #endregion
 
-        // Services
+        #region Services
     TokenServiceInterface::class => fn(Config $config, ContainerInterface $container) => new TokenService(
         $container->get(
             ResponseFactoryInterface::class
@@ -209,13 +213,15 @@ return [
             ResponseFactoryInterface::class
         ),
     ),
+        #endregion
 
-        // Repositories
+        #region Repositories
     UserRepositoryInterface::class => fn(ContainerInterface $container) => $container->get(
         UserRepository::class
     ),
+        #endregion
 
-        // Other
+        #region Other
     Twig::class => function (Config $config, ContainerInterface $container) {
         $twig = Twig::create(TEMPLATE_PATH, [
             'cache' => STORAGE_PATH . '/cache/templates',
@@ -292,6 +298,7 @@ return [
         $config->get('limiter'),
         new CacheStorage($redisAdapter)
     ),
+    #endregion
 
     // TODO: Pokud budu chtít napojit cache, napojím ji do dané metody podle videa 133, 19:00 a dát do env proměnné
 ];
