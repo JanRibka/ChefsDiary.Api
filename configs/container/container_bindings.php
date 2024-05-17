@@ -157,7 +157,7 @@ return [
         #endregion
 
         #region Services
-    TokenServiceInterface::class => fn(Config $config, ContainerInterface $container) => new TokenService(
+    TokenServiceInterface::class => fn(ContainerInterface $container) => new TokenService(
         $container->get(
             ResponseFactoryInterface::class
         ),
@@ -168,12 +168,12 @@ return [
     CookieServiceInterface::class => fn(ContainerInterface $container) => $container->get(
         CookieService::class
     ),
-    SessionServiceInterface::class => fn(Config $config) => new SessionService(
+    SessionServiceInterface::class => fn(ContainerInterface $container) => new SessionService(
         $container->get(
             SessionConfig::class
         ),
     ),
-    AuthServiceInterface::class => fn(Config $config, ContainerInterface $container) => new AuthService(
+    AuthServiceInterface::class => fn(ContainerInterface $container) => new AuthService(
         $container->get(
             UserRepository::class
         ),
@@ -204,14 +204,6 @@ return [
     ),
     EntityManagerServiceInterface::class => fn(EntityManagerInterface $entityManager) => new EntityManagerService(
         $entityManager
-    ),
-    TokenServiceInterface::class => fn(Config $config, ContainerInterface $container) => new TokenService(
-        $container->get(
-            ResponseFactoryInterface::class
-        ),
-        $container->get(
-            ResponseFactoryInterface::class
-        ),
     ),
         #endregion
 
