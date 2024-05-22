@@ -17,10 +17,12 @@ use Clockwork\Storage\FileStorage;
 use Twig\Extra\Intl\IntlExtension;
 use JR\ChefsDiary\Mail\SignUpEmail;
 use Psr\SimpleCache\CacheInterface;
+use Symfony\Component\Asset\Package;
 use Symfony\Component\Mailer\Mailer;
 use JR\ChefsDiary\Enums\SameSiteEnum;
 use JR\ChefsDiary\Filters\UserFilter;
 use Psr\Container\ContainerInterface;
+use Symfony\Component\Asset\Packages;
 use Symfony\Component\Cache\Psr16Cache;
 use Symfony\Component\Mailer\Transport;
 use Doctrine\ORM\EntityManagerInterface;
@@ -41,6 +43,7 @@ use Symfony\Component\Cache\Adapter\RedisAdapter;
 use Symfony\Component\Mime\BodyRendererInterface;
 use JR\ChefsDiary\DataObjects\Configs\TokenConfig;
 use League\Flysystem\Local\LocalFilesystemAdapter;
+use Symfony\WebpackEncoreBundle\Asset\TagRenderer;
 use JR\ChefsDiary\DataObjects\Configs\SessionConfig;
 use JR\ChefsDiary\Shared\RouteEntityBindingStrategy;
 use Symfony\Component\RateLimiter\RateLimiterFactory;
@@ -59,10 +62,13 @@ use JR\ChefsDiary\Services\Contract\SessionServiceInterface;
 use JR\ChefsDiary\Repositories\Implementation\UserRepository;
 use Symfony\WebpackEncoreBundle\Twig\EntryFilesTwigExtension;
 use JR\ChefsDiary\Services\Implementation\EntityManagerService;
+use JR\ChefsDiary\Services\Implementation\UserLoginCodeService;
 use JR\ChefsDiary\Repositories\Contract\UserRepositoryInterface;
 use JR\ChefsDiary\Services\Contract\EntityManagerServiceInterface;
 use JR\ChefsDiary\Services\Contract\UserLoginCodeServiceInterface;
 use JR\ChefsDiary\RequestValidators\RequestValidatorFactoryInterface;
+use Symfony\Component\Asset\VersionStrategy\JsonManifestVersionStrategy;
+use Symfony\WebpackEncoreBundle\Asset\EntrypointLookupCollectionInterface;
 
 // TODO: Pokud budu chtít filtrovat data podle uživatele, tak to musím udělat pomocí filtrů. Video 129
 return [
@@ -91,9 +97,9 @@ return [
         require CONFIG_PATH . '/app.php'
     ),
     ResponseFactoryInterface::class => fn(App $app) => $app->getResponseFactory(),
-    AuthServiceInterface::class => fn(ContainerInterface $container) => $container->get(
-        AuthService::class
-    ),
+        // AuthServiceInterface::class => fn(ContainerInterface $container) => $container->get(
+        //     AuthService::class
+        // ),
         #endregion
 
         #region Database
@@ -173,9 +179,12 @@ return [
             SessionConfig::class
         ),
     ),
+    UserLoginCodeServiceInterface::class => fn(ContainerInterface $container) => $container->get(
+        UserLoginCodeService::class
+    ),
     AuthServiceInterface::class => fn(ContainerInterface $container) => new AuthService(
         $container->get(
-            UserRepository::class
+            UserRepositoryInterface::class
         ),
         $container->get(
             TokenServiceInterface::class
@@ -187,7 +196,7 @@ return [
             AuthCookieConfig::class
         ),
         $container->get(
-            ResponseFactoryInterface::class
+            TokenConfig::class
         ),
         $container->get(
             SessionServiceInterface::class
@@ -226,6 +235,16 @@ return [
 
         return $twig;
     },
+    /**
+     * The following two bindings are needed for EntryFilesTwigExtension & AssetExtension to work for Twig
+     */
+    'webpack_encore.packages' => fn() => new Packages(
+        new Package(new JsonManifestVersionStrategy(BUILD_PATH . '/manifest.json'))
+    ),
+    'webpack_encore.tag_renderer' => fn(ContainerInterface $container) => new TagRenderer(
+        $container->get(EntrypointLookupCollectionInterface::class),
+        $container->get('webpack_encore.packages'),
+    ),
         // TODO: FileSystem asi není potřeba, ale může se hodit
     Filesystem::class => function (Config $config) {
         $digitalOcean = function (array $options) {
