@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-use App\Controllers\UserController;
 use Slim\Routing\RouteCollectorProxy;
+use JR\ChefsDiary\Controllers\UserController;
 
 function getUserRoutes(RouteCollectorProxy $api)
 {
     $api->group('/user', function (RouteCollectorProxy $user) {
-        $user->get('/get-all', [UserController::class, 'getAll']);
+        $user->get('/getAll', [UserController::class, 'getAll']);
     });
 
     return $api;

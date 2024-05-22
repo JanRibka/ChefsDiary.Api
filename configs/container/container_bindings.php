@@ -48,12 +48,14 @@ use JR\ChefsDiary\DataObjects\Configs\SessionConfig;
 use JR\ChefsDiary\Shared\RouteEntityBindingStrategy;
 use Symfony\Component\RateLimiter\RateLimiterFactory;
 use JR\ChefsDiary\Services\Implementation\AuthService;
+use JR\ChefsDiary\Services\Implementation\UserService;
 use JR\ChefsDiary\DataObjects\Configs\AuthCookieConfig;
 use JR\ChefsDiary\Services\Implementation\TokenService;
 use Symfony\Component\RateLimiter\Storage\CacheStorage;
 use JR\ChefsDiary\Services\Implementation\CookieService;
 use JR\ChefsDiary\Services\Implementation\MailerService;
 use JR\ChefsDiary\Services\Contract\AuthServiceInterface;
+use JR\ChefsDiary\Services\Contract\UserServiceInterface;
 use JR\ChefsDiary\Services\Implementation\SessionService;
 use JR\ChefsDiary\Services\Contract\TokenServiceInterface;
 use JR\ChefsDiary\Services\Contract\CookieServiceInterface;
@@ -210,6 +212,9 @@ return [
         $container->get(
             UserLoginCodeServiceInterface::class
         )
+    ),
+    UserServiceInterface::class => fn(ContainerInterface $container) => $container->get(
+        UserService::class
     ),
     EntityManagerServiceInterface::class => fn(EntityManagerInterface $entityManager) => new EntityManagerService(
         $entityManager

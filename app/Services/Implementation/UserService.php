@@ -29,7 +29,7 @@ class UserService implements UserServiceInterface
             );
         }
 
-        $query->orderBy('c.' . $orderBy, $orderDir);
+        $query->orderBy('u.' . $orderBy, $orderDir);
 
         return new Paginator($query);
     }

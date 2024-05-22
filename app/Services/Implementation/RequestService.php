@@ -40,15 +40,15 @@ class RequestService
     {
         $params = $request->getQueryParams();
 
-        $orderBy = $params['columns'][$params['order'][0]['column']]['data'];
-        $orderDir = $params['order'][0]['dir'];
+        $orderBy = $params['columns'][$params['order'][0]['column']]['data'] ?? '';
+        $orderDir = $params['order'][0]['dir'] ?? '';
 
         return new DataTableQueryParams(
-            (int) $params['start'],
-            (int) $params['length'],
+            (int) $params['start'] ?? 0,
+            (int) $params['length'] ?? 1000,
             $orderBy,
             $orderDir,
-            $params['search']['value'],
+            $params['search']['value'] ?? '',
             (int) $params['draw']
         );
     }

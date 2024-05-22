@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Controllers;
+namespace JR\ChefsDiary\Controllers;
 
 use JR\ChefsDiary\Entity\User\Implementation\User;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -20,6 +20,13 @@ class UserController
     ) {
     }
 
+    /**
+     * Get all users
+     * @param \Psr\Http\Message\ServerRequestInterface $request
+     * @param \Psr\Http\Message\ResponseInterface $response
+     * @return Response
+     * @author Jan Ribka
+     */
     public function getAll(Request $request, Response $response)
     {
         $params = $this->requestService->getDataTableQueryParameters($request);
