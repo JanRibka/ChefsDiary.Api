@@ -45,7 +45,7 @@ class RequestService
 
         return new DataTableQueryParams(
             (int) $params['start'] ?? 0,
-            (int) $params['length'] ?? 1000,
+            !!$params['length'] ? ((int) $params['length']) : null,
             $orderBy,
             $orderDir,
             $params['search']['value'] ?? '',

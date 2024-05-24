@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace JR\ChefsDiary\Controllers;
 
-use JR\ChefsDiary\Entity\User\Implementation\User;
 use Psr\Http\Message\ResponseInterface as Response;
+use JR\ChefsDiary\Entity\User\Implementation\UserInfo;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use JR\ChefsDiary\Services\Contract\UserServiceInterface;
 use JR\ChefsDiary\Services\Implementation\RequestService;
@@ -32,11 +32,13 @@ class UserController
         $params = $this->requestService->getDataTableQueryParameters($request);
         $users = $this->userService->getPaginatedUsers($params);
 
-        $transformer = function (User $user) {
+        $transformer = function (UserInfo $userInfo) {
             return [
-                'Uuid' => $user->getUuid(),
-                'Login' => $user->getLogin(),
-                'IsDisabled' => $user->getIsDisabled(),
+                'uuid' => $userInfo->getUser()->getUuid(),
+                'login' => $userInfo->getUser()->getLogin(),
+                'isDisabled' => $userInfo->getUser()->getIsDisabled(),
+                'email' => $userInfo->getEmail(),
+                'createdAt' => $userInfo->getCreatedAt()->format('Y-m-d H:i:s'),
             ];
         };
 

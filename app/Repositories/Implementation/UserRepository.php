@@ -274,8 +274,8 @@ class UserRepository implements UserRepositoryInterface
     public function getPaginatedUsersQuery(DataTableQueryParams $params): QueryBuilder
     {
         return $this->entityManagerService
-            ->getRepository(User::class)
-            ->createQueryBuilder('u')
+            ->getRepository(UserInfo::class)
+            ->createQueryBuilder('ui')
             ->setFirstResult($params->start)
             ->setMaxResults($params->length);
     }

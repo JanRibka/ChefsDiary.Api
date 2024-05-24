@@ -19,9 +19,13 @@ class UserService implements UserServiceInterface
     public function getPaginatedUsers(DataTableQueryParams $params): Paginator
     {
         $query = $this->userRepository->getPaginatedUsersQuery($params);
-        $orderBy = in_array($params->orderBy, ['Login']) ? $params->orderBy : 'Login';
         $orderDir = strtolower($params->orderDir) === 'asc' ? 'asc' : 'desc';
+        $orderBy = in_array($params->orderBy, ['Uuid', 'Login', 'IsDisabled']) ? 'u' . $params->orderBy : '';
 
+        if (empty($orderBy)) {
+            $orderBy = in_array($params->orderBy, ['Email', 'CreatedA']) ? 'ui' . $params->orderBy : 'ui.Email';
+        }
+        // Kvůli orderBY tu asi bude muset být query a UserResponseData
         if (!empty($params->searchTerm)) {
             $query->where('u.Login LIKE :login')->setParameter(
                 'login',
@@ -29,7 +33,7 @@ class UserService implements UserServiceInterface
             );
         }
 
-        $query->orderBy('u.' . $orderBy, $orderDir);
+        $query->orderBy($orderBy, $orderDir);
 
         return new Paginator($query);
     }
