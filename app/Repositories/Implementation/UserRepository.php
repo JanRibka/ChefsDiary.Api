@@ -276,6 +276,8 @@ class UserRepository implements UserRepositoryInterface
         return $this->entityManagerService
             ->getRepository(UserInfo::class)
             ->createQueryBuilder('ui')
+            ->select('ui', 'u')
+            ->join('ui.User', 'u')
             ->setFirstResult($params->start)
             ->setMaxResults($params->length);
     }
