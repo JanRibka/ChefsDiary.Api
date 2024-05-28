@@ -29,14 +29,14 @@ class User implements UserInterface
     #[Column(length: 75)]
     private string $Password;
 
-    #[Column(options: ['default' => false], nullable: false)]
+    #[Column(options: ['default' => false], nullable: true)]
     private bool|null $IsDisabled;
 
     #[Column(nullable: true)]
     private DateTime|null $LoginRestrictedUntil;
 
-    #[Column(options: ['default' => false])]
-    private bool $TwoFactor;
+    #[Column(options: ['default' => false], nullable: true)]
+    private bool|null $TwoFactor;
 
     #[Column(nullable: true)]
     private DateTime|null $VerifiedAt;
