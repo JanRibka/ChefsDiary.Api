@@ -75,11 +75,6 @@ class User implements UserInterface
         return $this->TwoFactor;
     }
 
-    public function getVerifiedAt(): DateTime
-    {
-        return $this->VerifiedAt;
-    }
-
 
     // Setters
     public function setLogin(string $login): User
@@ -120,13 +115,6 @@ class User implements UserInterface
     public function setTwoFactor(bool $twoFactor): User
     {
         $this->TwoFactor = $twoFactor;
-
-        return $this;
-    }
-
-    public function setVerifiedAt(DateTime $verifiedAt): User
-    {
-        $this->VerifiedAt = $verifiedAt;
 
         return $this;
     }
