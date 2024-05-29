@@ -1,4 +1,11 @@
 {
-  "cSpell.words": ["délka", "chefsdiary", "Maximální", "znaků"],
+  "cSpell.words": [
+    "délka",
+    "deník",
+    "chefsdiary",
+    "Kuchařův",
+    "Maximální",
+    "znaků"
+  ],
   "php.version": "8.3"
 }

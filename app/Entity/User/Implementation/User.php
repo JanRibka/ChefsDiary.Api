@@ -38,9 +38,6 @@ class User implements UserInterface
     #[Column(options: ['default' => false], nullable: true)]
     private bool|null $TwoFactor;
 
-    #[Column(nullable: true)]
-    private DateTime|null $VerifiedAt;
-
 
     // Getters
     public function getId(): int

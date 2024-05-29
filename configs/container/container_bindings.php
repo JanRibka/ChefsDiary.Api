@@ -54,11 +54,13 @@ use JR\ChefsDiary\Services\Implementation\TokenService;
 use Symfony\Component\RateLimiter\Storage\CacheStorage;
 use JR\ChefsDiary\Services\Implementation\CookieService;
 use JR\ChefsDiary\Services\Implementation\MailerService;
+use JR\ChefsDiary\Services\Implementation\VerifyService;
 use JR\ChefsDiary\Services\Contract\AuthServiceInterface;
 use JR\ChefsDiary\Services\Contract\UserServiceInterface;
 use JR\ChefsDiary\Services\Implementation\SessionService;
 use JR\ChefsDiary\Services\Contract\TokenServiceInterface;
 use JR\ChefsDiary\Services\Contract\CookieServiceInterface;
+use JR\ChefsDiary\Services\Contract\VerifyServiceInterface;
 use JR\ChefsDiary\RequestValidators\RequestValidatorFactory;
 use JR\ChefsDiary\Services\Contract\SessionServiceInterface;
 use JR\ChefsDiary\Repositories\Implementation\UserRepository;
@@ -219,6 +221,9 @@ return [
     EntityManagerServiceInterface::class => fn(EntityManagerInterface $entityManager) => new EntityManagerService(
         $entityManager
     ),
+    VerifyServiceInterface::class => fn(ContainerInterface $container) => $container->get(
+        VerifyService::class
+    ),
         #endregion
 
         #region Repositories
@@ -250,7 +255,6 @@ return [
         $container->get(EntrypointLookupCollectionInterface::class),
         $container->get('webpack_encore.packages'),
     ),
-        // TODO: FileSystem asi není potřeba, ale může se hodit
     Filesystem::class => function (Config $config) {
         $digitalOcean = function (array $options) {
             $client = new S3Client(

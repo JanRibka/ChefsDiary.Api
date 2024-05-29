@@ -19,6 +19,7 @@ use JR\ChefsDiary\Entity\User\Contract\UserTokenInterface;
 interface UserRepositoryInterface
 {
     public function getById(int $userId): ?UserInterface;
+    public function getByUuid(string $uuid): ?UserInterface;
     public function getByLogin(string $login): ?UserInterface;
     public function getByRefreshToken(string $refreshToken): ?UserInterface;
     public function createUser(RegisterUserData $data): UserInterface;

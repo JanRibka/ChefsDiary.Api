@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace JR\ChefsDiary\Services\Implementation;
 
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use JR\ChefsDiary\Entity\User\Contract\UserInterface;
 use JR\ChefsDiary\DataObjects\Data\DataTableQueryParams;
 use JR\ChefsDiary\Services\Contract\UserServiceInterface;
 use JR\ChefsDiary\Repositories\Contract\UserRepositoryInterface;
@@ -14,6 +15,11 @@ class UserService implements UserServiceInterface
     public function __construct(
         private readonly UserRepositoryInterface $userRepository
     ) {
+    }
+
+    public function getByUuid(string $uuid): ?UserInterface
+    {
+        return $this->userRepository->getByUuid($uuid);
     }
 
     public function getPaginatedUsers(DataTableQueryParams $params): Paginator

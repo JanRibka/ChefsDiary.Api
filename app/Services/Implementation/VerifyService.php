@@ -22,7 +22,7 @@ class VerifyService implements VerifyServiceInterface
         $userInfo = $this->userRepository->getUserInfoByUserId($user->getId());
         // TODO: Misto id pouzivat uuid
         if (
-            !hash_equals((string) $user->getId(), $args['id'])
+            !hash_equals((string) $user->getUuid(), $args['uuid'])
             || !hash_equals(sha1($userInfo->getEmail()), $args['hash'])
         ) {
             throw new RuntimeException('Verification failed');

@@ -26,18 +26,18 @@ class SignUpEmail
     public function send(UserInfoInterface $userInfo): void
     {
         $email = $userInfo->getEmail();
-        $expirationDate = new DateTime('+30 minutes');
+        $expirationDate = new DateTime('+60 minutes');
         $activationLink = $this->signedUrlService->fromRoute(
             'verify',
-            ['id' => $userInfo->getUser()->getId(), 'hash' => sha1($email)],
+            ['uuid' => $userInfo->getUser()->getUuid(), 'hash' => sha1($email)],
             $expirationDate
         );
 
         $message = (new TemplatedEmail())
             ->from($this->config->get('mailer.from'))
             ->to($email)
-            ->subject('Welcome to Expennies')
-            ->htmlTemplate('emails/signup.html.twig')
+            ->subject('[Kuchařův deník] Potvrďte prosím svou e-mailovou adresu')
+            ->htmlTemplate('signup.html.twig')
             ->context(
                 [
                     'activationLink' => $activationLink,

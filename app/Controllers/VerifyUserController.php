@@ -8,19 +8,21 @@ use JR\ChefsDiary\Enums\HttpStatusCode;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use JR\ChefsDiary\Entity\User\Implementation\User;
+use JR\ChefsDiary\Services\Contract\UserServiceInterface;
 use JR\ChefsDiary\Services\Contract\VerifyServiceInterface;
 
 class VerifyUserController
 {
     public function __construct(
-        private readonly VerifyServiceInterface $verifyService
+        private readonly VerifyServiceInterface $verifyService,
+        private readonly UserServiceInterface $userService,
     ) {
 
     }
     public function verify(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
-        /** @var User $user */
-        $user = $request->getAttribute('user');
+        $uuid = $args['uuid'];
+        $user = $this->userService->getByUuid($uuid);
 
         $this->verifyService->verify($user, $args);
 

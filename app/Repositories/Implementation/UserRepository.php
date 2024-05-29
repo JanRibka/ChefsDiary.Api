@@ -41,9 +41,16 @@ class UserRepository implements UserRepositoryInterface
         return $this->entityManagerService->find(User::class, $userId);
     }
 
+    public function getByUuid(string $uuid): ?UserInterface
+    {
+        return $this->entityManagerService->getRepository(User::class)
+            ->findOneBy(['Uuid' => $uuid]);
+    }
+
     public function getByLogin(string $login): ?UserInterface
     {
-        return $this->entityManagerService->getRepository(User::class)->findOneBy(['Login' => $login]);
+        return $this->entityManagerService->getRepository(User::class)
+            ->findOneBy(['Login' => $login]);
     }
 
     public function getByRefreshToken(string $refreshToken): ?UserInterface
