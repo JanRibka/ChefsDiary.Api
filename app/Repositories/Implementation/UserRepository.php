@@ -288,4 +288,15 @@ class UserRepository implements UserRepositoryInterface
             ->setFirstResult($params->start)
             ->setMaxResults($params->length);
     }
+
+    public function getUserForEdit(string $uuid): UserInfoInterface
+    {
+        return $this->entityManagerService
+            ->getRepository(UserInfo::class)
+            ->createQueryBuilder('ui')
+            ->innerJoin('ui.User', 'u')
+            ->setParameter('uuid', $uuid)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

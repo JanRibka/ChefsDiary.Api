@@ -7,6 +7,7 @@ namespace JR\ChefsDiary\Services\Implementation;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use JR\ChefsDiary\Entity\User\Contract\UserInterface;
 use JR\ChefsDiary\DataObjects\Data\DataTableQueryParams;
+use JR\ChefsDiary\Entity\User\Contract\UserInfoInterface;
 use JR\ChefsDiary\Services\Contract\UserServiceInterface;
 use JR\ChefsDiary\Repositories\Contract\UserRepositoryInterface;
 
@@ -42,6 +43,11 @@ class UserService implements UserServiceInterface
         $query->orderBy($orderBy, $orderDir);
 
         return new Paginator($query);
+    }
+
+    public function getUserForEdit(string $uuid): UserInfoInterface
+    {
+        return $this->userRepository->getUserForEdit($uuid);
     }
 
 }

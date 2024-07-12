@@ -46,4 +46,5 @@ interface UserRepositoryInterface
     public function findUserPasswordResetByToken(string $token): UserPasswordResetInterface|null;
     public function deactivateAllUserPasswordResets(string $email): void;
     public function getPaginatedUsersQuery(DataTableQueryParams $params): QueryBuilder;
+    public function getUserForEdit(string $uuid): UserInfoInterface;
 }

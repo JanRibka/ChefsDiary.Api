@@ -9,6 +9,7 @@ function getUserRoutes(RouteCollectorProxy $api)
 {
     $api->group('/user', function (RouteCollectorProxy $user) {
         $user->get('/getAll', [UserController::class, 'getAll']);
+        $user->get('/getUserForEdit', [UserController::class, 'getUserForEdit']);
     });
 
     return $api;

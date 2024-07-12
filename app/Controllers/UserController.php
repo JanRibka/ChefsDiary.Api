@@ -51,4 +51,21 @@ class UserController
             $totalUsers
         );
     }
+
+    /**
+     * et user for edit
+     * @param \Psr\Http\Message\ServerRequestInterface $request
+     * @param \Psr\Http\Message\ResponseInterface $response
+     * @return Response
+     * @author Jan Ribka
+     */
+    public function getUserForEdit(Request $request, Response $response)
+    {
+        $queryParams = $request->getQueryParams();
+
+        $data = $this->userService->getUserForEdit($queryParams['uuid']);
+
+
+        return $this->responseFormatter->asJson($response, $data);
+    }
 }
